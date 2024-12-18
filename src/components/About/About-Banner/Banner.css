@@ -1,0 +1,56 @@
+.aboutBannerSec {
+    position: relative;
+    padding-top: 55px;
+    padding-bottom: 55px;
+    background-image: url('../../../assets/Images/aboutBaneer.jpg');
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.aboutBannerSec .aboutOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(32 31 31 / 81%);
+    z-index: 1;
+}
+
+.about-text-container {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    z-index: 1;
+    color: white;
+}
+
+.aboutBannerSec .breadcrumb {
+    margin-top: 20px;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    color: rgb(196, 180, 180);
+    font-weight: 500;
+}
+.aboutBannerSec .breadcrumb svg{
+    margin: 5px 10px;
+}
+
+.aboutBannerSec .breadcrumb-link {
+    text-decoration: none;
+    color: rgb(196, 180, 180);
+    font-weight: 500;
+}
+
+.aboutBannerSec .breadcrumb-link:hover {
+    text-decoration: underline;
+    color: #008080 ;
+
+}

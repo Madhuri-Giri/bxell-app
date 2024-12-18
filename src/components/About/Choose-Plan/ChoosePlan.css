@@ -1,0 +1,80 @@
+.aboutChoosePlanSec {
+    padding: 30px 0px;
+}
+
+.aboutChoosePlanSecMainDivHED {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.aboutChoosePlanSecMainDivHED p {
+    color: rgb(153, 145, 145);
+    font-weight: 500;
+}
+
+.choosePlanBox {
+    background: #fff;
+    box-shadow: 0 0px 25px rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+}
+
+.choosePlanBoxSKyBlue {
+    background-color: #008080 ;
+    text-align: center;
+    color: white;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 30px 0px;
+    height: 175px;
+}
+
+.choosePlanBoxSKyBlue .ChoosePlanPrice strong {
+    font-weight: 500;
+    font-size: 30px;
+}
+.choosePlanBoxSKyBlue h4{
+    text-transform: uppercase;
+    font-size: 22px;
+    padding: 0px 30px;
+}
+
+.choosePlanBoxWhite {
+    background-color: white;
+    text-align: center;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding: 30px 0px;
+}
+
+.choosePlanBoxWhite ul {
+    list-style: none;
+    padding: 0px 20px;
+}
+
+.choosePlanBoxWhite ul li {
+    border-top: 1px dotted rgba(176, 165, 165, 0.63);
+    padding: 7px 0px;
+    color: gray;
+}
+
+.choosePlanBoxWhite .orderButton {
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.choosePlanBoxWhite .orderButton a {
+    background-color: #008080 ;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+}
+
+
+/* responsive css */
+@media (max-width: 992px) {
+    .choosePlanBox{
+        margin-bottom: 20px
+    }
+   
+  }

@@ -1,0 +1,116 @@
+/* BlogMainContent.css */
+.blogMainContentSec{
+    padding: 40px 10px;
+}
+
+
+.blogMainContentSec {
+    padding: 40px 10px;
+}
+
+.blog-card {
+    /* border: 1px solid #ddd; */
+    /* border-radius: 8px; */
+    margin-bottom: 15px;
+    background-color: #fff;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    overflow: hidden;
+}
+
+.blog-image img {
+    width: 100%;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.blog-content {
+    padding: 16px 7px;
+}
+
+.blog-header {
+    font-size: 1.5rem;
+    color: black;
+    text-decoration: none;
+    margin-bottom: 0px;
+}
+
+.blog-meta {
+    font-size: 0.9rem;
+    color: #777;
+    display: flex;
+    gap: 12px;
+    margin: 4px 0;
+}
+
+.blog-text {
+    font-size: 1rem;
+    color: #555;
+    margin: 4px 0;
+    line-height: 1.6;
+}
+
+.blogMainContentSec .read-more {
+    background-color: transparent;
+    color: #008080;
+    font-weight: bold;
+    border: none;
+    padding: 0px 0px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.blogMainContentSec .read-more svg{
+    font-size: 22px;
+}
+
+.blogMainContentSec .category-filter {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    height: 300px;
+}
+
+.blogMainContentSec .category-filter h3 {
+    margin-bottom: 15px;
+    font-size: 23px;
+    color: #333;
+    border-bottom: 1px solid gray; /* Existing bottom border */
+    text-align: center;
+    padding-bottom: 10px;
+    position: relative; /* Required for the pseudo-element positioning */
+}
+
+.blogMainContentSec .category-filter h3::before {
+    content: '';
+    position: absolute;
+    top: 37px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: #008080;
+    border-radius: 1px;
+}
+
+
+.blogMainContentSec .category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.blogMainContentSec .category-item {
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.blogMainContentSec .category-item:hover {
+    background-color: #f1f1f1;
+    color: #008080;
+}
+
+.blogMainContentSec .category-item.active {
+    background-color: #008080;
+    color: white !important;
+}

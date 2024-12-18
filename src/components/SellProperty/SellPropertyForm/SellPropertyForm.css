@@ -1,0 +1,88 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.propertyTypeButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.propertyTypeButton {
+  /* width: 120px; */
+  padding: 6px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #008080;
+  border: 1px solid #008080;
+  background-color: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.propertyTypeButton:hover,
+.propertyTypeButton:focus {
+  color: white;
+  background-color: #008080;
+  border: 1px solid #008080;
+  outline: none; 
+  box-shadow: none;
+}
+
+.propertyTypeButton:active {
+  background-color: #007070; 
+  color: white;
+}
+
+.propertyTypeButton.active {
+  background-color: #008080;
+  color: white;
+}
+
+
+button {
+  outline: none;
+  box-shadow: none;
+}
+
+.country-options {
+  display: flex;
+  gap: 10px;
+}
+
+.country-option-box {
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px; 
+  border-radius: 5px;
+  cursor: pointer;
+  color: #008080;
+  border: 2px solid #008080;
+  text-align: center;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.country-option-box:hover {
+  background-color: #008080;
+  color: white;
+}
+
+.country-option-box.selected {
+  background-color: #008080;
+  color: white;
+  font-weight: bold;
+  border: 2px solid #008080;
+}
+

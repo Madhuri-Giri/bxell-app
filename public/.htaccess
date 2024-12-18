@@ -1,0 +1,47 @@
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteBase /
+#     RewriteRule ^index\.html$ - [L]
+#     RewriteCond %{REQUEST_FILENAME} !-f
+#     RewriteCond %{REQUEST_FILENAME} !-d
+#     RewriteRule . /index.html [L]
+#     Options -MultiViews
+# RewriteEngine On
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteRule ^ index.html [QSA,L]
+
+# </IfModule>
+
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteBase /
+
+    
+#     # Allow direct access to existing files and directories
+#     RewriteCond %{REQUEST_FILENAME} !-f
+#     RewriteCond %{REQUEST_FILENAME} !-d
+    
+#     # Redirect all other requests to index.html
+#     RewriteRule . /index.html [L]
+# </IfModule>
+
+# # Disable MultiViews to avoid conflicts with URL segments
+# Options -MultiViews
+
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /bxell/
+    
+    # Allow direct access to existing files and directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirect all other requests to index.html within /bxell
+    RewriteRule . /bxell/index.html [L]
+</IfModule>
+
+# Disable MultiViews to avoid conflicts with URL segments
+Options -MultiViews
+
+

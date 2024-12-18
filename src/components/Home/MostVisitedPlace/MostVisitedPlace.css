@@ -1,0 +1,236 @@
+.homeMostVisitedPlace {
+  padding: 40px 0;
+}
+.homeMostVisitedPlaceROW{
+  display: flex;
+  justify-content: space-between;
+}
+
+.homeMostVisitedPlace .homeMostVisitedPlaceHed {
+  text-align: center;
+}
+
+.homeMostVisitedPlace .card {
+  border: 1px solid #a9a1a1;
+  border-radius: 8px;
+  /* overflow: hidden; */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.homeMostVisitedPlace .card:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-5px);
+}
+
+.homeMostVisitedPlace .card-image-wrapper {
+  position: relative;
+  /* border-radius: 8px; */
+  overflow: hidden;
+  padding: 5px 5px;
+}
+
+.homeMostVisitedPlace .card-image-wrapper img {
+  height: 300px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  /* border-radius: 8px; */
+}
+
+.homeMostVisitedPlace .status-tag {
+  position: absolute;
+  font-size: 12px;
+  top: 60px;
+  left: -22px;
+  background-color: #28a745;
+  color: #fff;
+  padding: 4px 47px;
+  border-radius: 6px;
+  font-weight: 400;
+  transform: rotate(-38deg);
+  transform-origin: top left;
+}
+
+.homeMostVisitedPlace .status-tag.closed {
+  background-color: #dc3545;
+}
+
+.homeMostVisitedPlace .image-background {
+  position: relative;
+  overflow: hidden;
+}
+
+.homeMostVisitedPlace .image-background img {
+  width: 100%;
+  height: auto;
+  display: block;
+  height: 170px;
+  /* border-radius: 8px; */
+}
+
+.homeMostVisitedPlace .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* background: linear-gradient(to bottom, rgba(46, 42, 42, 0.5), rgba(0, 0, 0, 0.9)); */
+  background: linear-gradient(to bottom, rgb(184 180 180 / 23%), rgba(0, 0, 0, 0.9));
+  /* border-radius: 8px; */
+  transition: background-color 0.3s ease;
+}
+
+.homeMostVisitedPlace .slick-dots {
+  margin: -20px 0;
+}
+
+.homeMostVisitedPlace .slick-dots li {
+  margin: 0 5px;
+}
+
+.homeMostVisitedPlace .slick-dots li button {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 3px solid rgba(128, 128, 128, 0.568);
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+/* Active Dot Styling */
+.homeMostVisitedPlace .slick-dots li.slick-active button {
+  background-color: #feffff;
+  border-color: #008080;
+  border: 5px solid #008080;
+}
+
+.homeMostVisitedPlace .slick-dots li button:before {
+  display: none;
+}
+
+.homeMostVisitedPlace .info-overlay {
+  position: absolute;
+  bottom: 200px;
+  left: 10px;
+  color: #fff;
+  z-index: 1;
+  width: 95%;
+}
+
+.homeMostVisitedPlace .price-range span {
+  background: rgba(255, 255, 255, 0.95);
+  color: #525252;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 8px;
+  margin-right: 5px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.homeMostVisitedPlace .price-range svg {
+  color: #ff0018;
+  margin-right: 7px;
+}
+
+.homeMostVisitedPlace .card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.homeMostVisitedPlaceHedCardText {
+  padding: 10px 10px;
+}
+
+.homeMostVisitedPlace .card-location,
+.homeMostVisitedPlace .card-phone {
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 5px;
+}
+
+.homeMostVisitedPlace .card-location svg,
+.homeMostVisitedPlace .card-phone svg {
+  color: #008080;
+  margin-right: 10px;
+}
+
+.homeMostVisitedPlace .typee {
+  display: flex;
+  justify-content: end;
+}
+
+.homeMostVisitedPlace .typee span {
+  background-color: #008080;
+  border-radius: 5px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.homeMostVisitedPlace .rating {
+  padding: 16px 15px;
+  z-index: 10;
+  position: absolute;
+  /* bottom: 0px;
+  left: 15px;
+  right: 15px; */
+  background: rgb(255 255 255);
+  border-radius: 40px;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: -28px;
+  width: 90%;
+}
+
+
+.homeMostVisitedPlace .featured {
+  display: flex;
+  justify-content: end;
+  margin-top: 10px;
+}
+
+.homeMostVisitedPlace .featured span {
+  text-transform: uppercase;
+  border: 2px solid #2cafe3;
+  font-size: 12px;
+  font-weight: 500;
+  background: #2cafe3;
+  border-radius: 4px;
+  padding: 1px 10px;
+}
+
+
+.homeMostVisitedPlaceSlider .slick-slide {
+  padding: 10px 6px !important;
+}
+
+
+.chooseCityMain {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+.chooseCityMain svg{
+  font-size: 35px;
+}
+.chooseCityChilds {
+  border: 1px solid #0080803b;
+  padding: 7px 12px;
+  border-radius: 10px;
+  color: #008080;
+  width: 100px;
+  background: #00808014;
+  cursor: pointer;
+  margin-bottom: 10px;
+}

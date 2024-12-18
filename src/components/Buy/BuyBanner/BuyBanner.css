@@ -1,0 +1,31 @@
+.buyMainBanner {
+    position: relative;
+    padding-top: 90px;
+    padding-bottom: 90px;
+    /* background-image: url('../../../assets/Images/aboutBaneer.jpg'); */
+    background-image: url('../../../assets/Images/city_search_background.jpg');
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+.buyMainBanner .buyMainBannerOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(58, 56, 56, 0.269);
+    z-index: 1;
+}
+.buy-text-container {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    z-index: 1;
+    color: white;
+}

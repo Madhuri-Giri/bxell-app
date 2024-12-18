@@ -1,0 +1,289 @@
+.businessListingFormMAinSec {
+    padding: 20px 30px;
+}
+
+.businessListingFormMAinRow {
+    display: flex;
+    justify-content: center;
+}
+
+.businessListingFormMainBox {
+    background-color: white;
+    box-shadow: 2px 5px 6px 5px rgb(183 173 173);
+    border-radius: 7px;
+}
+
+.businessListingFormMainBox .radio_space{
+    padding-left: 40px;
+}
+
+.businessListingFormHed {
+    background-color: #008080;
+    color: white;
+    text-align: center;
+    padding: 10px 0px;
+    /* display: flex; */
+}
+
+.businessListingFormsDiv small {
+    font-size: 13px;
+    margin-left: 3px;
+}
+
+.businessListingFormsDiv select {
+    padding: 6px 13px;
+    border-radius: 5px;
+}
+
+.businessListingFormsDiv label {
+    color: #008080;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 3px;
+    text-transform: uppercase;
+}
+
+.businessListingFormsDiv span {
+    color: #008080;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 3px;
+    text-transform: uppercase;
+}
+
+.propertyFormRadio label {
+    color: #008080;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 3px;
+    text-transform: capitalize;
+}
+
+.businessListingFormsRadioDivMAIN {
+    display: flex;
+}
+
+.currentStatusClosed {
+    margin-left: 20px;
+}
+
+.additionalDetails h6 {
+    margin-top: 20px;
+    color: #008080;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 3px;
+    text-transform: capitalize;
+}
+
+.businessListingFormsRadioDiv label {
+    color: #008080;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 3px;
+    text-transform: uppercase;
+}
+
+.businessListingFormsDiv {
+    margin: 5px 0px;
+}
+
+.businessListingFormsDiv .invalid-feedback {
+    font-size: 11px;
+}
+
+.businessListingCurrentStratusRadioDiv input {
+    padding: 6px 5px;
+    color: black;
+}
+
+/* .businessListingCurrentStratusRadioDiv label {
+    color: black;
+} */
+
+.businesListingSubmitButton {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.businesListingSubmitButton button {
+    background-color: #008080;
+    padding: 10px 40px;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.businesListingSubmitButton button:hover {
+    background-color: #008080;
+    padding: 10px 40px;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.businessformStepper {
+    padding: 30px 30px;
+}
+
+.vallidateRequiredStar {
+    color: red !important;
+    margin-left: 10px;
+}
+
+.propertyFormStepper {
+    padding: 30px 30px;
+}
+
+.propertyListingSubmitButton {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.propertyListingSubmitButton button {
+    background-color: #008080 !important;
+    padding: 10px 40px;
+    border: none;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.propertyListingSubmitButton button:hover {
+    background-color: #008080 !important;
+    padding: 10px 40px;
+    border: none;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.proprtytypeRadio {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.listing-type-container {
+    display: flex;
+    gap: 10px; /* Space between boxes */
+}
+
+.listing-type-box {
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #008080;
+    border: 1px solid #008080;
+    background-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-align: center; 
+}
+
+.listing-type-box:hover {
+    color: white;
+    background-color: #008080;
+    border: 1px solid #008080;
+    outline: none;
+    box-shadow: none;
+}
+
+.listing-type-box.selected {
+    border-color: #008080;
+    background-color: #008080;
+    color: #fff;
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+/* ---------------------country----------------- */
+.country-box-container {
+    display: flex; 
+    gap: 10px; 
+  }
+  
+  .country-box {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px; 
+    border-radius: 5px;
+    cursor: pointer;
+    color: #008080;
+    border: 2px solid #008080;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  
+  .country-box:hover {
+    background-color: #008080;
+    color: white;
+  }
+  
+  .country-box.selected {
+    background-color: #008080;
+    color: white;
+    font-weight: bold;
+    border: 2px solid #008080;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  /* -------------------------------ARE YOU?-------------- */
+  .you-are-box-container {
+    display: flex; 
+    gap: 10px; 
+  }
+  
+  .you-are-box {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    text-transform: uppercase; 
+    padding: 10px 20px; 
+    border-radius: 5px;
+    cursor: pointer;
+    color: #008080;
+    border: 2px solid #008080;
+    background-color: white;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .you-are-box:hover {
+    background-color: #008080;
+    color: white;
+  }
+  
+  .you-are-box.selected {
+    background-color: #008080;
+    color: white;
+    font-weight: bold;
+    border: 2px solid #008080;
+  }
+  
+  .invalid-feedback {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+ /* CSS to remove spinner from number input */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner[type="number"] {
+  -moz-appearance: textfield;
+}

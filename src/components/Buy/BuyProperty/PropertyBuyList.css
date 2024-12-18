@@ -1,0 +1,162 @@
+.propertyBuyListingSec{
+    padding: 50px 0px;
+}
+.propertyBuyListingBox{
+    padding: 5px 5px;
+    border-radius: 7px;
+    margin-bottom: 30px;
+    position: relative;
+    
+}
+.propertyBuyListingBox img{
+    margin-bottom: 10px;
+    border-radius: 2px;
+    height: 240px;
+    width: 100%;
+}
+.explorePropertyHed{
+    background-color: #008080;
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 30px;
+}
+.propertyBuyListingRow_2{
+    /* margin-top: 6px; */
+}
+.propertyBuyListingRow_2 a{
+    text-decoration: none;
+}
+.propertyBuyListingRow_1 h6{
+    color: gray;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+.propertyBuyListingRow_1 h6 span{
+    color: #21c521;
+    font-weight: 600;
+}
+
+.propertyBuyListingRow_2 h6{
+    color: gray;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+.propertyBuyListingfilterBox{
+    box-shadow: 2px 3px 3px 4px rgba(128, 128, 128, 0.189);
+    padding: 15px;
+    border-radius: 6px;
+}
+.propertyBuyListingfilterBox label{
+    color: #008080;
+    font-weight: 600;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+.propertyBuyListingfilterBox select{
+    padding: 6px 7px;
+    font-size: 13px;
+}
+.propertyBuyListingExploreRow img{
+    height: 240px;
+    width: 100%;
+}
+
+
+.propertyBuyListingSec .tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.propertyBuyListingSec .tab-button {
+    width: 100%;
+    background-color: lightgray;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.propertyBuyListingSec .tab-button.active {
+    background-color: #008080;
+    color: white;
+}
+
+.propertyBuyListingSec .wishlist-heart {
+    position: absolute;
+    /* top: 10px;
+    right: 10px; */
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    z-index: 10;
+    margin-left: 10px;
+    float: right; 
+}
+
+.propertyBuyListingSec .wishlist-icon {
+    font-size: 25px;
+    transition: color 0.3s ease;
+}
+
+.propertyBuyListingSec .title-location {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.propertyBuyListingSec .interested {
+    font-size: 14px;
+    color: #008080;
+}
+
+.propertyBuyListingSec .location-call {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.propertyBuyListingSec .call-btn {
+    background-color: transparent;
+    color: gray;
+    border: none;
+    cursor: pointer;
+}
+.propertyBuyListingSec .call-btn svg {
+    font-size: 10px;
+    margin-top: -3px;
+}
+.filter_listing_type{
+
+}
+
+.filter_listing_type h6{
+    color: #008080;
+    font-weight: 600;
+}
+.filter_listing_type {
+    margin: 20px 0;
+  }
+  
+
+  .filter_box {
+    display: flex;
+    gap: 10px; 
+  }
+  
+  .filter-button {
+    color: #008080;
+    padding: 6px 12px;
+    font-weight: bold;
+    border: 2px solid #008080; 
+  border-radius: 2px; 
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; 
+  }
+  
+  .filter-button.active {
+    background-color: #008080;
+    color: white; 
+  }
+  
+ 
+  

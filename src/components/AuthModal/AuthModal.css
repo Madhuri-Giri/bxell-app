@@ -1,0 +1,112 @@
+
+.auth-modal-body {
+    min-height: 360px;
+    padding: 10px 16px;
+}
+.signInModelHed {
+    background-color: #008080;
+    color: white;
+    font-weight: bold;
+}
+#signup-login-tabs {
+    border: none;
+}
+.custom-tabs .nav-item {
+    flex: 1;
+    margin: 0px 3px;
+}
+.custom-tabs .nav-link {
+    background-color: rgba(224, 214, 214, 0.498);
+    color: #000;
+    text-align: center;
+    padding: 0.75rem 0;
+    border-radius: 6px;
+}
+.custom-tabs .nav-link.active {
+    background-color: #008080;
+    color: #fff;
+}
+.registerSubmitBtn,
+.loginSubmitBtn{
+    background-color: #008080;
+    padding: 10px 20px;
+    border: none;
+    text-transform: uppercase;
+}
+.registerSubmitBtn:hover,
+.loginSubmitBtn:hover{
+    background-color: #008080;
+    padding: 10px 20px;
+    border: none;
+    text-transform: uppercase;
+}
+.auth-modal-body input{
+    padding: 12px 15px;
+    box-shadow: 1px 1px 1px 2px #8080801a;
+    border-radius: 4px;
+}
+
+.forgetPassorddiv{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    font-size: 13px;
+}
+.forgetPassorddiv input{
+   box-shadow: none;
+   padding: 6px 6px;
+}
+.forgetPassorddiv a:hover{
+    color: #008080;
+}
+
+/* AuthModal.css */
+
+/* Style the close button in the modal */
+.modal-header .btn-close {
+    background-color: white;
+    color: #008080;
+    border: none;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: 12px;
+}
+
+/* Change the color on hover */
+.modal-header .btn-close:hover {
+    background-color: white; /* Set background color to white */
+    color: #008080; /* Set text color to sky blue */
+}
+.error{
+    color: red;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.loginForm button,
+.registerForm button{
+    background-color: #008080;
+    padding: 10px 20px;
+    border: none;
+    text-transform: uppercase;
+}
+.loginForm button:hover,
+.registerForm button:hover{
+    background-color: #008080;
+    padding: 10px 20px;
+    border: none;
+    text-transform: uppercase;
+}
+.password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}

@@ -1,0 +1,110 @@
+/* .sellMainBtnRow{
+    padding: 20px 0px;
+    text-align:center;
+    margin-bottom: 100px;
+}
+.sellMainBtnRow h1{
+    text-align: center;
+    border-bottom: 12px solid #008080;
+    font-size: 52px;
+    margin-bottom: 60px;
+}
+.sellMainBtnRow a{
+    text-decoration: none;
+    color: white;
+}
+.sellMainBtnBuisness span{
+    background-color: #93c47d;
+    padding: 4px 10px;
+}
+.sellMainBtnProperty span{
+    background-color: #008080;
+    padding: 4px 10px;
+} */
+
+
+.sellMainBtnRow {
+    padding: 20px 0px;
+    text-align: center;
+    /* margin-bottom: 100px; */
+    display: flex;
+    justify-content: space-around;
+}
+.sellMainBtnRow h1 {
+    text-align: center;
+    border-bottom: 12px solid #008080;
+    font-size: 52px;
+    margin-bottom: 60px;
+}
+.sellMainBtnRow a {
+    text-decoration: none;
+    color: white;
+    background: #008080;
+    border-radius: 10px;
+    padding: 10px 20px;
+    z-index: 1;
+}
+.sellMainBtnRow a:hover{
+    text-decoration: none;
+    color: white;
+    background: #00808094;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+.sellMainBtnRow a p{
+    margin: 0px;
+}
+.sellMainBtnBuisness, .sellMainBtnProperty {
+    position: relative;
+    color: white;
+    padding: 40px 20px; /* Adjust for spacing */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden; /* Ensure the background doesn't overflow */
+}
+
+/* Add background images to the button sections */
+/* .sellMainBtnBuisness {
+    background-image: url('../../assets/Images/propertyyy.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.sellMainBtnProperty {
+    background-image: url('../../assets/Images/propertyyy.jpg');
+    background-size: cover;
+    background-position: center;
+} */
+.banner_sell_img{
+    background-image: url('../../assets/Images/sell_banner.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+.sellMainBtnBuisness ,
+.sellMainBtnProperty{
+    /* background: repeating-linear-gradient(45deg, #ffffff, #d2d2d2 10px, #0c0b0b94 10px, #c7c7c7fa 20px); */
+   
+    /* filter: grayscale(100%); */
+}
+
+/* Optional: Overlay color to ensure text is visible */
+.sellMainBtnBuisness::before, .sellMainBtnProperty::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(0 0 0 / 0%);
+    z-index: 1;
+}
+
+.sellMainBtnBuisness h2,
+.sellMainBtnBuisness p,
+.sellMainBtnProperty h2,
+.sellMainBtnProperty p {
+    position: relative;
+    z-index: 2; /* Make sure text is above the overlay */
+}

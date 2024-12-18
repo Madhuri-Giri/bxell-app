@@ -1,0 +1,188 @@
+.home_img img{
+    width: 100%;
+    padding-top: 20px;
+}
+
+.homeRecomendedList{
+    background-color: #dae7e7;
+    border-radius: 3px;
+    padding: 5px 8px;
+    margin-bottom: 10px;
+}
+.homeRecomendedList h6 {
+    margin: 0px;
+    color: #008080;
+    font-weight: 600;
+}
+.homeRecomendedListSEC{
+    padding: 5px 10px;
+}
+.homeRecomendedListSEC img {
+    height: 200px;
+    width: 100%;
+    border-radius: 2px;
+}
+
+.recommendationsClsNameSec {
+    padding: 50px 0px;
+}
+.recommendationsClsNameBox {
+    padding: 5px 5px;
+    
+    border-radius: 7px;
+    margin-bottom: 30px;
+    position: relative;
+    border: 1px solid #06020221;
+}
+.recommendationsClsNameBox h5{
+    font-size: 15px;
+}
+.recommendationsClsNameBox img {
+    margin-bottom: 10px;
+    border-radius: 2px;
+    height: 240px;
+    width: 100%;
+}
+/* .explorePropertyHed {
+    background-color: #008080;
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 30px;
+} */
+.recommendationsClsNameRow_2 a {
+    text-decoration: none;
+}
+.recommendationsClsNameRow_1 h6 {
+    color: gray;
+    font-weight: 400;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+.recommendationsClsNameRow_1 svg {
+    color: #008080;
+}
+.recommendationsClsNameRow_1 h6 span {
+    color: #21c521;
+    font-weight: 600;
+}
+.recommendationsClsNameRow_2 h6 {
+    color: gray;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+.recommendationsClsNamefilterBox {
+    box-shadow: 2px 3px 3px 4px rgba(128, 128, 128, 0.189);
+    padding: 15px;
+    border-radius: 6px;
+}
+.recommendationsClsNamefilterBox label {
+    color: #008080;
+    font-weight: 600;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+.recommendationsClsNamefilterBox select {
+    padding: 6px 7px;
+    font-size: 13px;
+}
+.recommendationsClsNameExploreRow img {
+    height: 200px;
+    width: 100%;
+}
+
+.recommendationsClsNameSec .tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.recommendationsClsNameSec .tab-button {
+    width: 100%;
+    background-color: lightgray;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.recommendationsClsNameSec .tab-button.active {
+    background-color: #008080;
+    color: white;
+}
+
+.recommendationsClsNameSec .wishlist-heart {
+    position: absolute;
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    z-index: 10;
+    margin-left: 10px;
+}
+
+.recommendationsClsNameSec .wishlist-icon {
+    font-size: 25px;
+    transition: color 0.3s ease;
+}
+
+.recommendationsClsNameSec .title-location {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recommendationsClsNameSec .interested {
+    font-size: 14px;
+    color: #008080;
+}
+
+.recommendationsClsNameSec .location-call {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recommendationsClsNameSec .call-btn {
+    background-color: transparent;
+    color: gray;
+    border: none;
+    cursor: pointer;
+}
+.recommendationsClsNameSec .call-btn svg {
+    font-size: 10px;
+    margin-top: -3px;
+}
+.promotedTextWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.promotedText {
+    position: absolute;
+    top: 10px;
+    left: 10px; 
+    background-color: #f4c542;
+    color: #fff;
+    padding: 2px 8px;
+    font-weight: bold;
+    z-index: 10; 
+}
+.promotedTextWrapper h5{
+    font-size: 12px;
+}
+.home_call{
+    display: flex;
+    justify-content: space-between;
+}
+.home_price{
+    display: flex;
+    justify-content: space-between;
+   
+}
+.home_con{
+    background-color: hwb(0 0% 0%);
+    color: #fff;
+    padding: 2px 8px;
+    font-size: 12px;
+text-transform: uppercase;
+text-align: center;
+}

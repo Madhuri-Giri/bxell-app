@@ -1,0 +1,112 @@
+/* Center the container and improve spacing */
+.registration-container{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.registration-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    padding: 0 15px; /* Add padding for small screens */
+}
+
+/* Card Styling */
+.registration-card {
+    max-width: 700px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column; /* Ensure form elements stack vertically */
+}
+
+/* Header */
+.registration-header {
+    background-color: #008080;
+    color: white;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Custom Input Fields */
+.custom-input {
+    padding: 12px 15px;
+    box-shadow: 1px 1px 1px 2px #8080801a;
+    border-radius: 4px;
+    transition: 0.3s ease-in-out;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Focused Input Field */
+.custom-input:focus {
+    border-color: #008080;
+    box-shadow: 0 0 5px rgba(0, 128, 128, 0.5);
+}
+
+/* Password Toggle Icon */
+.password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+/* Submit Button */
+.register-btn {
+    background-color: #008080;
+    padding: 12px;
+    border: none;
+    text-transform: uppercase;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #006f6f;
+}
+
+/* Error Message */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-left: 5px;
+    padding-top: 10px;
+}
+
+/* Registration Link */
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-link a {
+    color: #008080;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Flex container for Forget Password and Remember Me */
+.forget-password-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.forget-password-div a:hover {
+    color: #008080;
+}

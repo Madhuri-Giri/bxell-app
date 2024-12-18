@@ -1,0 +1,50 @@
+.aboutBannerSec-2 {
+    position: relative;
+    background-image: url('../../../assets/Images/about-3.jpg');
+    background-attachment: fixed;
+    background-position: 50% -63.2626px;
+    margin: 90px 0px;
+}
+
+.aboutBannerSec-2 .aboutBanner_2_Overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(32, 24, 24, 0.71);
+    z-index: 1;
+}
+
+.aboutBanner_2-text-container {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    z-index: 1;
+    color: white;
+    padding: 100px 10px;
+}
+
+.aboutBanner_2-text-container p {
+    line-height: 33px;
+    color: rgb(228, 222, 222);
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.aboutbanner_2hed {
+    padding: 0px 130px;
+    margin-bottom: 20px;
+}
+
+.aboutBannerSec-2 a {
+    background: #008080 ;
+    color: #fff;
+    padding: 12px 29px;
+    border-radius: 3px;
+    text-decoration: none;
+}

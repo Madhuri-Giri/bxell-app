@@ -1,0 +1,182 @@
+.profileHed{
+    background-color: #008080 ;
+    /* background-color: rgba(65, 58, 58, 0.667); */
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+.profileHed svg{
+    margin-right: 10px;
+    font-size: 25px;
+}
+.profileHed{
+    background-color: #008080 ;
+    /* background-color: rgba(65, 58, 58, 0.667); */
+    color: white;
+    display: flex;
+}
+.profileMainBox{
+    background-color: white;
+    box-shadow: 2px 5px 6px 5px rgb(183 173 173 / 16%);
+    border-radius: 7px;
+}
+.profileMAinSec{
+    padding: 20px 30px;
+}
+.profileMAinRow{
+    display: flex;
+    justify-content: center;
+}
+
+.edit-profile-photo {
+    position: relative;
+    display: block;
+    /* margin-bottom: 35px; */
+    text-align: center;
+    margin-top: 20px;
+}
+
+.edit-profile-photo img {
+    border-radius: 50%;
+    max-width: 200px;
+    width: 100%;
+    border: 10px solid rgba(0, 0, 0, 0.08);
+}
+
+.change-photo-btn {
+    font-weight: 600;
+    padding: 5px;
+    color: #333;
+    background-color: #fff;
+    border-radius: 50px;
+    display: inline-block;
+    position: relative;
+    font-size: 13px;
+    width: auto;
+    transition: 0.3s;
+    cursor: pointer;
+    line-height: 20px;
+    position: absolute;
+    bottom: 35px;
+    left: 0;
+    right: 0;
+    width: 140px;
+    margin: 0 auto;
+}
+
+.photoUpload {
+    position: relative;
+    overflow: hidden;
+    padding: 3px 5px;
+    cursor: pointer;
+}
+.photoUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+}
+.profileForms{
+    text-align: start;
+    padding: 10px 30px;
+    border: 1px solid rgba(128, 128, 128, 0.116);
+    border-radius: 3px;
+    margin-top: 10px;
+}
+.profileForms p strong{
+    color: #008080;
+}
+.profileFormsDiv{
+   margin: 5px 0px;
+}
+.profileFormsDiv label{
+    color: #008080;
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: 3px;
+}
+.profileFormsDiv input{
+    padding: 5px 13px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.profileSaveChangesButton button{
+    background-color: #008080 ;
+    padding: 10px 20px;
+    border: none;
+    margin-bottom: 20px;
+}
+.profileSaveChangesButton button:hover{
+    background-color: #008080 ;
+    border: none;
+    padding: 10px 20px;
+}
+
+/* Style for the tab container */
+.profileMAinSec .nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/* Style for active tab */
+.profileMAinSec .nav-tabs .nav-link.active-tab {
+    background-color: #008080; /* Active tab background color */
+    color: #fff !important; /* Active tab text color */
+    font-weight: bold;
+    border: 1px solid #008080; /* Optional: border for active tab */
+    border-bottom: none; /* Prevents double-border at bottom */
+    border-radius: 5px 5px 0 0; /* Rounded corners for active tab */
+}
+
+/* Style for non-active tab */
+.profileMAinSec .nav-tabs .nav-link {
+    background-color: #f0f0f0; 
+    color: #333; 
+    font-weight: normal;
+    border: 1px solid #ddd;
+    border-bottom: none; 
+    transition: background-color 0.3s ease; 
+    border-radius: 5px 5px 0 0; 
+}
+
+.profileMAinSec .nav-tabs .nav-link:hover {
+    background-color: #e0e0e0; 
+    color: #008080 !important; 
+}
+
+/* Styling for the content box to connect with tabs */
+.profileMAinSec .profileMainBox {
+    border: 1px solid #ddd; /* Border for main content container */
+    border-top: none; /* Align with tab styles */
+    padding: 20px;
+    border-radius: 0 0 5px 5px; /* Rounded corners at bottom */
+}
+
+.profileNoOfListing {
+    background-color: #008080;
+    color: white;
+    padding: 10px 10px;
+    margin-bottom: 15px;
+
+}
+.profileNoOfListing h6{
+   margin: 0px;
+}
+
+.recentIquiies {
+    background-color: #008080;
+    color: white;
+    padding: 10px 10px;
+    margin-bottom: 15px;
+}
+.recentIquiies h6{
+   margin: 0px;
+}

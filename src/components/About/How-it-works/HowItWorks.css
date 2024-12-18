@@ -1,0 +1,71 @@
+.aboutHowItWorksSec {
+    padding: 30px 0px;
+}
+.aboutHowItWorksMainDivHED {
+    text-align: center;
+}
+.aboutHowItWorksMainDivHED p {
+    color: rgb(153, 145, 145);
+    font-weight: 500;
+    font-size: 17px
+}
+.howItworksBox {
+    text-align: center;
+    margin-top: 30px;
+    position: relative;
+    background: #fff;
+    padding: 40px 25px 20px 25px;
+    box-shadow: 0 0px 25px rgba(0, 0, 0, 0.12);
+    margin-bottom: 20px;
+    border-radius: 10px;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.3s;
+}
+.howItworksBox svg {
+    padding: 16px;
+    width: 100px;
+    height: 100px;
+    background: #008080 ;
+    border: 5px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50%;
+    margin-bottom: 10px;
+    color: #fff;
+}
+.howItworksBox h5 {
+    margin: 20px 0px;
+}
+.howItworksBox p {
+    line-height: 33px;
+    font-weight: 400;
+    font-size: 16px;
+    color: gray;
+}
+.howItworksBox:hover {
+    transform: translateY(-10px); 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+}
+.howItworksBox svg {
+    padding: 16px;
+    width: 100px;
+    height: 100px;
+    background: #008080 ;
+    border: 5px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50%;
+    margin-bottom: 10px;
+    color: #fff !important;
+    transition: transform 0.6s ease-in-out; 
+}
+.howItworksBox:hover svg {
+    transform: rotateY(360deg); 
+}
+
+
+
+
+/* responsive css */
+@media (max-width: 992px) {
+    .howItworksBox {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+}

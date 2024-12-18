@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Existing styles */
+.homeBanner {
+    /* background-image: url('../../../assets/Images/city_search_background.jpg'); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* height: 500px; */
+    /* height: 620px; */
+    position: relative;
+    z-index: 1;
+    padding: 20px 10px;
+}
+
+.homeBanner .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.homeBanner .text-container {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    color: white;
+}
+
+.homeBanner .banner-title {
+    font-family: 'Merriweather';
+    font-weight: 400;
+    font-size: 2.5rem;
+    /* Adjust the size as needed */
+    color: #333;
+    /* Optional: Set text color */
+}
+
+.homeBanner .business-color,
+.homeBanner .property-color {
+    color: #008080;
+}
+
+.homeBanner .blinking-text {
+    font-weight: bold;
+}
+
+.homeBanner .button-text {
+    color: gray;
+    text-align: center !important;
+    font-size: 16px;
+    margin: 0; /* Removes top and bottom margins */
+    padding: 0; 
+}
+
+.homeBanner .blinking-cursor {
+    animation: blink 1s step-end infinite;
+    font-weight: bold;
+    color: #333;
+}
+
+.homeBannerSellBuyBtn {
+    /* margin: 15px 0px; */
+    margin-bottom: -25px;
+    display: flex;
+    justify-content: center;
+}
+
+.homeBannerSellBuyBtn button {
+    color: white;
+    background: #008080;
+    width: 100%;
+    border-radius: 5px;
+    padding: 9px 0px;
+    font-size: 32px;
+    font-weight: bold;
+    margin-left: 0px;
+    border-radius: 40px;
+}
+
+.homeBannerSellBuyBtn button:hover {
+    background: #008080a2;
+}
+
+.homeBanner .boxx {
+    background-color: rgb(120 118 118 / 15%);
+    box-shadow: 2px 3px 4px 3px rgba(128, 128, 128, 0.365);
+    border: 1px solid rgba(128, 128, 128, 0.527);
+    border-radius: 10px;
+    color: #008080;
+    padding: 3px 40px;
+    /* max-width: 150px; */
+    /* width: 100%; */
+    border-radius: 40px;
+}
+
+.homeBanner .homeBannerCOL1 {
+    display: flex;
+    justify-content: end;
+}
+
+.homeBanner .homeBannerCOL2 {
+    display: flex;
+    justify-content: start;
+}
+
+.homeBanner .boxx svg {
+    font-size: 21px;
+}
+
+.homeBanner .boxx h5 {
+    font-size: 17px;
+
+}
+
+.homeBannerRow {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.homeBannerRow a {
+    text-decoration: none;
+}
+
+/* .homeSell {
+    text-align: end;
+}
+.homeBuy {
+    text-align: start;
+} */
+
+/* Search form styles */
+.search-form {
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px; */
+    margin-top: 8px;
+}
+
+.formSearchRow {
+    justify-content: center;
+    display: flex;
+}
+
+.search-input {
+    /* width: 250px; */
+    padding: 8px;
+    border-radius: 5px;
+    border: 2px solid #0b57574b;
+    font-size: 16px;
+}
+
+/* Style for search input and icon */
+.search-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search-icon {
+    background-color: #008080;
+    color: white;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    cursor: pointer;
+}
+
+.country-dropdown .dropdown-toggle {
+    background-color: transparent;
+    color: #00000082;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    text-align: start;
+    border: 2px solid #0b57574b;
+    /* border: 1px solid #ccc; */
+}
+
+.country-dropdown .dropdown-menu.show {
+    width: 100%;
+}
+
+.country-dropdown .dropdown-toggle:hover {
+    background-color: #008080a2;
+}
+
+.boxxCol1 {
+    display: flex;
+    justify-content: end;
+}
+
+.boxxCol2 {
+    display: flex;
+    justify-content: start;
+}
+
+.listingLogo img {
+    height: 25px;
+    /* margin-right: -11px; */
+}
+
+.listingLogoCOL {
+    margin-top: 7px;
+}
+
+.listingLogoCOL {
+    display: flex;
+    color: #21c521;
+    font-style: italic;
+    position: relative;
+    left: 85px;
+    
+}
+
+.listingLogoCOLP2 {
+    font-size: 12px;
+    margin-top: -6;
+}
+
+.listingLogoCOL p {
+    margin: 0px;
+    font-weight: bold;
+}
+
+.formSearchCOL {
+    padding: 0px 4px;
+}
+/* Adjust the layout for the instant image and explore text */
+/* Styles for instant image below SELL button */
+/* .instant-img-wrapper {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+} */
+
+.instant-img {
+    height: 30px;
+    max-width: 100%;
+    margin-right: 310px;
+}
+
+.instant-img-wrapper {
+    margin-top: 8px; 
+}
+
+.buy-info-text span{
+    color: #008080; 
+}
+
+.explore-text {
+    font-size: 14px;
+    color: #5A5A5A;
+    font-weight: normal;
+}
+
+.explore-text span {
+    color: #27ae60; /* Color the "Free" part, if needed */
+    font-weight: bold;
+}
+.text-with-image {
+    display: flex;
+    align-items: center; /* Vertically align text and image */
+    gap: 40px; /* Space between the image and text */
+    margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  margin-left: 35px;
+}
+
+.razorpay-img {
+    width: 80px; /* Adjust image width */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.homeBanner .vertical-icons {
+    position: absolute;
+    top: 40%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    z-index: 3;
+    background-color: rgb(120 118 118 / 15%);
+    
+    border-radius: 8px;
+}
+.clickable-link {
+    cursor: pointer;
+    text-decoration: none; 
+  }
+  
+
+.homeBanner .vertical-icons a img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.vertical-box{
+    background-color: #f5ecec;
+    z-index: 3333333;
+}
+
+.homeBanner .vertical-icons a:hover img {
+    transform: scale(1.2);
+    
+}
+
+/* Animation for blinking cursor */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+
+/* Responsive css */
+@media (max-width: 1200px) {
+    .listingLogoCOL {
+        left: 66px;
+        
+    }
+}
+
+@media (max-width: 1024px) {
+    .listingLogoCOL {
+        left: 46px;
+        margin-left: 12px; 
+        padding-left: 12px; 
+    }
+}
+
+@media (max-width: 992px) {
+    .listingLogoCOL {
+        left: 46px;
+        margin-left: 4px; 
+        padding-left: 4px; 
+    }
+}
+
+@media (max-width: 768px) {
+    .listingLogoCOL {
+        left: -15px;
+        top: -6px;
+        margin-left: 30px; 
+        padding-left: 30px; 
+    }
+}
+
+@media (max-width: 576px) {
+    .homeBanner .boxx {
+        padding: 2px 20px;
+    }
+    .listingLogoCOL {
+        left: -15px;
+        top: -20px;
+        margin-left: 3px; 
+        padding-left: 3px; 
+    }
+
+    .listingLogoCOL p {
+        font-size: 11px;
+    }
+
+    .buttonWithText {
+        margin-bottom: 16px;
+    }
+
+    .homeBannerSellBuyBtn button {
+        padding: 0px 0px;
+    }
+
+    .country-dropdown .dropdown-toggle {
+        font-size: 11px;
+    }
+    .search-input {
+        font-size: 11px;
+    }
+}
