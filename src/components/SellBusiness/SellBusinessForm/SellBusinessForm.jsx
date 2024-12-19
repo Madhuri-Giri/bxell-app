@@ -122,17 +122,17 @@ function SellBusinessForm() {
     try {
       // Fetch business ID from the submitted form
       const business_id = await submitSellBusinessForm(formData);
-      const userId = localStorage.getItem("userLoginId");
+      // const userId = localStorage.getItem("userLoginId");
 
-      if (!userId || !business_id || !formData.amount) {
+      if (!formData.user_id || !business_id || !formData.amount) {
         throw new Error(
-          "Login ID, Transaction Number, or Business ID is missing."
+          "Login ID, amount  or Business ID is missing."
         );
       }
 
       const payload = {
         amount: formData.amount,
-        user_id: userId || 1,
+        user_id: formData.user_id,
         business_id: business_id,
       };
 
