@@ -32,7 +32,7 @@ function SellPropertyForm() {
   const userId = localStorage.getItem("userLoginId");
 
   const [formData, setFormData] = useState({
-    user_id: userId ,
+    user_id: userId || 1,
     property_title: "",
     listing_type: "",
     listed_by: "",
@@ -66,6 +66,18 @@ function SellPropertyForm() {
     }));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value, type, files } = e.target;
+
+    if (type === "file" && files && files.length > 0) {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: undefined }));
+  };
+
   const handleListingTypeChange = (event) => {
     setListingType(event.target.value);
     setFormData((prevFormData) => ({
@@ -74,21 +86,31 @@ function SellPropertyForm() {
     }));
   };
 
+ 
   const handleNext = () => {
     const currentErrors = { ...errors };
 
     // Validate required fields
-    if (!listing_type)
+    if (!formData.listing_type)
       currentErrors.listing_type = "Please select a listing type";
     else currentErrors.listing_type = "";
 
-    if (!property_type)
+    if (!formData.property_type)
       currentErrors.property_type = "Please select a property type";
     else currentErrors.property_type = "";
 
+    if (!formData.property_title)
+      currentErrors.property_title = "Please enter property title";
+    else currentErrors.property_title = "";
+
     setErrors(currentErrors);
 
-    if (!currentErrors.property_type && !currentErrors.listing_type) {
+    // If no errors, move to the next step
+    if (
+      !currentErrors.listing_type &&
+      !currentErrors.property_type &&
+      !currentErrors.property_title
+    ) {
       setStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
     }
   };
@@ -115,16 +137,16 @@ function SellPropertyForm() {
     try {
       // Send the form data to get the property ID and user ID
       const property_id = await submitSellPropertyForm(formData);
-      const userId = localStorage.getItem("userLoginId");
+      // const userId = localStorage.getItem("userLoginId");
   
-      if (!userId || !property_id || !formData.amount) {
-        throw new Error("Login ID, Transaction Number, or Hotel Booking ID is missing.");
+      if (!formData.user_id || !property_id || !formData.amount) {
+        throw new Error("Login ID, amount, or property ID is missing.");
       }
   
       // Prepare the payload to fetch payment details
       const payload = {
         amount: formData.amount,
-        user_id: userId,
+        user_id: formData.user_id,
         property_id: property_id,
       };
   
@@ -148,8 +170,33 @@ function SellPropertyForm() {
       console.error("Error fetching payment details:", error);
       if (error.response) {
         console.error("Error response data:", error.response.data);
-      }
-      alert("Failed to initiate payment. Please try again.");
+    
+        const errorData = error.response.data;
+    
+        // Process errors and update the error state
+        setErrors({
+            property_title: errorData.error?.property_title ? errorData.error.property_title[0] : '',
+            listing_type: errorData.error?.listing_type ? errorData.error.listing_type[0] : '',
+            property_type: errorData.error?.property_type ? errorData.error.property_type[0] : '',
+            bedroom: errorData.error?.bedroom ? errorData.error.bedroom[0] : '',
+            bathroom: errorData.error?.bathroom ? errorData.error.bathroom[0] : '',
+            furnishing: errorData.error?.furnishing ? errorData.error.furnishing[0] : '',
+            car_parking: errorData.error?.car_parking ? errorData.error.car_parking[0] : '',
+            project_status: errorData.error?.project_status ? errorData.error.project_status[0] : '',
+            listed_by: errorData.error?.listed_by ? errorData.error.listed_by[0] : '',
+            country: errorData.error?.country ? errorData.error.country[0] : '',
+            state: errorData.error?.state ? errorData.error.state[0] : '',
+            sq_ft: errorData.error?.sq_ft ? errorData.error.sq_ft[0] : '',
+            area_measurment: errorData.error?.area_measurment ? errorData.error.area_measurment[0] : '',
+            area: errorData.error?.area ? errorData.error.area[0] : '',
+            asking_price: errorData.error?.asking_price ? errorData.error.asking_price[0] : '',
+            advance_price: errorData.error?.advance_price ? errorData.error.advance_price[0] : '',
+            phone_number: errorData.error.phone_number ? errorData.error.phone_number[0] : "",
+            city: errorData.error.city ? errorData.error.city[0] : "",
+            // Add additional fields here if required
+        });
+    }
+    
       return null;
     }
   };
@@ -338,7 +385,7 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
         <div className="row businessListingFormMAinRow">
           <div className="col-10">
             <div className="businessListingFormMainBox">
-              <div className="businessListingFormHed">
+              <div className="businessListingFormHed mb-4">
                 <h4>SELLING PROPERTY FORM</h4>
               </div>
 
@@ -348,13 +395,14 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
               </Stepper>
 
               <Form>
-                <div className="container profileForms">
+                <div className="container profileForms mt-2">
                   <div className="row">
                     {step === 0 && (
                       <>
                         <div className="col-7">
                           <Form.Group controlId="listing_type" className="businessListingFormsDiv" >
                             <Form.Label>LISTING TYPE</Form.Label>
+                            <span className="vallidateRequiredStar">*</span>
                             <Form.Select  value={listing_type} onChange={handleListingTypeChange} >
                               <option value="">Select Listing Type</option>
                               <option value="Selling">Selling</option>
@@ -366,12 +414,12 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
                           </Form.Group>
                         </div>
 
-                        <div className="col-7">
+                        <div className="col-12">
                           <Form.Group  controlId="property_type"  className="businessListingFormsDiv propertyFormRadio" >
                             <Form.Label>PROPERTY TYPE</Form.Label>
                             <span className="vallidateRequiredStar">*</span>
                             <div className="row">
-                              <div className="mb-3 propertyTypeButtons property_space col-3">
+                              <div className="mb-3 propertyTypeButtons property_space">
                                 {[ "House", "Apartment",  "Retail Space", "Office Space", "Complex/Entire Property", "Land",  ].map((type) => (
                                   <Button  key={type} type="button"  className={`btn btn-outline-primary propertyTypeButton ${  property_type === type ? "active" : ""
                                     }`}
@@ -381,6 +429,28 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
                             {errors.property_type && ( <small className="text-danger"> {errors.property_type}</small> )}
                           </Form.Group>
                         </div>
+
+                        <div className="col-7">
+                        <Form.Group className="businessListingFormsDiv" controlId="property_title">
+                          <Form.Label>TITLE</Form.Label>
+                          <span className="vallidateRequiredStar">*</span>
+                          <Form.Control
+                            type="text"
+                            name="property_title"
+                            placeholder="Title (e.g., RETAIL SPACE FOR SALE)"
+                            value={formData.property_title}
+                            onChange={handleInputChange}
+                            isInvalid={!!errors.property_title}
+                          />
+                          {/* Correctly display the error message */}
+                          <Form.Control.Feedback type="invalid">
+                            {errors.property_title}
+                          </Form.Control.Feedback>
+                        
+                        </Form.Group>
+                      </div>
+
+
 
                         <div className="col-7 propertyListingSubmitButton">
                           <Button variant="" onClick={handleNext} type="button"> Next</Button>
@@ -414,13 +484,13 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
                     {step === 2 && (
                       <>
                         {property_type === "Land" && (
-                          <Page3Land formData={formData} setFormData={setFormData}  />
+                          <Page3Land formData={formData} setFormData={setFormData} handleChange={handleChange}  errors={errors}  />
                         )}
                         {["House", "Apartment"].includes(property_type) && (
-                          <Page3Common formData={formData} setFormData={setFormData}  />
+                          <Page3Common formData={formData} setFormData={setFormData} handleChange={handleChange}  errors={errors}  />
                         )}
                         {[  "Retail Space", "Office Space", "Complex/Entire Property",  ].includes(property_type) && (
-                          <Page3ROC formData={formData} setFormData={setFormData} />
+                          <Page3ROC formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} />
                         )}
 
                         <div className="col-12 propertyListingSubmitButton">

@@ -12,15 +12,15 @@ const Land = ({ formData = {}, setFormData = () => {}, errors = {} }) => {
 
   return (
     <>
-      <div className="col-7">
+      <div className="col-12">
         <Form.Group
           controlId="area_measurment"
           className="businessListingFormsDiv propertyFormRadio"
         >
-          <Form.Label>AREA: </Form.Label>
+          <Form.Label>AREA MEASURMENT </Form.Label>
           <span className="vallidateRequiredStar">*</span>
           <div className="row">
-            <div className="mb-3 propertyTypeButtons col-3">
+            <div className="mb-3 propertyTypeButtons">
               {["sq.m", "sq.ft", "cents", "acre"].map((type) => (
                 <Button
                   key={type}
@@ -35,34 +35,43 @@ const Land = ({ formData = {}, setFormData = () => {}, errors = {} }) => {
               ))}
             </div>
           </div>
+          {errors?.area_measurment && (
+            <small className="text-danger">{errors.area_measurment}</small>
+          )}
         </Form.Group>
       </div>
 
       <div className="col-7">
-        <Form.Group controlId="sq_ft" className="businessListingFormsDiv">
+        <Form.Group controlId="area" className="businessListingFormsDiv">
           <Form.Label>Area</Form.Label>
           <span className="vallidateRequiredStar">*</span>
           <Form.Control
             type="text"
-            name="sq_ft"
+            name="area"
             value={formData.area || ""}
             onChange={(e) => handleSelectionChange("area", e.target.value)}
             placeholder="(e.g., 25)"
-            isInvalid={!!errors.sq_ft}
+            isInvalid={!!errors.area}
+            onKeyPress={(e) => {
+              // Allow only numbers
+              if (!/^[0-9]*$/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
           <Form.Control.Feedback type="invalid">
-            {errors.sq_ft}
+            {errors.area}
           </Form.Control.Feedback>
         </Form.Group>
       </div>
 
       {/* Listed By Selection */}
-      <div className="col-7">
+      <div className="col-12">
         <Form.Group controlId="listedBy" className="businessListingFormsDiv">
-          <Form.Label>Listed By: </Form.Label>
+          <Form.Label>Listed By </Form.Label>
           <span className="vallidateRequiredStar">*</span>
           <div className="row">
-            <div className="mb-3 propertyTypeButtons col-3">
+            <div className="mb-3 propertyTypeButtons">
               {["Builder", "Dealer", "Owner"].map((type) => (
                 <Button
                   key={type}
@@ -87,14 +96,19 @@ const Land = ({ formData = {}, setFormData = () => {}, errors = {} }) => {
       <div className="col-7">
         <Form.Group controlId="length" className="businessListingFormsDiv">
           <Form.Label>Length</Form.Label>
-          <span className="vallidateRequiredStar">*</span>
           <Form.Control
             type="text"
             name="length"
             value={formData.length              || ""}
             onChange={(e) => handleSelectionChange("length", e.target.value)}
-            placeholder="Length"
-            isInvalid={!!errors.length            }
+            placeholder="Enter Length"
+            isInvalid={!!errors.length}
+            onKeyPress={(e) => {
+              // Allow only numbers
+              if (!/^[0-9]*$/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
           <Form.Control.Feedback type="invalid">
             {errors.length}
@@ -105,14 +119,19 @@ const Land = ({ formData = {}, setFormData = () => {}, errors = {} }) => {
       <div className="col-7">
         <Form.Group controlId="breadth" className="businessListingFormsDiv">
           <Form.Label>Breadth</Form.Label>
-          <span className="vallidateRequiredStar">*</span>
           <Form.Control
             type="text"
             name="breadth"
             value={formData.breadth || ""}
             onChange={(e) => handleSelectionChange("breadth", e.target.value)}
-            placeholder="Breadth"
+            placeholder="Enter Breadth"
             isInvalid={!!errors.breadth}
+            onKeyPress={(e) => {
+              // Allow only numbers
+              if (!/^[0-9]*$/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
           <Form.Control.Feedback type="invalid">
             {errors.breadth}

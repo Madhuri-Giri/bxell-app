@@ -67,6 +67,16 @@
   background-color: #005f5f;
 }
 
+.pro_city{
+  color: gray;
+  font-size: 24px;
+}
+
+.pro_city span{
+  font-size: 30px;
+  font-weight: bold;
+}
+
 /* Listing row */
 .propertyBuyListingRow {
   display: flex;
@@ -100,7 +110,7 @@
 }
 
 .green-text {
-  color: rgb(12, 212, 12);
+  color: rgb(39, 141, 51);
   font-weight: bold;
 }
 
@@ -119,9 +129,23 @@
 .mapLocationDiv {
   margin-top: 10px;
 }
+
+.ask_price{
+  color: grey;
+  font-size: 18px;
+  font-weight: bold;
+}
+.ask_price .green-text{
+  font-size: 24px;
+  color: rgb(86, 181, 86);
+
+}
+
 .ask_price h6 span{
   color: rgb(12, 212, 12);
 }
+
+
 
 
 
@@ -281,7 +305,21 @@
 .home_price{
   display: flex;
   justify-content: space-between;
- 
+}
+.table_heading th{
+  color: #fff; 
+  background: #008080;
+  text-align: center;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  font-size: 14px;
+}
+
+.home_price .ask_price_side{
+  color: rgb(86, 181, 86);
 }
 .home_con{
   background-color: hwb(0 0% 0%);

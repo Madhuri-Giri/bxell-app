@@ -16,7 +16,7 @@ function SellBusinessForm() {
   const userId = localStorage.getItem("userLoginId");
 
   const [formData, setFormData] = useState({
-    user_id: userId,
+    user_id: userId || 1,
     business_type: "",
     title: "",
     description: "",
@@ -132,7 +132,7 @@ function SellBusinessForm() {
 
       const payload = {
         amount: formData.amount,
-        user_id: userId,
+        user_id: userId || 1,
         business_id: business_id,
       };
 
@@ -160,9 +160,26 @@ function SellBusinessForm() {
     } catch (error) {
       console.error("Error fetching payment details:", error.message);
       if (error.response) {
-        console.error("Error response data:", error.response.data);
+        const errorData = error.response.data;
+
+        // Process errors and update the error state
+        setErrors({
+          asking_price: errorData.error?.asking_price ? errorData.error.asking_price[0] : '',
+          city: errorData.error?.city ? errorData.error.city[0] : '',
+          country: errorData.error?.country ? errorData.error.country[0] : '',
+          current_status: errorData.error?.current_status ? errorData.error.current_status[0] : '',
+          phone_number: errorData.error?.phone_number ? errorData.error.phone_number[0] : '',
+          percentage_of_stake: errorData.error?.percentage_of_stake ? errorData.error.percentage_of_stake[0] : '',
+          reported_turnover_from: errorData.error?.reported_turnover_from ? errorData.error.reported_turnover_from[0] : '',
+          reported_turnover_to: errorData.error?.reported_turnover_to ? errorData.error.reported_turnover_to[0] : '',
+          state: errorData.error?.state ? errorData.error.state[0] : '',
+          you_are: errorData.error?.you_are ? errorData.error.you_are[0] : '',
+          file_name: errorData.error?.file_name ? errorData.error.file_name[0] : '',
+        });
+
+
       }
-      alert("Failed to initiate payment. Please try again.");
+      // alert("Failed to initiate payment. Please try again.");
       return null;
     }
   };
@@ -174,7 +191,7 @@ function SellBusinessForm() {
       // Fetch payment details
       const paymentData = await fetchPaymentDetails();
       if (!paymentData) {
-        alert("Failed to fetch payment details. Please try again.");
+        // alert("Failed to fetch payment details. Please try again.");
         return;
       }
 
@@ -402,7 +419,7 @@ function SellBusinessForm() {
                         <div className="col-7">
                           <Form.Group className="businessListingFormsDiv" controlId="businessType">
                             <Form.Label>BUSINESS TYPE</Form.Label>
-                            <span className="validateRequiredStar">*</span>
+                            <span className="vallidateRequiredStar">*</span>
                             <Form.Select
                               name="business_type"
                               value={formData.business_type}
@@ -437,7 +454,7 @@ function SellBusinessForm() {
                         <div className="col-7">
                           <Form.Group className="businessListingFormsDiv" controlId="listingType">
                             <Form.Label>LISTING TYPE</Form.Label>
-                            <span className="validateRequiredStar">*</span>
+                            <span className="vallidateRequiredStar">*</span>
                             <div className="listing-type-container">
                               {["Selling", "Franchising", "Seeking Investment"].map((type) => (
                                 <div
@@ -465,7 +482,7 @@ function SellBusinessForm() {
                         <div className="col-7">
                           <Form.Group className="businessListingFormsDiv" controlId="title">
                             <Form.Label>TITLE</Form.Label>
-                            <span className="validateRequiredStar">*</span>
+                            <span className="vallidateRequiredStar">*</span>
                             <Form.Control
                               type="text"
                               name="title"
@@ -611,29 +628,6 @@ function SellBusinessForm() {
                           <div className="col-7">
                             <Form.Group
                               className="businessListingFormsDiv"
-                              controlId="asking_price"
-                            >
-                              <Form.Label>PRICE</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <Form.Control
-                                type="number"
-                                name="asking_price"
-                                value={formData.asking_price}
-                                onChange={handlepriceChange}
-                                placeholder="Asking Price"
-                                isInvalid={!!errors.asking_price}
-                                className="no-spinner"
-                              />
-                              <Form.Control.Feedback type="invalid">
-                                {" "}
-                                {errors.asking_price}{" "}
-                              </Form.Control.Feedback>
-                            </Form.Group>
-                          </div>
-
-                          <div className="col-7">
-                            <Form.Group
-                              className="businessListingFormsDiv"
                               controlId="reportedTurnover"
                             >
                               <Form.Label>TURNOVER RANGE (Yearly)</Form.Label>
@@ -682,6 +676,29 @@ function SellBusinessForm() {
                                 <option value="80% - 90%">80% - 90%</option>
                                 <option value="90% - 99%">90% - 99%</option>
                               </Form.Select>
+                            </Form.Group>
+                          </div>
+
+                          <div className="col-7">
+                            <Form.Group
+                              className="businessListingFormsDiv"
+                              controlId="asking_price"
+                            >
+                              <Form.Label>PRICE</Form.Label>
+                              <span className="vallidateRequiredStar">*</span>
+                              <Form.Control
+                                type="number"
+                                name="asking_price"
+                                value={formData.asking_price}
+                                onChange={handlepriceChange}
+                                placeholder="Asking Price"
+                                isInvalid={!!errors.asking_price}
+                                className="no-spinner"
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {" "}
+                                {errors.asking_price}{" "}
+                              </Form.Control.Feedback>
                             </Form.Group>
                           </div>
 
@@ -737,7 +754,12 @@ function SellBusinessForm() {
                           <div className="col-7">
                             <Form.Group className="businessListingFormsDiv" controlId="no_of_employees" >
                               <Form.Label>NUMBER OF EMPLOYEES</Form.Label>
-                              <Form.Control  type="number" name="no_of_employees"  value={formData.no_of_employees} onChange={handleChange} placeholder="Enter number of employees" isInvalid={!!errors.no_of_employees} maxLength={10}  />
+                              <Form.Control  type="text" name="no_of_employees"  value={formData.no_of_employees} onChange={handleChange} placeholder="Enter number of employees" isInvalid={!!errors.no_of_employees} maxLength={10} onKeyPress={(e) => {
+                            // Allow only numbers
+                            if (!/^[0-9]*$/.test(e.key)) {
+                              e.preventDefault();
+                            }
+                          }} />
                               <Form.Control.Feedback type="invalid"> {errors.no_of_employees} </Form.Control.Feedback>
                             </Form.Group>
                           </div>

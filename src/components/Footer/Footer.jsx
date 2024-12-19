@@ -50,14 +50,14 @@ function Footer() {
                                 <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Home </NavLink></li>
                                 <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Listing  </NavLink></li>
                                 <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Blog </NavLink></li>
-                                <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Privacy Policy </NavLink></li>
+                                {/* <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Privacy Policy </NavLink></li> */}
                                 <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Contact </NavLink></li>
                             </ul>
                         </div>
                         <div className="col-2 mt-2 footerPagesDiv">
                             <h5>Pages</h5>
                             <ul>
-                                <li><NavLink to='/blog'><MdKeyboardDoubleArrowRight />Blog </NavLink></li>
+                                <li><NavLink to='/blog-details'><MdKeyboardDoubleArrowRight />Blog </NavLink></li>
                                 <li><NavLink to='/'><MdKeyboardDoubleArrowRight />How it work </NavLink></li>
                                 <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Our Partner </NavLink></li>
                             </ul>
@@ -65,16 +65,16 @@ function Footer() {
                         <div className="col-2 mt-2 footerHelpDiv">
                             <h5>Help</h5>
                             <ul>
-                                <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Sign In   </NavLink></li>
-                                <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Register </NavLink></li>
-                                <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Pricing </NavLink></li>
-                                <li><NavLink to='/'><MdKeyboardDoubleArrowRight />Add Listing </NavLink></li>
+                                <li><NavLink to='/register'><MdKeyboardDoubleArrowRight />Sign In   </NavLink></li>
+                                <li><NavLink to='/register'><MdKeyboardDoubleArrowRight />Register </NavLink></li>
+                                <li><NavLink to='/sell-business'><MdKeyboardDoubleArrowRight />Add Listing Business  </NavLink></li>
+                                <li><NavLink to='/sell-property'><MdKeyboardDoubleArrowRight />Add Listing Business </NavLink></li>
                             </ul>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12 footerCopyRight">
-                            <p>Copyright © 2022 All Rights Reserved.</p>
+                            <p>Copyright © 2024-2025 Bxell. All rights reserved.</p>
                         </div>
                     </div>
                 </div>

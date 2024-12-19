@@ -139,9 +139,9 @@ function PropertyBuySinglePage() {
       <section className="propertyBuyListingSec">
         <div className="space_r_l">
           <div className="container">
-          <div className=" row single_container">
-               {/* Conditionally render Property or Business */}
-               {type === "property" && property && (
+            <div className=" row single_container">
+              {/* Conditionally render Property or Business */}
+              {type === "property" && property && (
                 <div className="col-9">
                   <>
                     <div className="single_box">
@@ -150,19 +150,38 @@ function PropertyBuySinglePage() {
                           <h1>{property.property_title}</h1>
                           <div className="boldBorder"></div>
                           <div className="prop_type">
-                            <h6> Property Type : <span>{property.property_type}</span> </h6>
+                            <h6>
+                              {" "}
+                              Property Type :{" "}
+                              <span>{property.property_type}</span>{" "}
+                            </h6>
                           </div>
                         </div>
                         <div className="col-6 d-flex justify-content-between align-items-center">
                           <div className="propertyBuyListingActions">
-                            <button> <IoShareSocial /> Share </button>
-                            <button> <IoMail /> Mail </button>
-                            <button>  <IoCall /> Call </button>
+                            <button>
+                              {" "}
+                              <IoShareSocial /> Share{" "}
+                            </button>
+                            <button>
+                              {" "}
+                              <IoMail /> Mail{" "}
+                            </button>
+                            <button>
+                              {" "}
+                              <IoCall /> Call{" "}
+                            </button>
                           </div>
                           <div className="business_rating">
                             {/* Star Rating Section */}
                             {/* <h5>Rate this Property</h5> */}
-                            <ReactStars  count={5} size={25}   activeColor="#ffd700"  value={userRating || averageRating}  onChange={handleRatingChange} />
+                            <ReactStars
+                              count={5}
+                              size={25}
+                              activeColor="#ffd700"
+                              value={userRating || averageRating}
+                              onChange={handleRatingChange}
+                            />
                             {/* <p>Average Rating: {averageRating.toFixed(1)}</p> */}
                           </div>
                         </div>
@@ -170,7 +189,11 @@ function PropertyBuySinglePage() {
 
                       <div className="row propertyBuyListingRow_1 propertySinglePage">
                         <div className="col-6">
-                          <img  className="img-fluid"  src={(() => {  try {   const fileName = property.file_name;
+                          <img
+                            className="img-fluid"
+                            src={(() => {
+                              try {
+                                const fileName = property.file_name;
 
                                 // Parse the file_name if it's a JSON string
                                 const files =
@@ -211,38 +234,98 @@ function PropertyBuySinglePage() {
                         <div className="col-6">
                           <div className="row">
                             <div className="col-6 ask_price">
-                              <h6> Asking Price : <span>{property.asking_price} </span> </h6>
+                              <span>
+                                {" "}
+                                Asking Price :{" "}
+                                ₹ <span className="green-text">{property.asking_price} </span>{" "}
+                              </span>
                             </div>
-                            <div className="col-6">
-                              <h6> <IoLocation /> {property.city}  </h6>
+                            <div className="col-6 pro_city">
+                              <IoLocation />
+                              <span>
+                                {" "}
+                                 {property.city}{" "}
+                              </span>
                             </div>
                           </div>
 
                           {/* Property Financials in table format */}
                           <div>
                             <div className="propertyInfoTableContainer">
-                              <table className="propertyInfoTable">
+                          
+                              <table className="propertyInfoTable ">
+                              <thead className=" table_heading">
+                                <tr>
+                                  <th colSpan="2">Proposal</th> {/* Adjust colSpan to cover all columns */}
+                                </tr>
+                              </thead>
+                              
                                 <tbody>
+                                
                                   <tr>
                                     {/* <td>Reported sale (yearly): <br /><span className="green-text">82,00,000</span></td> */}
-                                    <td> Listing Type: <br /> <span className="green-text">  {property.listing_type} </span> </td>
-                                    <td> Property Type: <br /> <span className="green-text">  {property.property_type}  </span>  </td>
+                                    <td>
+                                      {" "}
+                                      Listing Type: <br />{" "}
+                                      <span className="green-text">
+                                        {" "}
+                                        {property.listing_type}{" "}
+                                      </span>{" "}
+                                    </td>
+                                    <td>
+                                      {" "}
+                                      Property Type: <br />{" "}
+                                      <span className="green-text">
+                                        {" "}
+                                        {property.property_type}{" "}
+                                      </span>{" "}
+                                    </td>
                                   </tr>
                                   <tr>
-                                  <td>BUSINESS STATUS:<br /> <span className="green-text">{property.project_status}</span> </td>
-                                  <td>Furnishing: <br /> <span className="green-text">{property.furnishing}</span> </td>
+                                    <td>
+                                      BUSINESS STATUS:
+                                      <br />{" "}
+                                      <span className="green-text">
+                                        {property.project_status}
+                                      </span>{" "}
+                                    </td>
+                                    <td>
+                                      Furnishing: <br />{" "}
+                                      <span className="green-text">
+                                        {property.furnishing}
+                                      </span>{" "}
+                                    </td>
                                   </tr>
                                   <tr>
-                                    <td>Price: <br /> <span className="green-text"> {property.asking_price}</span> </td>
+                                    <td>
+                                      Price: <br />{" "}₹
+                                      <span className="green-text">
+                                        {" "}
+                                        {property.asking_price}
+                                      </span>{" "}
+                                    </td>
 
                                     <td>
                                       DOCUMENTS UPLOADED: <br />
                                       <span className="green-text">
-                                        {(() => { try {   const files = JSON.parse(  property.file_name
-                                            ); return Array.isArray(files) ? files.length  : 0;
-                                          } catch (error) { console.error("Error parsing file_name:",  error
-                                            );  return 0;
-                                          }   })()}  </span> </td>
+                                        {(() => {
+                                          try {
+                                            const files = JSON.parse(
+                                              property.file_name
+                                            );
+                                            return Array.isArray(files)
+                                              ? files.length
+                                              : 0;
+                                          } catch (error) {
+                                            console.error(
+                                              "Error parsing file_name:",
+                                              error
+                                            );
+                                            return 0;
+                                          }
+                                        })()}{" "}
+                                      </span>{" "}
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -260,104 +343,134 @@ function PropertyBuySinglePage() {
 
                     {/* Google Map Section */}
                     <div className="mapLocationDiv">
-                      <iframe  style={{ width: "100%" }}  src="https://www.google.com/maps/embed?pb=..."  width="600" height="450" allowFullScreen=""  loading="lazy" ></iframe>
+                      <iframe
+                        style={{ width: "100%" }}
+                        src="https://www.google.com/maps/embed?pb=..."
+                        width="600"
+                        height="450"
+                        allowFullScreen=""
+                        loading="lazy"
+                      ></iframe>
                     </div>
                   </>
-                
-              </div>
-            )}
+                </div>
+              )}
               <div className="col-3 property-listings-scroll ">
-              {/* <h2>SIMILAR LISTINGS</h2> */}
-                  {/* Scrollable Container for Property Listings */}
-                  {type === "property" &&
-          homeProperty.map((property, index) => (
-            <div className="">
-                  <div className="">
-                    <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow">
-                   
-            <div className="propertyBuyClsNameCOL" key={index}>
-              <div className="propertyBuyClsNameBox">
-                <div className="promotedTextWrapper">
-                  <img
-                    className="img-fluid"
-                    style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      handlepropertyNavigate("property", property.id)
-                    }
-                    src={(() => {
-                      try {
-                        const fileName = property.file_name;
+                {/* Scrollable Container for Property Listings */}
+                {type === "property" && homeProperty.length > 0 && (
+                  <>
+                  <div className="buy_back">
+                    <h2>SIMILAR LISTINGS</h2>
+                    {homeProperty.map((property, index) => (
+                      <div className="" key={index}>
+                        <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow ">
+                          <div className="propertyBuyClsNameCOL">
+                            <div className="propertyBuyClsNameBox">
+                              <div className="promotedTextWrapper">
+                                <img
+                                  className="img-fluid"
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() =>
+                                    handlepropertyNavigate("property", property.id)
+                                  }
+                                  src={(() => {
+                                    try {
+                                      const fileName = property.file_name;
 
-                        const files =
-                          typeof fileName === "string" && fileName.startsWith("[")
-                            ? JSON.parse(fileName)
-                            : fileName;
+                                      const files =
+                                        typeof fileName === "string" &&
+                                        fileName.startsWith("[")
+                                          ? JSON.parse(fileName)
+                                          : fileName;
 
-                        if (typeof files === "string") {
-                          return files.startsWith("http")
-                            ? files
-                            : `${BASE_URL}/${files}`;
-                        } else if (Array.isArray(files) && files.length > 0) {
-                          return files[0].startsWith("http")
-                            ? files[0]
-                            : `${BASE_URL}/${files[0]}`;
-                        } else {
-                          return "default-image.jpg";
-                        }
-                      } catch (error) {
-                        console.error("Error parsing file_name:", error);
-                        return "default-image.jpg";
-                      }
-                    })()}
-                    alt={property.title || "property Image"}
-                  />
-                </div>
-                <h5>{property.property_title}</h5>
-                <div className="home_price">
-                  <h6>
-                    Price: <span>{property.asking_price}</span>
-                  </h6>
-                  <span className="home_con">{property.listing_type}</span>
-                </div>
-                <h6>Reported Sale (yearly): {property.sale}</h6>
-                <div className="home_call">
-                  <h6>
-                    <IoLocation /> {property.city}
-                  </h6>
-                  <h6 style={{ cursor: "pointer" }}>Call</h6>
-                </div>
-              </div>
-            </div>
-     
-                    </div>
+                                      if (typeof files === "string") {
+                                        return files.startsWith("http")
+                                          ? files
+                                          : `${BASE_URL}/${files}`;
+                                      } else if (
+                                        Array.isArray(files) &&
+                                        files.length > 0
+                                      ) {
+                                        return files[0].startsWith("http")
+                                          ? files[0]
+                                          : `${BASE_URL}/${files[0]}`;
+                                      } else {
+                                        return "default-image.jpg";
+                                      }
+                                    } catch (error) {
+                                      console.error("Error parsing file_name:", error);
+                                      return "default-image.jpg";
+                                    }
+                                  })()}
+                                  alt={property.title || "property Image"}
+                                />
+                              </div>
+                              <h5>{property.property_title}</h5>
+                              <div className="home_price">
+                                <h6>
+                                  Price: ₹ <span className="ask_price_side">{property.asking_price}</span>
+                                </h6>
+                                <span className="home_con">{property.listing_type}</span>
+                              </div>
+                              <div className="home_call">
+                                <h6>
+                                  <IoLocation /> {property.city}
+                                </h6>
+                                <h6 style={{ cursor: "pointer" }}>Call</h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  </div>
-                       ))}
-               
+                  </>
+                )}
               </div>
-            </div>
 
+            </div>
             <div className=" row single_container">
-                {type === "business" && business && (
-              <div className="col-9">
+              {type === "business" && business && (
+                <div className="col-9">
                   <div className="single_box">
                     <>
                       <div className="row">
                         <div className="col-6">
                           <h1>{business.title}</h1>
                           <div className="boldBorder"></div>
+                          <div className="prop_type">
+                            <h6>
+                              {" "}
+                              Business Type :{" "}
+                              <span>{business.business_type}</span>{" "}
+                            </h6>
+                          </div>
                         </div>
                         <div className="col-6 d-flex justify-content-between align-items-center">
                           <div className="propertyBuyListingActions">
-                            <button>  <IoShareSocial /> Share </button>
-                            <button> <IoMail /> Mail </button>
-                            <button><IoCall /> Call </button>
+                            <button>
+                              {" "}
+                              <IoShareSocial /> Share{" "}
+                            </button>
+                            <button>
+                              {" "}
+                              <IoMail /> Mail{" "}
+                            </button>
+                            <button>
+                              <IoCall /> Call{" "}
+                            </button>
                           </div>
 
                           <div className="business_rating">
                             {/* Star Rating Section */}
                             {/* <h5>Rate this Business</h5> */}
-                            <ReactStars count={5} size={25} activeColor="#ffd700" value={userRating || averageRating} onChange={handleRatingChange}  />
+                            <ReactStars
+                              count={5}
+                              size={25}
+                              activeColor="#ffd700"
+                              value={userRating || averageRating}
+                              onChange={handleRatingChange}
+                            />
                             {/* <p>Average Rating: {averageRating.toFixed(1)}</p> */}
                           </div>
                         </div>
@@ -409,10 +522,14 @@ function PropertyBuySinglePage() {
                         <div className="col-6">
                           <div className="row">
                             <div className="col-6">
-                              <h6>Asking Price: {business.asking_price}</h6>
+                              <h6>Asking Price: ₹ <span className="green-text">{business.asking_price}
+                                </span></h6>
                             </div>
                             <div className="col-6">
-                              <h6>  <IoLocation /> {business.city} </h6>
+                              <h6>
+                                {" "}
+                                <IoLocation /> {business.city}{" "}
+                              </h6>
                             </div>
                           </div>
 
@@ -423,16 +540,74 @@ function PropertyBuySinglePage() {
                               <table className="propertyInfoTable">
                                 <tbody>
                                   <tr>
-                                    <td>  REPORTED TURNOVER (YEARLY): <br />  <span className="green-text"> {business.reported_turnover_from} -  {business.reported_turnover_to}  </span></td>
-                                    <td>  PROFITABILITY(EBITDA MARGIN) : <br /> <span className="green-text">  {business.ebitda_margin} </span> </td>
+                                    <td>
+                                      {" "}
+                                      REPORTED TURNOVER (YEARLY): <br />{" "}₹
+                                      <span className="green-text">
+                                        {" "}
+                                        {business.reported_turnover_from} -{" "}
+                                        {business.reported_turnover_to}{" "}
+                                      </span>
+                                    </td>
+                                    <td>
+                                      {" "}
+                                      PROFITABILITY(EBITDA MARGIN) : <br />{" "}
+                                      <span className="green-text">
+                                        {" "}
+                                        {business.ebitda_margin}{" "}
+                                      </span>{" "}
+                                    </td>
                                   </tr>
                                   <tr>
-                                    <td>   BUSINESS STATUS:  <br />  <span className="green-text">   {business.current_status}   </span>   </td>
-                                    <td>  NUMBER OF EMPLOYEES: <br /> <span className="green-text">  {business.no_of_employees}  </span>  </td>
+                                    <td>
+                                      {" "}
+                                      BUSINESS STATUS: <br />{" "}
+                                      <span className="green-text">
+                                        {" "}
+                                        {business.current_status}{" "}
+                                      </span>{" "}
+                                    </td>
+                                    <td>
+                                      {" "}
+                                      NUMBER OF EMPLOYEES: <br />{" "}
+                                      <span className="green-text">
+                                        {" "}
+                                        {business.no_of_employees}{" "}
+                                      </span>{" "}
+                                    </td>
                                   </tr>
                                   <tr>
-                                    <td>   YEAR OF ESTABLISHMENT: <br /> <span className="green-text"> {business.year_of_establishment} </span>   </td>
-                                    <td>   DOCUMENTS UPLOADED: <br /><span className="green-text"> {(() => { try {  const files = JSON.parse(  business.file_name );   return Array.isArray(files)   ? files.length   : 0;    } catch (error) {   console.error( "Error parsing file_name:",   error  );  return 0;   }   })()}  </span> </td>
+                                    <td>
+                                      {" "}
+                                      YEAR OF ESTABLISHMENT: <br />{" "}
+                                      <span className="green-text">
+                                        {" "}
+                                        {business.year_of_establishment}{" "}
+                                      </span>{" "}
+                                    </td>
+                                    <td>
+                                      {" "}
+                                      DOCUMENTS UPLOADED: <br />
+                                      <span className="green-text">
+                                        {" "}
+                                        {(() => {
+                                          try {
+                                            const files = JSON.parse(
+                                              business.file_name
+                                            );
+                                            return Array.isArray(files)
+                                              ? files.length
+                                              : 0;
+                                          } catch (error) {
+                                            console.error(
+                                              "Error parsing file_name:",
+                                              error
+                                            );
+                                            return 0;
+                                          }
+                                        })()}{" "}
+                                      </span>{" "}
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -442,43 +617,51 @@ function PropertyBuySinglePage() {
                       </div>
                     </>
                   </div>
-                
-                {/* Description Section */}
-                <div className="descriptionSection">
-                  <h5>Description</h5>
-                  <div   dangerouslySetInnerHTML={{   __html:  business.description || "<p>No description available</p>",    }} />
-                </div>
 
-                {/* Google Map Section */}
-                <div className="mapLocationDiv">
-                  <iframe    style={{ width: "100%" }}   src="https://www.google.com/maps/embed?pb=..."  width="600" height="450"  allowFullScreen=""  loading="lazy"  ></iframe>
+                  {/* Description Section */}
+                  <div className="descriptionSection">
+                    <h5>Description</h5>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          business.description ||
+                          "<p>No description available</p>",
+                      }}
+                    />
+                  </div>
+
+                  {/* Google Map Section */}
+                  <div className="mapLocationDiv">
+                    <iframe
+                      style={{ width: "100%" }}
+                      src="https://www.google.com/maps/embed?pb=..."
+                      width="600"
+                      height="450"
+                      allowFullScreen=""
+                      loading="lazy"
+                    ></iframe>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
              <div className="col-3 property-listings-scroll ">
-             {/* <h2>SIMILAR LISTINGS</h2> */}
-             {type === "business" && 
-                      homeBusiness.map((list, index) => (
-                <div className="">
-                  <div className="">
-                    <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow">
-                        <div className="propertyBuyClsNameCOL" key={index}>
+              {type === "business" && (
+                <>
+                <div className="buy_back">
+                  <h2>SIMILAR LISTINGS</h2> {/* Move this outside the map */}
+                  {homeBusiness.map((list, index) => (
+                    <div className="" key={index}>
+                      <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow">
+                        <div className="propertyBuyClsNameCOL">
                           <div className="propertyBuyClsNameBox">
                             <div className="promotedTextWrapper">
                               <img
                                 className="img-fluid"
                                 style={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  handlepropertyNavigate(
-                                    "business",
-                                    list.id
-                                  )
-                                }
+                                onClick={() => handlepropertyNavigate("business", list.id)}
                                 src={(() => {
                                   try {
                                     const fileName = list.file_name;
 
-                                    // Parse the file_name if it's a JSON string
                                     const files =
                                       typeof fileName === "string" &&
                                       fileName.startsWith("[")
@@ -486,7 +669,6 @@ function PropertyBuySinglePage() {
                                         : fileName;
 
                                     if (typeof files === "string") {
-                                      // Single image case
                                       return files.startsWith("http")
                                         ? files
                                         : `${BASE_URL}/${files}`;
@@ -494,39 +676,53 @@ function PropertyBuySinglePage() {
                                       Array.isArray(files) &&
                                       files.length > 0
                                     ) {
-                                      // Multiple images case
                                       return files[0].startsWith("http")
                                         ? files[0]
                                         : `${BASE_URL}/${files[0]}`;
                                     } else {
-                                      // Default image as fallback
                                       return "default-image.jpg";
                                     }
                                   } catch (error) {
                                     console.error(
-                                      "Error parsing or handling file_name:",  error   );   return "default-image.jpg"; // Fallback in case of error
-                                  }  })()}   alt={list.title || "business Image"}  />
+                                      "Error parsing or handling file_name:",
+                                      error
+                                    );
+                                    return "default-image.jpg";
+                                  }
+                                })()}
+                                alt={list.title || "business Image"}
+                              />
                             </div>
                             <h5>{list.title}</h5>
                             <div className="home_price">
-                              <h6>  Price: <span>{list.asking_price}</span></h6>
-                              <span className="home_con">  {list.listing_type}  </span>
+                              <h6>
+                                Price: ₹ <span>{list.asking_price}</span>
+                              </h6>
+                              <span className="home_con">{list.listing_type}</span>
                             </div>
-                            <h6>Reported Sale (yearly): {list.sale}</h6>
+                            <h6>Reported Sale (yearly): 
+                              <br />₹ <span className="green-text">
+                                {" "}
+                                {list.reported_turnover_from} -{" "}
+                                {list.reported_turnover_to}{" "}
+                              </span></h6>
                             <div className="home_call">
-                              <h6>  <IoLocation /> {list.city} </h6>
+                              <h6>
+                                <IoLocation /> {list.city}
+                              </h6>
                               <h6 style={{ cursor: "pointer" }}>Call</h6>
                             </div>
                           </div>
                         </div>
-                    
+                      </div>
                     </div>
-                  </div>
-                </div>
                   ))}
-              </div>
+                </div>
+                </>
+              )}
             </div>
-            
+
+            </div>
           </div>
         </div>
       </section>
