@@ -233,19 +233,21 @@ function PropertyBuySinglePage() {
 
                         <div className="col-6">
                           <div className="row">
-                            <div className="col-6 ask_price">
-                              <span>
-                                {" "}
-                                Asking Price :{" "}
-                                ₹ <span className="green-text">{property.asking_price} </span>{" "}
-                              </span>
-                            </div>
-                            <div className="col-6 pro_city">
-                              <IoLocation />
-                              <span>
-                                {" "}
-                                 {property.city}{" "}
-                              </span>
+                            <div className="d-flex justify-content-between">
+                              <div className="col-6 ask_price">
+                                <span>
+                                  {" "}
+                                  Asking Price :{" "}
+                                  ₹ <span className="green-text">{property.asking_price} </span>{" "}
+                                </span>
+                              </div>
+                              <div className="col-6 pro_city">
+                                <IoLocation />
+                                <span>
+                                  {" "}
+                                  {property.city}{" "}
+                                </span>
+                              </div>
                             </div>
                           </div>
 
@@ -521,16 +523,23 @@ function PropertyBuySinglePage() {
                         </div>
                         <div className="col-6">
                           <div className="row">
-                            <div className="col-6">
-                              <h6>Asking Price: ₹ <span className="green-text">{business.asking_price}
-                                </span></h6>
+                            <div className="d-flex justify-content-between">
+                              <div className="col-6 ask_price">
+                                <span>
+                                  {" "}
+                                  Asking Price :{" "}
+                                  ₹ <span className="green-text">{business.asking_price} </span>{" "}
+                                </span>
+                              </div>
+                              <div className="col-6 pro_city">
+                                <IoLocation />
+                                <span>
+                                  {" "}
+                                  {business.city}{" "}
+                                </span>
+                              </div>
                             </div>
-                            <div className="col-6">
-                              <h6>
-                                {" "}
-                                <IoLocation /> {business.city}{" "}
-                              </h6>
-                            </div>
+                            
                           </div>
 
                           {/* Business Financials in table format */}
@@ -538,6 +547,11 @@ function PropertyBuySinglePage() {
                             {/* Business Financials Table */}
                             <div className="propertyInfoTableContainer">
                               <table className="propertyInfoTable">
+                              <thead className=" table_heading">
+                                <tr>
+                                  <th colSpan="2">Proposal</th> {/* Adjust colSpan to cover all columns */}
+                                </tr>
+                              </thead>
                                 <tbody>
                                   <tr>
                                     <td>
@@ -695,11 +709,11 @@ function PropertyBuySinglePage() {
                             </div>
                             <h5>{list.title}</h5>
                             <div className="home_price">
-                              <h6>
-                                Price: ₹ <span>{list.asking_price}</span>
-                              </h6>
-                              <span className="home_con">{list.listing_type}</span>
-                            </div>
+                                <h6>
+                                  Price: ₹ <span className="ask_price_side">{list.asking_price}</span>
+                                </h6>
+                                <span className="home_con">{list.listing_type}</span>
+                              </div>
                             <h6>Reported Sale (yearly): 
                               <br />₹ <span className="green-text">
                                 {" "}
