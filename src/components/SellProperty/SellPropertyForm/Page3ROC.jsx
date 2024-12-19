@@ -3,10 +3,10 @@ import { Button, Form } from "react-bootstrap";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellPropertyForm.css";
 
-const Page3ROC = ({ formData, setFormData }) => {
-  const [errors, setErrors] = useState({});
+const Page3ROC = ({ formData, setFormData, errors }) => {
+  // const [errors, setErrors] = useState({});
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
     if (type === "file" && files && files.length > 0) {
@@ -31,35 +31,20 @@ const Page3ROC = ({ formData, setFormData }) => {
 
   return (
     <>
-      <div className="col-7">
-        <Form.Group className="businessListingFormsDiv" controlId="property_title">
-          <Form.Label>TITLE</Form.Label>
-          <span className="vallidateRequiredStar">*</span>
-          <Form.Control
-            type="text"
-            name="property_title"
-            placeholder="Title (eg: RETAIL SPACE FOR SALE)"
-            value={formData.property_title}
-            onChange={handleInputChange}
-            isInvalid={!!errors.property_title}
-          />
-          <Form.Control.Feedback type="invalid"> {errors.property_title} </Form.Control.Feedback>
-        </Form.Group>
-      </div>
+      
 
       <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="additional_detail">
-          <Form.Label>Additional details:</Form.Label>
-          <span className="vallidateRequiredStar">*</span>
+          <Form.Label>Additional details</Form.Label>
           <Form.Control
             type="text"
             name="additional_detail"
-            placeholder="Eg: profitable retail space for sale in delhi.."
+            placeholder="Eg: Profitable retail space for sale in delhi.."
             value={formData.additional_detail}
-            onChange={handleInputChange}
-            isInvalid={!!errors.additional_detail}
+            onChange={handleChange}
+        
           />
-          <Form.Control.Feedback type="invalid"> {errors.additional_detail} </Form.Control.Feedback>
+         
         </Form.Group>
       </div>
 
@@ -71,16 +56,16 @@ const Page3ROC = ({ formData, setFormData }) => {
             name="file_name"
             multiple // Allow multiple files
             accept="image/*" // Only allow image files
-            onChange={handleInputChange}
+            onChange={handleChange}
           />
-          {errors.file_name && <p className="error-text">{errors.file_name}</p>}
+      
         </Form.Group>
       </div>
 
-      <div className="col-7">
+      <div className="col-12">
   <Form.Group className="businessListingFormsDiv" controlId="country">
     <Form.Label>COUNTRY</Form.Label>
-    <span className="validateRequiredStar">*</span>
+    <span className="vallidateRequiredStar">*</span>
     <div className="country-options">
       {["India", "USA", "UK"].map((country) => (
         <div
@@ -94,10 +79,9 @@ const Page3ROC = ({ formData, setFormData }) => {
         </div>
       ))}
     </div>
-    {errors.country && (
-      <Form.Control.Feedback type="invalid" style={{ display: "block" }}>
-        {errors.country}
-      </Form.Control.Feedback>
+   
+    {errors?.country && (
+      <small className="text-danger">{errors.country}</small>
     )}
   </Form.Group>
 </div>
@@ -109,8 +93,8 @@ const Page3ROC = ({ formData, setFormData }) => {
           <Form.Select
             name="state"
             value={formData.state}
-            onChange={handleInputChange}
-            isInvalid={!!errors.state}
+            onChange={handleChange}
+        
           >
             <option value="">Select State</option>
             <option value="maharashtra">Maharashtra</option>
@@ -118,7 +102,9 @@ const Page3ROC = ({ formData, setFormData }) => {
             <option value="kerala">Kerala</option>
             <option value="punjab">Punjab</option>
           </Form.Select>
-          <Form.Control.Feedback type="invalid"> {errors.state} </Form.Control.Feedback>
+          {errors?.state && (
+            <small className="text-danger">{errors.state}</small>
+          )}
         </Form.Group>
       </div>
 
@@ -129,8 +115,8 @@ const Page3ROC = ({ formData, setFormData }) => {
           <Form.Select
             name="city"
             value={formData.city}
-            onChange={handleInputChange}
-            isInvalid={!!errors.city}
+            onChange={handleChange}
+          
           >
             <option value="">Select City</option>
             <option value="mumbai">Mumbai</option>
@@ -138,7 +124,9 @@ const Page3ROC = ({ formData, setFormData }) => {
             <option value="delhi">Delhi</option>
             <option value="hyderabad">Hyderabad</option>
           </Form.Select>
-          <Form.Control.Feedback type="invalid"> {errors.city} </Form.Control.Feedback>
+          {errors?.city && (
+            <small className="text-danger">{errors.city}</small>
+          )}
         </Form.Group>
       </div>
 
@@ -147,14 +135,14 @@ const Page3ROC = ({ formData, setFormData }) => {
           {formData.listing_type === "Selling" && (
                      <>
                        <Form.Label>
-                         PRICE <span className="vallidateRequiredStar">*</span>
+                         PRICE<span className="vallidateRequiredStar">*</span>
                        </Form.Label>
                      </>
                  )}
                  {formData.listing_type === "Renting" && (
                    <>
                      <Form.Label>
-                       Rent <span className="vallidateRequiredStar">*</span>
+                       Rent<span className="vallidateRequiredStar">*</span>
                      </Form.Label>
                    </>
                  )}
@@ -163,11 +151,19 @@ const Page3ROC = ({ formData, setFormData }) => {
             type="text"
             name="asking_price"
             value={formData.asking_price}
-            onChange={handleInputChange}
-            placeholder="Asking Price"
-            isInvalid={!!errors.asking_price}
+            onChange={handleChange}
+            placeholder="Enter Asking Price"
+          
+            onKeyPress={(e) => {
+              // Allow only numbers
+              if (!/^[0-9]*$/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
-          <Form.Control.Feedback type="invalid">{errors.asking_price}</Form.Control.Feedback>
+                {errors?.asking_price && (
+                  <small className="text-danger">{errors.asking_price}</small>
+                )}
         </Form.Group>
       </div>
 
@@ -180,29 +176,44 @@ const Page3ROC = ({ formData, setFormData }) => {
             type="text"
             name="advance_price"
             value={formData.advance_price}
-            onChange={handleInputChange}
-            placeholder="Advance"
-            isInvalid={!!errors.advance_price}
+            onChange={handleChange}
+            placeholder="Enter Advance Price"
+           
+            onKeyPress={(e) => {
+              // Allow only numbers
+              if (!/^[0-9]*$/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
-          <Form.Control.Feedback type="invalid">{errors.advance_price}</Form.Control.Feedback>
+                {errors?.advance_price && (
+                  <small className="text-danger">{errors.advance_price}</small>
+                )}
         </Form.Group>
       </div>
 )}
       <div className="col-7">
-        <Form.Group controlId="phone_number" className="businessListingFormsDiv">
-          <Form.Label>Mobile number</Form.Label>
-          <span className="vallidateRequiredStar">*</span>
-          <Form.Control
-            type="text"
-            name="phone_number"
-            value={formData.phone_number}
-            onChange={handleInputChange}
-            placeholder="Contact Number"
-            isInvalid={!!errors.phone_number}
-          />
-          <Form.Control.Feedback type="invalid">{errors.phone_number}</Form.Control.Feedback>
-        </Form.Group>
-      </div>
+              <Form.Group controlId="phone_number" className="businessListingFormsDiv">
+                <Form.Label>Mobile number</Form.Label> <span className="vallidateRequiredStar">*</span>
+                <Form.Control 
+                  type="text" 
+                  name="phone_number" 
+                  value={formData.phone_number} 
+                  onChange={handleChange} 
+                  placeholder="Enter Mobile Number" 
+                
+                  onKeyPress={(e) => {
+                    // Allow only numbers
+                    if (!/^[0-9]*$/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
+               {errors?.phone_number && (
+                  <small className="text-danger">{errors.phone_number}</small>
+                )}
+              </Form.Group>
+        </div>
     </>
   );
 };
