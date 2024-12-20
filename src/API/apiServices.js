@@ -15,23 +15,6 @@ export const UPDATE_PROPERTY_STOCK_API_URL = `${BASE_URL}/update-property-stock`
 export const FILTER_API_URL = `${BASE_URL}/filters`;
 export const RATING_PROPERTY_API_URL = `${BASE_URL}/property-rating`;
 export const RATING_BUSINESS_API_URL = `${BASE_URL}/business-rating`;
-export const LOGIN_FORM_API_URL = `${BASE_URL}/login`;
-export const REGISTRATION_FORM_API_URL = `${BASE_URL}/signup`;
-// --------------------------Login form------------------------------------------
-
-
-
-// -------------------------SignUp form------------------------------------------
-// API Call to register the user
-export const fetchRegistrationDetail = async (formData) => {
-  try {
-    const response = await axios.post(REGISTRATION_FORM_API_URL, formData);
-    return response.data; // Return the response data
-  } catch (error) {
-    console.error("Error during registration:", error);
-    return null; // Return null if there's an error
-  }
-};
 
 // ----------------------------Sell Boost Lising API-------------------------------
 export const fetchListingDetail = async () => {
@@ -46,39 +29,8 @@ export const fetchListingDetail = async () => {
     return null; // Return null in case of an error
   }
 };
+
 // -------------------------SELL BUSINESS FORM API-----------------------------------
-
-// export const submitSellBusinessForm = async (formData) => {
-//   try {
-//     const data = new FormData();
-
-//     Object.keys(formData).forEach((key) => {
-//       if (key === "file_name" && Array.isArray(formData[key])) {
-//         // Append each file individually
-//         formData[key].forEach((file) => {
-//           data.append("file_name[]", file); // Use "file_name[]" to send multiple files
-//         });
-//       } else {
-//         data.append(key, formData[key]);
-//       }
-//     });
-
-//     const response = await axios.post(SELL_BUSINESS_FORM_URL, data, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-
-//     console.log("SELL BUSINESS FORM Response:", response.data);
-//     // return response.data;
-//     return response.data?.data?.id; 
-    
-//   } catch (error) {
-//     console.error("Error submitting Sell Business form data:", error.response?.data || error.message);
-//     throw error;
-//   }
-// };
-
 export const submitSellBusinessForm = async (formData) => {
   try {
     const data = new FormData();

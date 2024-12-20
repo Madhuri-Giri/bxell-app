@@ -786,7 +786,7 @@ function SellBusinessForm() {
                               <span className="vallidateRequiredStar">*</span>
                               <div className="businessListingFormsRadioDivMAIN">
                                 <Form.Check type="radio" label="Running" name="current_status" id="current_statusRunning" value="Running" onChange={handleChange} />
-                                <Form.Check type="radio" label="Closed" name="current_status" id="current_statusClosed" className="radio_space" value="closed" onChange={handleChange} />
+                                <Form.Check type="radio" label="Closed" name="current_status" id="current_statusClosed" className="radio_space" value="Closed" onChange={handleChange} />
                               </div>
                               {errors.current_status && (
                                 <div className="invalid-feedback d-block"> {errors.current_status} </div>
