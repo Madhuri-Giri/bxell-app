@@ -507,92 +507,103 @@ function PropertyBuyList() {
                     <h5>EXPLORE BUSINESSES (RECOMMENDED)</h5>{" "}
                   </div>
                   {filteredBusiness.map((lists, index) => (
-                    <div className="col-lg-6" key={index}>
-                      {/* Wishlist Heart */}
-                      <div
-                        className="propertyBuyListingBox"
-                        style={{ position: "relative" }}
-                      >
+                    <div className="col-lg-6 recommendationsClsNameCOL" key={index}>
+                      <div className="recommendationsClsNameBox">
+                        {/* Wishlist Heart */}
                         <div
-                          className="wishlist-heart"
-                          style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            zIndex: 10,
-                          }}
-                          onClick={() => handleWishlistClick(index)}
+                          className="propertyBuyListingBox"
+                          style={{ position: "relative" }}
                         >
-                          {wishlist[index] ? (
-                            <FaHeart className="wishlist-icon" />
-                          ) : (
-                            <FaRegHeart className="wishlist-icon" />
-                          )}
-                        </div>
-                        <img
-                          className="img-fluid"
-                          onClick={() =>
-                            handlebusinessNavigate("business", lists.id)
-                          }
-                          src={(() => {
-                            try {
-                              const fileName = lists.file_name;
-
-                              // Parse the file_name if it's a JSON string
-                              const files =
-                                typeof fileName === "string" &&
-                                fileName.startsWith("[")
-                                  ? JSON.parse(fileName)
-                                  : fileName;
-
-                              if (typeof files === "string") {
-                                // Single image case
-                                return files.startsWith("http")
-                                  ? files
-                                  : `${BASE_URL}/${files}`;
-                              } else if (
-                                Array.isArray(files) &&
-                                files.length > 0
-                              ) {
-                                // Multiple images case
-                                return files[0].startsWith("http")
-                                  ? files[0]
-                                  : `${BASE_URL}/${files[0]}`;
-                              } else {
-                                // Default image as fallback
-                                return "default-image.jpg";
-                              }
-                            } catch (error) {
-                              console.error(
-                                "Error parsing or handling file_name:",
-                                error
-                              );
-                              return "default-image.jpg"; // Fallback in case of error
-                            }
-                          })()}
-                          alt={lists.title || "business Image"}
-                        />
-                        <div className="listing-details">
-                          <div className="title-location">
-                            <h5>{lists.title}</h5>
-                            <span className="interested">
-                              {lists.interested} Interested
-                            </span>
+                          <div
+                            className="wishlist-heart"
+                            style={{
+                              position: "absolute",
+                              top: "10px",
+                              right: "10px",
+                              zIndex: 10,
+                            }}
+                            onClick={() => handleWishlistClick(index)}
+                          >
+                            {wishlist[index] ? (
+                              <FaHeart className="wishlist-icon" />
+                            ) : (
+                              <FaRegHeart className="wishlist-icon" />
+                            )}
                           </div>
-                          <h6>Asking Price: {lists.asking_price}</h6>
-                          <h6>
-                            Reported Sale (yearly): <span>{lists.price}</span>
-                          </h6>
-                          <div className="location-call">
+                          <img
+                            className="img-fluid"
+                            onClick={() =>
+                              handlebusinessNavigate("business", lists.id)
+                            }
+                            src={(() => {
+                              try {
+                                const fileName = lists.file_name;
+
+                                // Parse the file_name if it's a JSON string
+                                const files =
+                                  typeof fileName === "string" &&
+                                  fileName.startsWith("[")
+                                    ? JSON.parse(fileName)
+                                    : fileName;
+
+                                if (typeof files === "string") {
+                                  // Single image case
+                                  return files.startsWith("http")
+                                    ? files
+                                    : `${BASE_URL}/${files}`;
+                                } else if (
+                                  Array.isArray(files) &&
+                                  files.length > 0
+                                ) {
+                                  // Multiple images case
+                                  return files[0].startsWith("http")
+                                    ? files[0]
+                                    : `${BASE_URL}/${files[0]}`;
+                                } else {
+                                  // Default image as fallback
+                                  return "default-image.jpg";
+                                }
+                              } catch (error) {
+                                console.error(
+                                  "Error parsing or handling file_name:",
+                                  error
+                                );
+                                return "default-image.jpg"; // Fallback in case of error
+                              }
+                            })()}
+                            alt={lists.title || "business Image"}
+                          />
+                          <div className="listing-details">
+                            <div className="title-location">
+                              <h5>{lists.title}</h5>
+                              <span className="interested">
+                                {lists.interested} Interested
+                              </span>
+                            </div>
                             <h6>
-                              <IoLocation /> {lists.city}
+                              Asking Price: ₹{" "}
+                              <span className="">{lists.asking_price}</span>
                             </h6>
-                            <button className="call-btn">
-                              Call <FaPhoneAlt />
-                            </button>
+                            <h6>
+                              Reported Sale (yearly): ₹ 
+                              <span className="green-text">
+                                {" "}
+                                {lists.reported_turnover_from} -{" "}
+                                {lists.reported_turnover_to}{" "}
+                              </span>
+                            </h6>
+                            <div className="location-call">
+                              <h6>
+                                <IoLocation /> {lists.city}
+                              </h6>
+                              <button className="call-btn">
+                                Call <FaPhoneAlt />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
+                      
                     </div>
                   ))}
                 </div>
@@ -604,66 +615,69 @@ function PropertyBuyList() {
                     <h5>EXPLORE PROPERTIES</h5>
                   </div>
                   {filteredProperty.map((listsProperty, index) => (
-                    <div className="col-lg-6" key={index}>
-                      {/* Wishlist Heart */}
-                      <div
-                        className="propertyBuyListingBox"
-                        style={{ position: "relative" }}
-                      >
+                    <div className="col-lg-6 recommendationsClsNameCOL" key={index}>
+                      <div className="recommendationsClsNameBox"> 
+                          {/* Wishlist Heart */}
                         <div
-                          className="wishlist-heart"
-                          style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            zIndex: 10,
-                          }}
-                          onClick={() => handleWishlistClick(index)}
+                          className="propertyBuyListingBox"
+                          style={{ position: "relative" }}
                         >
-                          {wishlist[index] ? (
-                            <FaHeart className="wishlist-icon" />
-                          ) : (
-                            <FaRegHeart className="wishlist-icon" />
-                          )}
-                        </div>
-                        <img
-                          className="img-fluid"
-                          onClick={() =>
-                            handlepropertyNavigate("property", listsProperty.id)
-                          }
-                          src={
-                            listsProperty.file_name &&
-                            Array.isArray(JSON.parse(listsProperty.file_name))
-                              ? JSON.parse(listsProperty.file_name)[0]
-                              : "default-image.jpg"
-                          }
-                          alt={listsProperty.property_title}
-                        />
-                        <div className="title-location">
-                          <h5>{listsProperty.property_title}</h5>
-                          <span className="interested">
+                          <div
+                            className="wishlist-heart"
+                            style={{
+                              position: "absolute",
+                              top: "10px",
+                              right: "10px",
+                              zIndex: 10,
+                            }}
+                            onClick={() => handleWishlistClick(index)}
+                          >
+                            {wishlist[index] ? (
+                              <FaHeart className="wishlist-icon" />
+                            ) : (
+                              <FaRegHeart className="wishlist-icon" />
+                            )}
+                          </div>
+                          <img
+                            className="img-fluid"
+                            onClick={() =>
+                              handlepropertyNavigate("property", listsProperty.id)
+                            }
+                            src={
+                              listsProperty.file_name &&
+                              Array.isArray(JSON.parse(listsProperty.file_name))
+                                ? JSON.parse(listsProperty.file_name)[0]
+                                : "default-image.jpg"
+                            }
+                            alt={listsProperty.property_title}
+                          />
+                          <div className="title-location">
+                            <h5>{listsProperty.property_title}</h5>
+                            <span className="interested">
+                              {" "}
+                              {listsProperty.interested} Interested{" "}
+                            </span>
+                          </div>
+                          <h6>Asking Price: ₹ <span>{listsProperty.asking_price}</span></h6>
+                          {/* <h6>
                             {" "}
-                            {listsProperty.interested} Interested{" "}
-                          </span>
-                        </div>
-                        <h6>Asking Price: {listsProperty.asking_price}</h6>
-                        <h6>
-                          {" "}
-                          Reported Sale (yearly):{" "}
-                          <span>{listsProperty.price}</span>{" "}
-                        </h6>
-                        {/* <h6><IoLocation /> {listsProperty.city}</h6> */}
-                        <div className="location-call">
-                          <h6>
-                            {" "}
-                            <IoLocation /> {listsProperty.city}
-                          </h6>
-                          <button className="call-btn">
-                            {" "}
-                            Call <FaPhoneAlt />{" "}
-                          </button>
+                            Reported Sale (yearly):{" "}
+                            <span>{listsProperty.price}</span>{" "}
+                          </h6> */}
+                          {/* <h6><IoLocation /> {listsProperty.city}</h6> */}
+                          <div className="location-call">
+                            <h6>
+                              {" "}
+                              <IoLocation /> {listsProperty.city}
+                            </h6>
+                            <button className="call-btn">
+                              {" "}
+                              Call <FaPhoneAlt />{" "}
+                            </button>
+                          </div>
                         </div>
                       </div>
+                      
                     </div>
                   ))}
                 </div>

@@ -70,6 +70,7 @@
 .pro_city{
   color: gray;
   font-size: 24px;
+  text-align: right;
 }
 
 .pro_city span{
@@ -191,7 +192,7 @@
   color: #008080;
 }
 .propertyBuyClsNameRow_1 h6 span {
-  color: #21c521;
+  /* color: #21c521; */
   font-weight: 600;
 }
 .propertyBuyClsNameRow_2 h6 {

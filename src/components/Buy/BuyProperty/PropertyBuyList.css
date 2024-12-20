@@ -4,7 +4,7 @@
 .propertyBuyListingBox{
     padding: 5px 5px;
     border-radius: 7px;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     position: relative;
     
 }
@@ -32,7 +32,7 @@
     margin-bottom: 10px;
 }
 .propertyBuyListingRow_1 h6 span{
-    color: #21c521;
+    color: rgb(86, 181, 86);
     font-weight: 600;
 }
 

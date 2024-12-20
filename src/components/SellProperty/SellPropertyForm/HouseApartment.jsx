@@ -38,7 +38,7 @@ const HouseApartment = ({ formData, setFormData, errors }) => {
     <Form.Label>Balcony </Form.Label>
     <div className="row">
       <div className="mb-3 propertyTypeButtons">
-        {["1", "2", "3", "4", "5", "6"].map((type) => (
+        {["0","1", "2", "3", "4+"].map((type) => (
           <Button key={type} type="button" className={`btn btn-outline-primary propertyTypeButton ${ formData.balcony === type ? "active" : "" }`} onClick={() => handleSelectionChange("balcony", type)} >
             {type} </Button>
         ))}
@@ -56,7 +56,7 @@ const HouseApartment = ({ formData, setFormData, errors }) => {
           <span className="vallidateRequiredStar">*</span>
           <div className="row">
             <div className="mb-3 propertyTypeButtons">
-              {["1", "2", "3", "4", "5", "6"].map((type) => (
+              {["1", "2", "3", "4", "5", "6","7","8"].map((type) => (
                 <Button key={type} type="button" className={`btn btn-outline-primary propertyTypeButton ${ formData.bathroom === type ? "active" : "" }`} onClick={() => handleSelectionChange("bathroom", type)} >
                   {type} </Button>
               ))}

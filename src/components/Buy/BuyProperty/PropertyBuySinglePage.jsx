@@ -144,7 +144,7 @@ function PropertyBuySinglePage() {
               {type === "property" && property && (
                 <div className="col-9">
                   <>
-                    <div className="single_box">
+                    <div className="single_box mb-4">
                       <div className="row">
                         <div className="col-6 ">
                           <h1>{property.property_title}</h1>
@@ -233,7 +233,6 @@ function PropertyBuySinglePage() {
 
                         <div className="col-6">
                           <div className="row">
-                            <div className="d-flex justify-content-between">
                               <div className="col-6 ask_price">
                                 <span>
                                   {" "}
@@ -241,7 +240,7 @@ function PropertyBuySinglePage() {
                                   ₹ <span className="green-text">{property.asking_price} </span>{" "}
                                 </span>
                               </div>
-                              <div className="col-6 pro_city">
+                              <div className="col-6 pro_city ">
                                 <IoLocation />
                                 <span>
                                   {" "}
@@ -249,8 +248,6 @@ function PropertyBuySinglePage() {
                                 </span>
                               </div>
                             </div>
-                          </div>
-
                           {/* Property Financials in table format */}
                           <div>
                             <div className="propertyInfoTableContainer">
@@ -339,8 +336,8 @@ function PropertyBuySinglePage() {
 
                     {/* Description Section */}
                     <div className="descriptionSection">
-                      <h5>Description</h5>
-                      {/* <p>{property.additional_detail}</p> */}
+                      <h3>Description</h3>
+                      <p>{property.additional_detail}</p>
                     </div>
 
                     {/* Google Map Section */}
@@ -434,7 +431,7 @@ function PropertyBuySinglePage() {
             <div className=" row single_container">
               {type === "business" && business && (
                 <div className="col-9">
-                  <div className="single_box">
+                  <div className="single_box mb-4">
                     <>
                       <div className="row">
                         <div className="col-6">
@@ -634,7 +631,7 @@ function PropertyBuySinglePage() {
 
                   {/* Description Section */}
                   <div className="descriptionSection">
-                    <h5>Description</h5>
+                    <h3>Description</h3>
                     <div
                       dangerouslySetInnerHTML={{
                         __html:
