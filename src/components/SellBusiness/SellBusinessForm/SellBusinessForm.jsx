@@ -488,7 +488,7 @@ function SellBusinessForm() {
                               name="title"
                               value={formData.title}
                               onChange={handleChange}
-                              placeholder="Business Title (Eg: Best Restaurant for sale)"
+                              placeholder="Enter Business Title (Eg: Best Restaurant for sale)"
                               isInvalid={!!errors.title}
                             />
                             <Form.Control.Feedback type="invalid">
@@ -691,7 +691,7 @@ function SellBusinessForm() {
                                 name="asking_price"
                                 value={formData.asking_price}
                                 onChange={handlepriceChange}
-                                placeholder="Asking Price"
+                                placeholder="Enter Asking Price"
                                 isInvalid={!!errors.asking_price}
                                 className="no-spinner"
                               />
@@ -798,7 +798,7 @@ function SellBusinessForm() {
                             <Form.Group className="businessListingFormsDiv" controlId="phone_number"  >
                               <Form.Label>MOBILE NUMBER</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Control className="no-spinner" type="number" name="phone_number" value={formData.phone_number} onChange={handlepriceChange} placeholder="Mobile Number" maxLength={10} isInvalid={!!errors.phone_number} />
+                              <Form.Control className="no-spinner" type="number" name="phone_number" value={formData.phone_number} onChange={handlepriceChange} placeholder="Enter Mobile Number" maxLength={10} isInvalid={!!errors.phone_number} />
                               <Form.Control.Feedback type="invalid"> {errors.phone_number}</Form.Control.Feedback>
                             </Form.Group>
                           </div>
