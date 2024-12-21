@@ -8,6 +8,7 @@ import profile_1 from '../../../assets/Images/happy-client-01.jpg';
 import profile_2 from '../../../assets/Images/happy-client-02.jpg';
 import profile_3 from '../../../assets/Images/happy-client-03.jpg';
 import Slider from 'react-slick';
+import { text } from '@fortawesome/fontawesome-svg-core';
 
 function WhatSayCustomer() {
     const [activeSlide, setActiveSlide] = useState(0);
@@ -44,28 +45,52 @@ function WhatSayCustomer() {
 
     const testimonials = [
         {
-            name: "Denwen Evil",
-            title: "Web Developer",
-            text: "Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum has been the industry's standard dummy text ever since...",
+            name: "Vignesh",
+            title: "Investor",
+            text: "I found Bxell.com to be very easy to use. I was able to browse business listings without any hassle, and the details provided for each business were comprehensive. I ended up buying a small business, and the entire process went smoothly. Highly recommend this platform for anyone looking to invest in a business!",
             profile: profile_1,
         },
         {
-            name: "Denwen Evil",
-            title: "Web Developer",
-            text: "Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum has been the industry's standard dummy text ever since...",
+            name: "Anjali M.",
+            title: "Business Owner",
+            text: "I listed my boutique for sale on Bxell.com, and within two weeks, I received multiple inquiries. The premium listing option really helped boost visibility and I’m very happy with the results",
             profile: profile_2,
         },
         {
-            name: "Denwen Evil",
-            title: "Web Developer",
-            text: "Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum has been the industry's standard dummy text ever since...",
+            name: "Vaibav",
+            title: "Entrepreneur",
+            text: "I love how Bxell.com doesn’t require mandatory registration for browsing listings, So i view this as a great platform for connecting buyers and sellers.",
             profile: profile_1,
         },
         {
-            name: "Denwen Evil",
-            title: "Web Developer",
-            text: "Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum has been the industry's standard dummy text ever since...",
+            name: "Priya Suresh",
+            title: "Seller",
+            text: "The platform is user-friendly, and the payment process for boosting my listing was smooth. However, I feel it would be even better if there were tools like chat options or buyer-seller feedback to make communication easier. Overall, I’m satisfied.",
             profile: profile_3,
+        },
+        {
+            name: "Rohit Moorthy",
+            title: "Business ",
+            text: "I was struggling to find a buyer for my small IT company. After listing it on Bxell.com, I was surprised by the number of inquiries I received within a week. The boost feature is definitely worth it. I’ll use this platform again if needed.",
+            profile: profile_1,
+        },
+        {
+            name: "Deepak",
+            title: "Buyer",
+            text:"The concept of connecting buyers and sellers is amazing, and the platform is simple to navigate. However, I came across a few listings that seemed misleading. I appreciate that fraudulent listings are removed, but stricter moderation would make this even better",
+            profile: profile_2,
+        },
+        {
+            name: "Bitto Xavier",
+            title: "First-time Buyer",
+            text:"As someone new to buying businesses, I found Bxell.com extremely helpful. The website provides clear details about each listing, making it easier to evaluate opportunities. I purchased a small franchise through the platform and am very happy!",
+            profile: profile_3,
+        },
+        {
+            name: "Sundharam",
+            title: "Seller",
+            text:"The pricing for premium and boost listings is very reasonable. I liked how simple the listing process was, and the OTP verification adds a layer of trust. Highly recommend Bxell.com for anyone selling their business!",
+            profile: profile_1,
         }
     ];
 

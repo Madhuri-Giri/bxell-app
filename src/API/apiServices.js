@@ -18,6 +18,8 @@ export const RATING_BUSINESS_API_URL = `${BASE_URL}/business-rating`;
 export const UPDATE_PROFILE_API_URL = `${BASE_URL}/update-profile`;
 export const USER_PROFILE_API_URL = `${BASE_URL}/user-detail`;
 export const ENQUIRY_API_URL = `${BASE_URL}/business-enquiry`;
+export const BUSINESS_FAVORITE_API_URL = `${BASE_URL}/business-favorite`;
+export const PROPERTY_FAVORITE_API_URL = `${BASE_URL}/property-favorite`;
 //------------------------------ENQUIRY API-------------------------------------
 const submitpropertyEnquiryForm = async (formData) => {
   try {
@@ -414,5 +416,55 @@ export const fetchPropertyRating = async (propertyListingId, rating, userId) => 
     // Log and handle the error
     console.error("Error posting business rating:", error);
     return null; // Return null or handle as needed
+  }
+};
+
+// -----------------------------------business favorite--------------------
+export const fetchBusinessFav = async (businessId) => {
+  try {
+    if (!businessId) {
+      throw new Error("Business ID is required.");
+    }
+
+    // Make the API call
+    const response = await axios.post(BUSINESS_FAVORITE_API_URL, {
+      business_id: businessId,
+    });
+
+    // Check if the response status is 200
+    if (response.status === 200 && response.data.result) {
+      return response.data; // Successful response
+    } else {
+      throw new Error(response.data.message || "Failed to add business favorite.");
+    }
+  } catch (error) {
+    // Log and handle the error
+    console.error("Error posting business favorite:", error);
+    return { success: false, message: error.message }; // Return error object
+  }
+};
+
+//-----------------------------------property favorite----------------------
+export const fetchPropertyFav = async (propertyId) => {
+  try {
+    if (!propertyId) {
+      throw new Error("Property ID is required.");
+    }
+
+    // Make the API call
+    const response = await axios.post(PROPERTY_FAVORITE_API_URL, {
+      property_id: propertyId,
+    });
+
+    // Check if the response status is 200
+    if (response.status === 200 && response.data.result) {
+      return response.data; // Successful response
+    } else {
+      throw new Error(response.data.message || "Failed to add property favorite.");
+    }
+  } catch (error) {
+    // Log and handle the error
+    console.error("Error posting property favorite:", error);
+    return { success: false, message: error.message }; // Return error object
   }
 };

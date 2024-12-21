@@ -9,6 +9,7 @@ import { fetchPropertyRes, fetchBusinessRes } from "../../../API/apiServices";
 import { fetchViewPropertyRes } from "../../../API/apiServices"; // Adjust the path if needed
 import { fetchViewBusinessRes } from "../../../API/apiServices";
 import { fetchFilterRes } from "../../../API/apiServices";
+import { fetchBusinessFav, fetchPropertyFav } from "../../../API/apiServices";
 
 function PropertyBuyList() {
   const navigate = useNavigate();
@@ -195,12 +196,46 @@ function PropertyBuyList() {
   const handlePropertyPriceChange = (event) => {
     setPropertyPrice(event.target.value);
   };
-
-  const handleWishlistClick = (index) => {
-    setWishlist((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index], // Toggle the wishlist state (true/false)
-    }));
+  
+  const handleBusinessFavorite = async (businessId) => {
+    const result = await fetchBusinessFav(businessId);
+    if (result.success === false) {
+      console.error(result.message); // Handle error
+    } else {
+      console.log("Business favorite added successfully:", result);
+    }
+  };
+  
+  const handlePropertyFavorite = async (propertyId) => {
+    const result = await fetchPropertyFav(propertyId);
+    if (result.success === false) {
+      console.error(result.message); // Handle error
+    } else {
+      console.log("Property favorite added successfully:", result);
+    }
+  };
+  
+  useEffect(() => {
+    // Load wishlist state from localStorage on component mount
+    const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    setWishlist(savedWishlist);
+  }, []); // Empty dependency array to run only on mount
+  
+  const handleWishlistClick = (index, id) => {
+    // Toggle the favorite state
+    const newWishlist = [...wishlist];
+    newWishlist[index] = !newWishlist[index];
+    
+    // Save the updated wishlist to localStorage
+    localStorage.setItem('wishlist', JSON.stringify(newWishlist));
+    setWishlist(newWishlist);
+  
+    // Handle the API call to update the favorite status
+    if (activeTab === 'business') {
+      handleBusinessFavorite(id);
+    } else if (activeTab === 'property') {
+      handlePropertyFavorite(id);
+    }
   };
 
   return (
