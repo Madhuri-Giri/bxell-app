@@ -4,20 +4,25 @@ import { IoLocation } from "react-icons/io5";
 import axios from "axios";
 import Footer from "../../../Footer/Footer";
 import Header from "../../../Header/Header";
+import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const BoostListing = () => {
+  const navigate = useNavigate();
   const [businessSale, setBusinessSale] = useState([]);
   const [propertySale, setPropertySale] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [businessIds, setBusinessIds] = useState([]); // To store all business IDs
   const [propertyIds, setPropertyIds] = useState([]); 
+  const user = useSelector((state) => state.auth.user);
 
-  const fetchListDetail = async () => {
+  const fetchListDetail = async (userId) => {
     setLoading(true);
     setError(null);
     try {
-        const data = await fetchListingDetail();
+        const data = await fetchListingDetail(userId);
         console.log("API Response:", data);
 
         if (data && data.length > 0 && data[0].business_sale) {
@@ -33,7 +38,6 @@ const BoostListing = () => {
             setBusinessIds(businessIds);  // Set state for all business IDs
             setPropertyIds(propertyIds);  // Set state for all property IDs
 
-           
         } else {
             setError("No listings available.");
         }
@@ -43,25 +47,23 @@ const BoostListing = () => {
     setLoading(false);
 };
 
-  useEffect(() => {
-    fetchListDetail();
-  }, []);
+useEffect(() => {
+  if (user) {
+    fetchListDetail(user); // Pass the user ID here
+  }
+}, [user]);
 
-// ----------------------propert payment -------------------------------
 const fetchPaymentPropertyDetails = async (propertyId) => {
   try {
-    const userId = localStorage.getItem("userLoginId");
-    console.log("Fetched User ID from localStorage:", userId);
-
-    if (!userId || !propertyId) {
+    if (!user || !propertyId) {
       throw new Error("Login ID or Property ID is missing.");
     }
 
     const payload = {
       amount: 49,
-      user_id: userId,
+      user_id: user,
       property_id: propertyId,
-      boost_name: "week",
+      boost_name: "month",
     };
 
     console.log("Sending payload for property payment:", payload);
@@ -86,9 +88,13 @@ const fetchPaymentPropertyDetails = async (propertyId) => {
 
 const handlePaymentForProperty = async (propertyId) => {
   const paymentData = await fetchPaymentPropertyDetails(propertyId);
-
   console.log("Fetched Payment Data:", paymentData);
 
+  if (!user) {
+    // If the user is not logged in, redirect to the login page
+    navigate("/login");
+    return;
+  }
   if (paymentData) {
     const { payment_details, user_details, razorpay_key } = paymentData;
     const { razorpay_order_id, amount } = payment_details;
@@ -137,44 +143,47 @@ const handlePaymentForProperty = async (propertyId) => {
 };
 
 const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
-  try {
-    const url = "https://bxell.com/bxell/admin/api/update-property-boost-payment";
-    const payload = { payment_id: razorpay_payment_id, id };
+ 
+    try {
+  const url = "https://bxell.com/bxell/admin/api/update-property-boost-payment";
+  const payload = { payment_id: razorpay_payment_id, id };
 
-    console.log("Updating property payment status with payload:", payload);
+  console.log("Updating property payment status with payload:", payload);
 
-    const response = await axios.post(url, payload);
+  const response = await axios.post(url, payload);
 
-    console.log("API Response for payment status update:", response.data);
+  console.log("API Response for payment status update:", response.data);
 
-    // Check success conditions based on the actual API response structure
-    if (response.data?.result === true && response.data?.status === 200) {
-      alert("Payment successful and verified!");
-    } else {
-      alert("Payment verification failed. Please contact support.");
-      console.error("Payment verification failed response:", response.data);
-    }
-  } catch (error) {
-    console.error("Error updating payment status:", error.message);
-    alert("Failed to update payment status. Please try again.");
+  // Check success conditions based on the actual API response structure
+  if (response.data?.result === true && response.data?.status === 200) {
+    toast.success("Payment successful and verified!"); // Show success message
+
+    // Navigate to the home page after a delay
+    setTimeout(() => {
+      navigate("/"); // Adjust the route based on your routing setup
+    }, 3000); // Navigate after 3 seconds
+  } else {
+    toast.error("Payment verification failed. Please contact support."); // Show error message
+    console.error("Payment verification failed response:", response.data);
   }
+} catch (error) {
+  console.error("Error updating payment status:", error.message);
+  toast.error("Failed to update payment status. Please try again."); // Show error message
+}
 };
 
 //------------------ Fetch Payment Business Details--------------------------
 const fetchPaymentBusinessDetails = async (businessId) => {
   try {
-    const userId = localStorage.getItem("userLoginId");
-    console.log("Fetched User ID from localStorage:", userId);
-
-    if (!userId || !businessId) {
+    if (!user || !businessId) {
       throw new Error("Login ID or Property ID is missing.");
     }
 
     const payload = {
-      amount: 49,
-      user_id: userId,
+      amount:49,
+      user_id: user,
       business_id: businessId,
-      boost_name: "week",
+      boost_name: "month",
     };
 
     console.log("Sending payload for property payment:", payload);
@@ -201,6 +210,11 @@ const handlePaymentForBusiness = async (businessId) => {
   const paymentData = await fetchPaymentBusinessDetails(businessId);
 
   console.log("Fetched Payment Data:", paymentData);
+  if (!user) {
+    // If the user is not logged in, redirect to the login page
+    navigate("/login");
+    return;
+  }
 
   if (paymentData) {
     const { payment_details, user_details, razorpay_key } = paymentData;
@@ -223,7 +237,7 @@ const handlePaymentForBusiness = async (businessId) => {
         console.log("Payment successful response:", response);
         try {
           await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
-          alert("Payment successful!");
+         
         } catch (error) {
           console.error("Error during payment processing:", error.message);
           alert("Error updating payment status. Please contact support.");
@@ -250,27 +264,33 @@ const handlePaymentForBusiness = async (businessId) => {
 };
 
 const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
-  try {
-    const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
-    const payload = { payment_id: razorpay_payment_id, id };
 
-    console.log("Updating property payment status with payload:", payload);
+try {
+  const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
+  const payload = { payment_id: razorpay_payment_id, id };
 
-    const response = await axios.post(url, payload);
+  console.log("Updating property payment status with payload:", payload);
 
-    console.log("API Response for payment status update:", response.data);
+  const response = await axios.post(url, payload);
 
-    // Check success conditions based on the actual API response structure
-    if (response.data?.result === true && response.data?.status === 200) {
-      alert("Payment successful and verified!");
-    } else {
-      alert("Payment verification failed. Please contact support.");
-      console.error("Payment verification failed response:", response.data);
-    }
-  } catch (error) {
-    console.error("Error updating payment status:", error.message);
-    alert("Failed to update payment status. Please try again.");
+  console.log("API Response for payment status update:", response.data);
+
+  // Check success conditions based on the actual API response structure
+  if (response.data?.result === true && response.data?.status === 200) {
+    toast.success("Payment successful and verified!"); // Show success message
+
+    // Navigate to the home page after a delay
+    setTimeout(() => {
+      navigate("/"); // Adjust the route based on your routing setup
+    }, 3000); // Navigate after 3 seconds
+  } else {
+    toast.error("Payment verification failed. Please contact support."); // Show error message
+    console.error("Payment verification failed response:", response.data);
   }
+} catch (error) {
+  console.error("Error updating payment status:", error.message);
+  toast.error("Failed to update payment status. Please try again."); // Show error message
+}
 };
  
 //   ---------------------------------------------------------------

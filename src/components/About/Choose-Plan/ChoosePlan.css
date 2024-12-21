@@ -62,12 +62,13 @@
     margin-top: 20px;
 }
 
-.choosePlanBoxWhite .orderButton a {
+.choosePlanBoxWhite .orderButton button {
     background-color: #008080 ;
     color: white;
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 3px;
+   border-style: none;
 }
 
 

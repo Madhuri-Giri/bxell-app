@@ -11,6 +11,9 @@ import Page3ROC from "../SellPropertyForm/Page3ROC";
 import { submitSellPropertyForm } from "../../../API/apiServices";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 function loadScript(src) {
   return new Promise((resolve) => {
@@ -24,15 +27,16 @@ function loadScript(src) {
 
 function SellPropertyForm() {
   const [step, setStep] = useState(0);
+  const navigate = useNavigate();
   const steps = ["Property Info", "Property Details", "Confirmation"];
   const [property_type, setPropertyType] = useState("");
   const [listing_type, setListingType] = useState("");
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [errors, setErrors] = useState({});
-  const userId = localStorage.getItem("userLoginId");
-
+  const user = useSelector((state) => state.auth.user);
+  
   const [formData, setFormData] = useState({
-    user_id: userId || 1,
+    user_id: user ,
     property_title: "",
     listing_type: "",
     listed_by: "",
@@ -139,14 +143,14 @@ function SellPropertyForm() {
       const property_id = await submitSellPropertyForm(formData);
       // const userId = localStorage.getItem("userLoginId");
   
-      if (!formData.user_id || !property_id || !formData.amount) {
+      if (!user || !property_id || !formData.amount) {
         throw new Error("Login ID, amount, or property ID is missing.");
       }
   
       // Prepare the payload to fetch payment details
       const payload = {
         amount: formData.amount,
-        user_id: formData.user_id,
+        user_id: user,
         property_id: property_id,
       };
   
@@ -204,6 +208,12 @@ function SellPropertyForm() {
   const handlePayment = async (e) => {
     e.preventDefault();
   
+    if (!user) {
+      // If the user is not logged in, redirect to the login page
+      navigate("/login");
+      return;
+    }
+
     try {
       // await handleSubmit(e); 
       // Fetch payment details
@@ -283,43 +293,68 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
       body: JSON.stringify(payload),
     });
 
-    // Check if response is successful
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Failed to update payment details. Status:", response.status, "Response:", errorText);
-      alert("Failed to update payment details. Please try again.");
+      toast.error("Failed to update payment details. Please try again.");
       return;
     }
 
-    // Parse the response body
     const data = await response.json();
     console.log("Response Data:", data);
 
-    // Check if the status is in the result field
-    const status = data?.success || data?.result || "Unknown"; // Update this line to check success or result
+    const status = data?.success || data?.result || "Unknown";
     console.log("Payment Status:", status);
 
-    // Handle status based on response
     if (status === "Payment record update successfully") {
-      alert("Payment successful and verified!");
+      // Display toast notification for success
+      toast.success("Payment successful and verified!");
       console.log("Payment completed successfully.");
-    } else if (status === "Pending") {
-      alert("Payment successful, but verification is pending. Please contact support.");
-      console.warn("Payment verification is pending.");
-    } else if (status === "Failed") {
-      alert("Payment verification failed. Please contact support.");
-      console.error("Payment verification failed.");
-    } else {
-      alert("Unexpected payment status. Please contact support.");
-      console.warn("Unexpected payment status:", status);
-    }
 
+      // Add delay before navigating
+      setTimeout(() => {
+        // Reset form and navigate to home page after successful payment
+        setFormData({
+          user_id: user,
+          property_title: "",
+          listing_type: "",
+          listed_by: "",
+          property_type: "",
+          country: "",
+          state: "",
+          city: "",
+          area: "",
+          length: "",
+          breadth: "",
+          area_measurment: "",
+          sq_ft: "",
+          asking_price: "",
+          advance_price: "",
+          amount: "299",
+          phone_number: "",
+          bedroom: "",
+          bathroom: "",
+          floor_no: "",
+          additional_detail: "",
+          project_status: "",
+          total_floor: "",
+          file_name: null,
+        });
+        navigate("/");
+      }, 3000); // 3-second delay before navigation
+    } else if (status === "Pending") {
+      toast.warn("Payment successful, but verification is pending. Please contact support.");
+    } else if (status === "Failed") {
+      toast.error("Payment verification failed. Please contact support.");
+    } else {
+      toast.error("Unexpected payment status. Please contact support.");
+    }
   } catch (error) {
     console.error("Error updating payment details:", error.message);
-    alert("An error occurred while updating the payment status. Please try again or contact support.");
+    toast.error("An error occurred while updating the payment status. Please try again or contact support.");
   }
 };
-                                                     
+                                                
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Data before submission:", formData); // Log data before submission
@@ -338,7 +373,7 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
 
       // Reset form data to initial state
       setFormData({
-        user_id: userId,
+        user_id: user,
         property_title: "",
         listing_type: "",
         listed_by: "",

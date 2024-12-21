@@ -23,9 +23,28 @@ function Header() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    if (user) {
-      dispatch(logoutUser(user));
-    }
+    // Use SweetAlert to confirm logout
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, logout!",
+      cancelButtonText: "No, cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Dispatch logout action if user confirmed
+        if (user) {
+          dispatch(logoutUser(user)); // Assuming user is stored in Redux
+        }
+  
+        // Show success message with Toast
+        toast.success("Logout successful!", {
+          position: "top-right", // Toast position
+          autoClose: 3000, // Duration before auto-close
+        });
+      }
+    });
   };
 
   const handleProfileClick = () => {

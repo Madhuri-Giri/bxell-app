@@ -1,22 +1,28 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+
 import { Button, Form } from "react-bootstrap";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellBusinessForm.css"; // Import the CSS file
 import { useNavigate } from "react-router-dom";
 import { submitSellBusinessForm } from "../../../API/apiServices";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import React, { useState, useEffect} from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function SellBusinessForm() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState({});
   const steps = ["Business Info", "Business Details"];
   const [paymentDetails, setPaymentDetails] = useState(null);
-  const userId = localStorage.getItem("userLoginId");
+  const user = useSelector((state) => state.auth.user);
 
   const [formData, setFormData] = useState({
-    user_id: userId || 1,
+    user_id: user ,
     business_type: "",
     title: "",
     description: "",
@@ -38,6 +44,7 @@ function SellBusinessForm() {
     listing_type: "",
     file_name: null,
   });
+  console.log("User ID:", formData.user_id);
 
   // Updated handleChange function
   const handleChange = (e) => {
@@ -112,19 +119,14 @@ function SellBusinessForm() {
     setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
 
-
-
-
-
   // --------------  payment ------------
 
   const fetchPaymentDetails = async () => {
     try {
       // Fetch business ID from the submitted form
       const business_id = await submitSellBusinessForm(formData);
-      // const userId = localStorage.getItem("userLoginId");
-
-      if (!formData.user_id || !business_id || !formData.amount) {
+  
+      if (!user || !business_id || !formData.amount) {
         throw new Error(
           "Login ID, amount  or Business ID is missing."
         );
@@ -132,7 +134,7 @@ function SellBusinessForm() {
 
       const payload = {
         amount: formData.amount,
-        user_id: formData.user_id,
+        user_id: user,
         business_id: business_id,
       };
 
@@ -176,8 +178,6 @@ function SellBusinessForm() {
           you_are: errorData.error?.you_are ? errorData.error.you_are[0] : '',
           file_name: errorData.error?.file_name ? errorData.error.file_name[0] : '',
         });
-
-
       }
       // alert("Failed to initiate payment. Please try again.");
       return null;
@@ -185,8 +185,14 @@ function SellBusinessForm() {
   };
 
   const handlePayment = async (e) => {
-    e.preventDefault();
 
+    e.preventDefault();
+ if (!user) {
+    // If the user is not logged in, redirect to the login page
+    navigate("/login");
+    return;
+  }
+  
     try {
       // Fetch payment details
       const paymentData = await fetchPaymentDetails();
@@ -230,7 +236,7 @@ function SellBusinessForm() {
               response.razorpay_payment_id,
               payment_details.id
             );
-            alert("Payment successful!");
+           
           } catch (error) {
             console.error("Error during payment processing:", error.message);
             alert(
@@ -269,14 +275,14 @@ function SellBusinessForm() {
       if (!razorpay_payment_id || !Id) {
         throw new Error("Missing payment details");
       }
-
+  
       const url = "https://bxell.com/bxell/admin/api/update-business-payment";
       const payload = {
         payment_id: razorpay_payment_id,
         id: Id,
       };
       console.log("Updating payment with payload:", payload);
-
+  
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -284,53 +290,70 @@ function SellBusinessForm() {
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(
-          "Failed to update payment details. Status:",
-          response.status,
-          "Response:",
-          errorText
-        );
-        throw new Error("Failed to update payment details.");
+        console.error("Failed to update payment details. Status:", response.status, "Response:", errorText);
+        toast.error("Failed to update payment details. Please try again.");
+        return;
       }
-
+  
       const data = await response.json();
-      console.log("Update successful:", data);
-
-      // Check payment status
-      const status = data?.data?.status || "Unknown";
+      console.log("Response Data:", data);
+  
+      const status = data?.success || data?.result || "Unknown";
       console.log("Payment Status:", status);
-
-      // Handle status and return immediately after each alert
-      if (status === "Success") {
-        alert("Payment successful and verified!");
+  
+      if (status === "Payment record update successfully") {
+        // Display toast notification for success
+        toast.success("Payment successful and verified!");
         console.log("Payment completed successfully.");
-        return; // Prevent further execution
-      }
-
-      if (status === "Pending") {
-        alert(
-          "Payment successful, but verification is pending. Please contact support."
-        );
-        console.warn("Payment verification is pending.");
-        return; // Prevent further execution
-      }
-
-      if (status === "Failed") {
-        alert("Payment verification failed. Please contact support.");
-        console.error("Payment verification failed.");
-        return; // Prevent further execution
+  
+        // Add delay before navigating
+        setTimeout(() => {
+          // Reset form and navigate to home page after successful payment
+          setFormData({
+            user_id: user,
+            property_title: "",
+            listing_type: "",
+            listed_by: "",
+            property_type: "",
+            country: "",
+            state: "",
+            city: "",
+            area: "",
+            length: "",
+            breadth: "",
+            area_measurment: "",
+            sq_ft: "",
+            asking_price: "",
+            advance_price: "",
+            amount: "299",
+            phone_number: "",
+            bedroom: "",
+            bathroom: "",
+            floor_no: "",
+            additional_detail: "",
+            project_status: "",
+            total_floor: "",
+            file_name: null,
+          });
+          navigate("/");
+        }, 5000); // 3-second delay before navigation
+        
+      } else if (status === "Pending") {
+        toast.warn("Payment successful, but verification is pending. Please contact support.");
+      } else if (status === "Failed") {
+        toast.error("Payment verification failed. Please contact support.");
+      } else {
+        toast.error("Unexpected payment status. Please contact support.");
       }
     } catch (error) {
       console.error("Error updating payment details:", error.message);
-      alert(
-        "An error occurred while updating the payment status. Please try again or contact support."
-      );
-      throw error; // Optional: To signal an error in higher-level logic
+      toast.error("An error occurred while updating the payment status. Please try again or contact support.");
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -345,12 +368,12 @@ function SellBusinessForm() {
     }
   
     try {
-      const response = await submitSellBusinessForm(formData);
+      const response = await submitSellBusinessForm(formData, user);
       alert(response.message || "Form submitted successfully!");
   
       // Reset form data after successful submission
       setFormData({
-        user_id: userId,
+         user_id: user ,
         business_type: "",
         title: "",
         description: "",
@@ -364,8 +387,10 @@ function SellBusinessForm() {
         reported_turnover_to: "",
         you_are: "",
         business_link: "",
+        amount: 299,
         asking_price: "",
         phone_number: "",
+        no_of_employees: "",
         current_status: "",
         listing_type: "",
         file_name: null,
@@ -488,7 +513,7 @@ function SellBusinessForm() {
                               name="title"
                               value={formData.title}
                               onChange={handleChange}
-                              placeholder="Business Title (Eg: Best Restaurant for sale)"
+                              placeholder="Enter Business Title (Eg: Best Restaurant for sale)"
                               isInvalid={!!errors.title}
                             />
                             <Form.Control.Feedback type="invalid">
@@ -691,7 +716,7 @@ function SellBusinessForm() {
                                 name="asking_price"
                                 value={formData.asking_price}
                                 onChange={handlepriceChange}
-                                placeholder="Asking Price"
+                                placeholder="Enter Asking Price"
                                 isInvalid={!!errors.asking_price}
                                 className="no-spinner"
                               />
@@ -798,7 +823,7 @@ function SellBusinessForm() {
                             <Form.Group className="businessListingFormsDiv" controlId="phone_number"  >
                               <Form.Label>MOBILE NUMBER</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Control className="no-spinner" type="number" name="phone_number" value={formData.phone_number} onChange={handlepriceChange} placeholder="Mobile Number" maxLength={10} isInvalid={!!errors.phone_number} />
+                              <Form.Control className="no-spinner" type="number" name="phone_number" value={formData.phone_number} onChange={handlepriceChange} placeholder="Enter Mobile Number" maxLength={10} isInvalid={!!errors.phone_number} />
                               <Form.Control.Feedback type="invalid"> {errors.phone_number}</Form.Control.Feedback>
                             </Form.Group>
                           </div>

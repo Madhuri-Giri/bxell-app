@@ -1,14 +1,21 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import './ChoosePlan.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
 
 function ChoosePlan() {
-    // const arr1 = ['as', 'hh', 'ar'];
-    // const arr2 = ['sh', 'ab', 'nam'];
-    // const mainArr = [...arr1, ...arr2]
-    // console.log(mainArr);
+    const user = useSelector((state) => state.auth.user);
+    const navigate = useNavigate();
+
+    const handleNavigation = (path) => {
+        if (!user) {
+            navigate('/login'); 
+        } else {
+            navigate(path); 
+        }
+    };
 
     return (
         <>
@@ -29,7 +36,10 @@ function ChoosePlan() {
                                         </div>
                                         <div className='choosePlanBoxWhite'>
                                             <div className='orderButton'>
-                                                <NavLink  to="/boost-listing"> <FiShoppingCart /> Order Now</NavLink>
+                                                {/* <NavLink  to="/boost-listing"> <FiShoppingCart /> Order Now</NavLink> */}
+                                                <button onClick={() => handleNavigation('/boost-listing')}>
+                                                    <FiShoppingCart /> Order Now
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -43,7 +53,10 @@ function ChoosePlan() {
                                         <div className='choosePlanBoxWhite'>
 
                                             <div className='orderButton'>
-                                                <NavLink to="/boost-listing1"> <FiShoppingCart /> Order Now</NavLink>
+                                                {/* <NavLink to="/boost-listing1"> <FiShoppingCart /> Order Now</NavLink> */}
+                                                <button onClick={() => handleNavigation('/boost-listing1')}>
+                                                    <FiShoppingCart /> Order Now
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -56,8 +69,11 @@ function ChoosePlan() {
                                         </div>
                                         <div className='choosePlanBoxWhite'>
                                             <div className='orderButton'>
-                                            <NavLink to="/sell-property"> <FiShoppingCart /> Order Now</NavLink>
-                                            </div>
+                                            {/* <NavLink to="/sell-property"> <FiShoppingCart /> Order Now</NavLink> */}
+                                            <button onClick={() => handleNavigation('/sell-property')}>
+                                                    <FiShoppingCart /> Order Now
+                                                </button>
+                                           </div>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +86,10 @@ function ChoosePlan() {
                                         <div className='choosePlanBoxWhite'>
 
                                             <div className='orderButton'>
-                                            <NavLink to="/sell-business"> <FiShoppingCart /> Order Now</NavLink>
+                                            {/* <NavLink to="/sell-business"> <FiShoppingCart /> Order Now</NavLink> */}
+                                            <button onClick={() => handleNavigation('/sell-business')}>
+                                                    <FiShoppingCart /> Order Now
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

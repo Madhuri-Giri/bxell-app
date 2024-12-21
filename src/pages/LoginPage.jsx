@@ -10,11 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slice/authSlice';
 
 const LoginPage = () => {
+  
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
+
 const navigate = useNavigate();
   const dispatch = useDispatch();
     const { isAuthenticated, error } = useSelector((state) => state.auth);
@@ -25,8 +27,14 @@ const navigate = useNavigate();
     };
 
     useEffect(() => {
-        if (isAuthenticated) navigate('/');
-    }, [isAuthenticated]);
+      if (isAuthenticated) {
+        toast.success("Login successful!"); 
+        navigate('/'); 
+      }
+      if (error) {
+        toast.error(error); 
+      }
+    }, [isAuthenticated, error, navigate]);
 
     // Handle input changes
     const handleInputChange = (e) => {

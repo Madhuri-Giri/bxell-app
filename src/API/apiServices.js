@@ -15,11 +15,61 @@ export const UPDATE_PROPERTY_STOCK_API_URL = `${BASE_URL}/update-property-stock`
 export const FILTER_API_URL = `${BASE_URL}/filters`;
 export const RATING_PROPERTY_API_URL = `${BASE_URL}/property-rating`;
 export const RATING_BUSINESS_API_URL = `${BASE_URL}/business-rating`;
+export const UPDATE_PROFILE_API_URL = `${BASE_URL}/update-profile`;
+export const USER_PROFILE_API_URL = `${BASE_URL}/user-detail`;
+
+// -----------------------user profile api--------------------------------------
+export const userProfile = async (id) => {
+  try {
+    const response = await fetch(USER_PROFILE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }), // Send the correct ID payload
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data.data[0]; // Return the user data
+    } else {
+      throw new Error(data.message || "Failed to fetch profile");
+    }
+  } catch (error) {
+    console.error("Error fetching profile:", error.message);
+    throw error;
+  }
+};
+
+
+// ---------------------UPDATE PROFILE API----------------------------------------
+export const updateProfile = async (formData, id) => {
+  try {
+    const response = await fetch(UPDATE_PROFILE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...formData, id }), // Include id in the payload
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return data; // Return success response
+    } else {
+      throw new Error(data.message || "Failed to update profile");
+    }
+  } catch (error) {
+    console.error("Error updating profile:", error.message);
+    throw error;
+  }
+};
 
 // ----------------------------Sell Boost Lising API-------------------------------
-export const fetchListingDetail = async () => {
+export const fetchListingDetail = async (userId) => {
   try {
-    const userId = localStorage.getItem("userLoginId");
+   
     const response = await axios.post(LISTING_DETAILS_API_URL, {
       user_id: userId // Send user_id as part of the request body
     });
@@ -295,11 +345,9 @@ export const fetchFilterRes = async () => {
 };
 
 // ---------------------------Business Rating---------------------------------------
-export const fetchBusinessRating = async (businessListingId, rating) => {
+export const fetchBusinessRating = async (businessListingId, rating, userId) => {
   try {
-    // Retrieve the logged-in user ID from local storage
-    const userId = localStorage.getItem("userLoginId");
-    
+   
     // Validate inputs before making the API call
     if (!userId) {
       throw new Error("User ID is not available. Please log in.");
@@ -325,10 +373,9 @@ export const fetchBusinessRating = async (businessListingId, rating) => {
 };
 
 // -----------------------------Property Rating ------------------------------------
-export const fetchPropertyRating = async (propertyListingId, rating) => {
+export const fetchPropertyRating = async (propertyListingId, rating, userId) => {
   try {
-    // Retrieve the logged-in user ID from local storage
-    const userId = localStorage.getItem("userLoginId");
+   
     
     // Validate inputs before making the API call
     if (!userId) {

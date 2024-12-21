@@ -5,6 +5,7 @@ import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import ScrollToTop from "../../ScrollToTop/ScrollToTop";
+import { useSelector } from 'react-redux';
 // import { fetchViewBusinessRes } from "../../../API/apiServices";
 // import { fetchViewPropertyRes } from "../../../API/apiServices";
 import {
@@ -31,7 +32,7 @@ function PropertyBuySinglePage() {
   const [homeProperty, setHomeProperty] = useState([]);
   const [homeBusiness, setHomeBusiness] = useState([]);
   const navigate = useNavigate();
-
+  const user = useSelector((state) => state.auth.user);
   // Fetch the property data when the component mounts or the id/type changes
   useEffect(() => {
     if (type === "property" && id) {
@@ -61,12 +62,15 @@ function PropertyBuySinglePage() {
 
     // Store the rating in localStorage
     localStorage.setItem(`${type}-${id}-rating`, newRating); // Use unique key for property/business
-
+    if (!user) {
+      alert("Please log in to submit a rating.");
+      return;
+    }
     try {
       if (type === "property") {
-        await fetchPropertyRating(id, newRating); // Pass the property ID and rating
+        await fetchPropertyRating(id, newRating, user); // Pass the property ID and rating
       } else if (type === "business") {
-        await fetchBusinessRating(id, newRating); // Pass the business ID and rating
+        await fetchBusinessRating(id, newRating, user); // Pass the business ID and rating
       }
       alert("Thank you for rating!");
     } catch (error) {
@@ -144,7 +148,7 @@ function PropertyBuySinglePage() {
               {type === "property" && property && (
                 <div className="col-9">
                   <>
-                    <div className="single_box">
+                    <div className="single_box mb-4">
                       <div className="row">
                         <div className="col-6 ">
                           <h1>{property.property_title}</h1>
@@ -233,7 +237,6 @@ function PropertyBuySinglePage() {
 
                         <div className="col-6">
                           <div className="row">
-                            <div className="d-flex justify-content-between">
                               <div className="col-6 ask_price">
                                 <span>
                                   {" "}
@@ -241,7 +244,7 @@ function PropertyBuySinglePage() {
                                   ₹ <span className="green-text">{property.asking_price} </span>{" "}
                                 </span>
                               </div>
-                              <div className="col-6 pro_city">
+                              <div className="col-6 pro_city ">
                                 <IoLocation />
                                 <span>
                                   {" "}
@@ -249,8 +252,6 @@ function PropertyBuySinglePage() {
                                 </span>
                               </div>
                             </div>
-                          </div>
-
                           {/* Property Financials in table format */}
                           <div>
                             <div className="propertyInfoTableContainer">
@@ -339,8 +340,8 @@ function PropertyBuySinglePage() {
 
                     {/* Description Section */}
                     <div className="descriptionSection">
-                      <h5>Description</h5>
-                      {/* <p>{property.additional_detail}</p> */}
+                      <h3>Description</h3>
+                      <p>{property.additional_detail}</p>
                     </div>
 
                     {/* Google Map Section */}
@@ -434,7 +435,7 @@ function PropertyBuySinglePage() {
             <div className=" row single_container">
               {type === "business" && business && (
                 <div className="col-9">
-                  <div className="single_box">
+                  <div className="single_box mb-4">
                     <>
                       <div className="row">
                         <div className="col-6">
@@ -634,7 +635,7 @@ function PropertyBuySinglePage() {
 
                   {/* Description Section */}
                   <div className="descriptionSection">
-                    <h5>Description</h5>
+                    <h3>Description</h3>
                     <div
                       dangerouslySetInnerHTML={{
                         __html:

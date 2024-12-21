@@ -6,15 +6,17 @@ import {
   fetchUpdateBusinessStock,
   fetchUpdatePropertyStock,
 } from "../../API/apiServices"; // Assuming API call functions are imported
+import { useSelector } from 'react-redux';
 
 function ProfileListingDetails() {
   const [listingDetails, setListingDetails] = useState(null); // State to store API response
   const [soldStatus, setSoldStatus] = useState({}); // State to track ON/OFF checkbox status
+const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (userId) => {
       try {
-        const data = await fetchListingDetail();
+        const data = await fetchListingDetail(userId);
         console.log("Full API Response:", data);
 
         if (data && data.length > 0) {
@@ -53,7 +55,7 @@ function ProfileListingDetails() {
       }
     };
 
-    fetchData();
+    fetchData(user);
   }, []);
 
   const handleCheckboxChange = async (id, type, itemType) => {
@@ -115,22 +117,46 @@ function ProfileListingDetails() {
                   <div className="promotedTextWrapperBoost">
                     {business.file_name ? (
                       <img
-                        className="img-fluid"
-                        src={(() => {
-                          try {
-                            // Try parsing file_name as JSON
-                            const files = JSON.parse(business.file_name);
-                            return Array.isArray(files) && files.length > 0
+                      className="img-fluid"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        handlebusinessNavigate("business", business.id)
+                      }
+                      src={(() => {
+                        try {
+                          const fileName = business.file_name;
+
+                          // Parse the file_name if it's a JSON string
+                          const files =
+                            typeof fileName === "string" &&
+                            fileName.startsWith("[")
+                              ? JSON.parse(fileName)
+                              : fileName;
+
+                          if (typeof files === "string") {
+                            // Single image case
+                            return files.startsWith("http")
+                              ? files
+                              : `${BASE_URL}/${files}`;
+                          } else if (Array.isArray(files) && files.length > 0) {
+                            // Multiple images case
+                            return files[0].startsWith("http")
                               ? files[0]
-                              : "default-image.jpg";
-                          } catch (error) {
-                            // If parsing fails, assume it's a URL or malformed string
-                            console.error("Error parsing file_name:", error);
-                            return business.file_name || "default-image.jpg"; // Fallback to file_name if it's a URL
+                              : `${BASE_URL}/${files[0]}`;
+                          } else {
+                            // Default image as fallback
+                            return "default-image.jpg";
                           }
-                        })()}
-                        alt={business.title || "business Image"}
-                      />
+                        } catch (error) {
+                          console.error(
+                            "Error parsing or handling file_name:",
+                            error
+                          );
+                          return "default-image.jpg"; // Fallback in case of error
+                        }
+                      })()}
+                      alt={business.title || "business Image"}
+                    />
                     ) : (
                       <p>No images available</p>
                     )}

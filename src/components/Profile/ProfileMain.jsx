@@ -6,46 +6,19 @@ import User_Avtar from "../../assets/Images/user-avatar.jpg";
 import { Button, Form, Nav } from "react-bootstrap";
 import ProfileListingDetails from "./profileLisintgDetails";
 import { useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserProfile } from '../../redux/slice/authSlice';
+import {userProfile, updateProfile} from '../../API/apiServices';
 
 function ProfileMain() {
   const location = useLocation();
-   const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState("view"); // Track the active tab
-  const { user } = location.state || {};
-
-  const { profile, loading } = useSelector((state) => state.auth); // Fetch profile from Redux store
-
-  useEffect(() => {
-    if (user) {
-      dispatch(fetchUserProfile(user)); // Fetch the user profile when the component mounts
-    }
-  }, [dispatch, user]);
-  
-  // Update formData whenever profile data changes
-  useEffect(() => {
-    if (profile) {
-      setFormData({
-        name: profile.name || "",
-        phone: profile.phone_number || "",
-        company: profile.company || "",
-        email: profile.email || "",
-        designation: profile.designation || "",
-        state: profile.state || "",
-        birth: profile.birth || "",
-        country: profile.country || "",
-        age: profile.age || "",
-        address: profile.address || "",
-        profile: profile.profile || "", // Set profile picture URL
-      });
-    }
-  }, [profile]); // This effect runs whenever the `profile` state from Redux changes
-  
-  // Initialize formData state
+  const { user } = location.state || {}; // Extract user ID from state
+  const [activeTab, setActiveTab] = useState("view"); // Track active tab
+  const [profile, setProfile] = useState(null); // Store profile data
+  const [loading, setLoading] = useState(false); // Track loading state
+  const [error, setError] = useState(null); // Track error state
   const [formData, setFormData] = useState({
+    id: user || "", // Initialize with user ID
     name: "",
-    phone: "",
+    phone_number: "",
     company: "",
     email: "",
     designation: "",
@@ -57,36 +30,83 @@ function ProfileMain() {
     profile: "",
   });
 
+  // Fetch user profile on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) {
+        setError("User ID is missing");
+        return;
+      }
+      setLoading(true);
+      try {
+        const data = await userProfile(user); // Call API with user ID
+        setProfile(data);
+      } catch (err) {
+        setError(err.message || "Failed to fetch profile");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchUserData();
+  }, [user]);
 
+  // Update formData whenever profile data changes
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        id: profile.id || "",
+        name: profile.name || "",
+        phone_number: profile.phone_number || "",
+        company: profile.company || "",
+        email: profile.email || "",
+        designation: profile.designation || "",
+        state: profile.state || "",
+        birth: profile.birth || "",
+        country: profile.country || "",
+        age: profile.age || "",
+        address: profile.address || "",
+        profile: profile.profile || "",
+      });
+    }
+  }, [profile]);
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  // Handle profile image upload
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the selected file
+    const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file); // Create a URL for the image
-      setFormData((prevData) => ({
-        ...prevData,
-        profile: imageUrl, // Set the image URL to formData
-      }));
+      const imageUrl = URL.createObjectURL(file);
+      setFormData((prevData) => ({ ...prevData, profile: imageUrl }));
+    }
+  };
+
+  // Save profile changes
+  const handleSaveChanges = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      await updateProfile(formData, user);
+      alert("Profile updated successfully!");
+      setActiveTab("view");
+    } catch (err) {
+      setError(err.message || "Failed to update profile");
+      alert("Error updating profile: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSaveChanges = (e) => {
-    e.preventDefault();
-    // Handle saving changes (e.g., update data in backend or state)
-    console.log("Profile updated:", formData);
-
-    // Move back to the "View Profile" tab after saving changes
-    setActiveTab("view");
-  };
+  
 
   return (
     <section className="profileMAinSec">
@@ -127,7 +147,7 @@ function ProfileMain() {
                 // View Profile Tab Content
                 <div className="profileForms row">
                   <div className="col-md-4">  <p>  <strong>Name:</strong> {formData.name}  </p> </div>
-                  <div className="col-md-4">  <p> <strong>Phone:</strong> {formData.phone} </p>   </div>
+                  <div className="col-md-4">  <p> <strong>Phone:</strong> {formData.phone_number} </p>   </div>
                   <div className="col-md-4"><p> <strong>Company:</strong> {formData.company} </p> </div>
                   <div className="col-md-4">  <p>  <strong>Email:</strong> {formData.email} </p>  </div>
                   <div className="col-md-4">  <p>  <strong>Designation:</strong> {formData.designation} </p>  </div>
@@ -152,7 +172,7 @@ function ProfileMain() {
                       <div className="col-md-4">
                         <Form.Group  className="profileFormsDiv"  controlId="phone"  >
                           <Form.Label>Phone</Form.Label>
-                          <Form.Control type="number"  placeholder="Phone" name="phone"  value={formData.phone} onChange={handleChange}  />
+                          <Form.Control type="number"  placeholder="Phone" name="phone_number"  value={formData.phone_number} onChange={handleChange}  />
                         </Form.Group>
                       </div>
 
