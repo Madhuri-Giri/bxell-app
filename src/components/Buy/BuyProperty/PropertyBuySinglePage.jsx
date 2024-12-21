@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { IoLocation } from "react-icons/io5";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import ScrollToTop from "../../ScrollToTop/ScrollToTop";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 // import { fetchViewBusinessRes } from "../../../API/apiServices";
 // import { fetchViewPropertyRes } from "../../../API/apiServices";
 import {
@@ -33,6 +33,56 @@ function PropertyBuySinglePage() {
   const [homeBusiness, setHomeBusiness] = useState([]);
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  const [formData, setFormData] = useState({
+    user_id: "",
+    name: "",
+    email: "",
+    listing_title: "",
+    enquiry_message: "",
+  });
+
+  const [showModal, setShowModal] = useState(false); // State for modal visibility
+
+  const toggleModal = () => setShowModal(!showModal); // Toggle modal visibility
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.user_id || id) {
+      alert("User ID or Property ID is missing.");
+      return;
+    }
+
+    try {
+      if (response.status === 200 && response.result) {
+        alert(response.message);
+        setShowModal(false); // Close the modal after successful submission
+        setFormData({
+          user_id: "",
+          property_id: id,
+          name: "",
+          email: "",
+          listing_title: "",
+          enquiry_message: "",
+        });
+      } else {
+        alert("There was an issue with your enquiry.");
+      }
+    } catch (error) {
+      alert("There was an error processing your enquiry.");
+    }
+  };
+
   // Fetch the property data when the component mounts or the id/type changes
   useEffect(() => {
     if (type === "property" && id) {
@@ -237,34 +287,32 @@ function PropertyBuySinglePage() {
 
                         <div className="col-6">
                           <div className="row">
-                              <div className="col-6 ask_price">
-                                <span>
-                                  {" "}
-                                  Asking Price :{" "}
-                                  ₹ <span className="green-text">{property.asking_price} </span>{" "}
-                                </span>
-                              </div>
-                              <div className="col-6 pro_city ">
-                                <IoLocation />
-                                <span>
-                                  {" "}
-                                  {property.city}{" "}
-                                </span>
-                              </div>
+                            <div className="col-6 ask_price">
+                              <span>
+                                {" "}
+                                Asking Price : ₹{" "}
+                                <span className="green-text">
+                                  {property.asking_price}{" "}
+                                </span>{" "}
+                              </span>
                             </div>
+                            <div className="col-6 pro_city ">
+                              <IoLocation />
+                              <span> {property.city} </span>
+                            </div>
+                          </div>
                           {/* Property Financials in table format */}
                           <div>
                             <div className="propertyInfoTableContainer">
-                          
                               <table className="propertyInfoTable ">
-                              <thead className=" table_heading">
-                                <tr>
-                                  <th colSpan="2">Proposal</th> {/* Adjust colSpan to cover all columns */}
-                                </tr>
-                              </thead>
-                              
+                                <thead className=" table_heading">
+                                  <tr>
+                                    <th colSpan="2">Proposal</th>{" "}
+                                    {/* Adjust colSpan to cover all columns */}
+                                  </tr>
+                                </thead>
+
                                 <tbody>
-                                
                                   <tr>
                                     {/* <td>Reported sale (yearly): <br /><span className="green-text">82,00,000</span></td> */}
                                     <td>
@@ -301,7 +349,7 @@ function PropertyBuySinglePage() {
                                   </tr>
                                   <tr>
                                     <td>
-                                      Price: <br />{" "}₹
+                                      Price: <br /> ₹
                                       <span className="green-text">
                                         {" "}
                                         {property.asking_price}
@@ -339,10 +387,77 @@ function PropertyBuySinglePage() {
                     </div>
 
                     {/* Description Section */}
-                    <div className="descriptionSection">
-                      <h3>Description</h3>
-                      <p>{property.additional_detail}</p>
+                    <div className="container_b">
+                      <div className="descriptionSection">
+                        <h3>Description</h3>
+                        <p>{property.additional_detail}</p>
+                      </div>
+
+                      <div className="button_box">
+                        <button className="enquiry-btn" onClick={toggleModal}>
+                          Enquiry Form
+                        </button>
+                      </div>
                     </div>
+
+                    {/* Form Section */}
+                    {/* Modal for Enquiry Form */}
+                    <Modal show={showModal} onHide={toggleModal} centered>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Send Us A Message</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body className="form-page">
+                        <h5>Send Us A Message</h5>
+                        <p>
+                          Please contact us for any assistance by filling up the
+                          form below. We will get back to you within 24 hours.
+                        </p>
+                        <form onSubmit={handleSubmit}>
+                          <div className="ipt">
+                            <input
+                              type="text"
+                              name="name"
+                              placeholder="Full Name*"
+                              required
+                              value={formData.name}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="ipt">
+                            <input
+                              type="email"
+                              name="email"
+                              placeholder="Email*"
+                              required
+                              value={formData.email}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="ipt">
+                            <input
+                              type="text"
+                              name="listing_title"
+                              placeholder="Listing Title*"
+                              required
+                              value={formData.listing_title}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="ipt">
+                            <textarea
+                              name="enquiry_message"
+                              placeholder="Message*"
+                              required
+                              value={formData.enquiry_message}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="btn-cont">
+                            <button type="submit">SEND MESSAGE</button>
+                          </div>
+                        </form>
+                      </Modal.Body>
+                    </Modal>
 
                     {/* Google Map Section */}
                     <div className="mapLocationDiv">
@@ -362,75 +477,85 @@ function PropertyBuySinglePage() {
                 {/* Scrollable Container for Property Listings */}
                 {type === "property" && homeProperty.length > 0 && (
                   <>
-                  <div className="buy_back">
-                    <h2>SIMILAR LISTINGS</h2>
-                    {homeProperty.map((property, index) => (
-                      <div className="" key={index}>
-                        <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow ">
-                          <div className="propertyBuyClsNameCOL">
-                            <div className="propertyBuyClsNameBox">
-                              <div className="promotedTextWrapper">
-                                <img
-                                  className="img-fluid"
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() =>
-                                    handlepropertyNavigate("property", property.id)
-                                  }
-                                  src={(() => {
-                                    try {
-                                      const fileName = property.file_name;
+                    <div className="buy_back">
+                      <h2>SIMILAR LISTINGS</h2>
+                      {homeProperty.map((property, index) => (
+                        <div className="" key={index}>
+                          <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow ">
+                            <div className="propertyBuyClsNameCOL">
+                              <div className="propertyBuyClsNameBox">
+                                <div className="promotedTextWrapper">
+                                  <img
+                                    className="img-fluid"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() =>
+                                      handlepropertyNavigate(
+                                        "property",
+                                        property.id
+                                      )
+                                    }
+                                    src={(() => {
+                                      try {
+                                        const fileName = property.file_name;
 
-                                      const files =
-                                        typeof fileName === "string" &&
-                                        fileName.startsWith("[")
-                                          ? JSON.parse(fileName)
-                                          : fileName;
+                                        const files =
+                                          typeof fileName === "string" &&
+                                          fileName.startsWith("[")
+                                            ? JSON.parse(fileName)
+                                            : fileName;
 
-                                      if (typeof files === "string") {
-                                        return files.startsWith("http")
-                                          ? files
-                                          : `${BASE_URL}/${files}`;
-                                      } else if (
-                                        Array.isArray(files) &&
-                                        files.length > 0
-                                      ) {
-                                        return files[0].startsWith("http")
-                                          ? files[0]
-                                          : `${BASE_URL}/${files[0]}`;
-                                      } else {
+                                        if (typeof files === "string") {
+                                          return files.startsWith("http")
+                                            ? files
+                                            : `${BASE_URL}/${files}`;
+                                        } else if (
+                                          Array.isArray(files) &&
+                                          files.length > 0
+                                        ) {
+                                          return files[0].startsWith("http")
+                                            ? files[0]
+                                            : `${BASE_URL}/${files[0]}`;
+                                        } else {
+                                          return "default-image.jpg";
+                                        }
+                                      } catch (error) {
+                                        console.error(
+                                          "Error parsing file_name:",
+                                          error
+                                        );
                                         return "default-image.jpg";
                                       }
-                                    } catch (error) {
-                                      console.error("Error parsing file_name:", error);
-                                      return "default-image.jpg";
-                                    }
-                                  })()}
-                                  alt={property.title || "property Image"}
-                                />
-                              </div>
-                              <h5>{property.property_title}</h5>
-                              <div className="home_price">
-                                <h6>
-                                  Price: ₹ <span className="ask_price_side">{property.asking_price}</span>
-                                </h6>
-                                <span className="home_con">{property.listing_type}</span>
-                              </div>
-                              <div className="home_call">
-                                <h6>
-                                  <IoLocation /> {property.city}
-                                </h6>
-                                <h6 style={{ cursor: "pointer" }}>Call</h6>
+                                    })()}
+                                    alt={property.title || "property Image"}
+                                  />
+                                </div>
+                                <h5>{property.property_title}</h5>
+                                <div className="home_price">
+                                  <h6>
+                                    Price: ₹{" "}
+                                    <span className="ask_price_side">
+                                      {property.asking_price}
+                                    </span>
+                                  </h6>
+                                  <span className="home_con">
+                                    {property.listing_type}
+                                  </span>
+                                </div>
+                                <div className="home_call">
+                                  <h6>
+                                    <IoLocation /> {property.city}
+                                  </h6>
+                                  <h6 style={{ cursor: "pointer" }}>Call</h6>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
                   </>
                 )}
               </div>
-
             </div>
             <div className=" row single_container">
               {type === "business" && business && (
@@ -528,19 +653,17 @@ function PropertyBuySinglePage() {
                               <div className="col-6 ask_price">
                                 <span>
                                   {" "}
-                                  Asking Price :{" "}
-                                  ₹ <span className="green-text">{business.asking_price} </span>{" "}
+                                  Asking Price : ₹{" "}
+                                  <span className="green-text">
+                                    {business.asking_price}{" "}
+                                  </span>{" "}
                                 </span>
                               </div>
                               <div className="col-6 pro_city">
                                 <IoLocation />
-                                <span>
-                                  {" "}
-                                  {business.city}{" "}
-                                </span>
+                                <span> {business.city} </span>
                               </div>
                             </div>
-                            
                           </div>
 
                           {/* Business Financials in table format */}
@@ -548,16 +671,17 @@ function PropertyBuySinglePage() {
                             {/* Business Financials Table */}
                             <div className="propertyInfoTableContainer">
                               <table className="propertyInfoTable">
-                              <thead className=" table_heading">
-                                <tr>
-                                  <th colSpan="2">Proposal</th> {/* Adjust colSpan to cover all columns */}
-                                </tr>
-                              </thead>
+                                <thead className=" table_heading">
+                                  <tr>
+                                    <th colSpan="2">Proposal</th>{" "}
+                                    {/* Adjust colSpan to cover all columns */}
+                                  </tr>
+                                </thead>
                                 <tbody>
                                   <tr>
                                     <td>
                                       {" "}
-                                      REPORTED TURNOVER (YEARLY): <br />{" "}₹
+                                      REPORTED TURNOVER (YEARLY): <br /> ₹
                                       <span className="green-text">
                                         {" "}
                                         {business.reported_turnover_from} -{" "}
@@ -634,16 +758,83 @@ function PropertyBuySinglePage() {
                   </div>
 
                   {/* Description Section */}
-                  <div className="descriptionSection">
-                    <h3>Description</h3>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          business.description ||
-                          "<p>No description available</p>",
-                      }}
-                    />
+                  <div className="container_b">
+                    <div className="descriptionSection">
+                      <h3>Description</h3>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            business.description ||
+                            "<p>No description available</p>",
+                        }}
+                      />
+                    </div>
+
+                    <div className="button_box">
+                      <button className="enquiry-btn" onClick={toggleModal}>
+                        Enquiry Form
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Form Section */}
+                  {/* Modal for Enquiry Form */}
+                  <Modal show={showModal} onHide={toggleModal} centered>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Send Us A Message</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="form-page">
+                      <h5>Send Us A Message</h5>
+                      <p>
+                        Please contact us for any assistance by filling up the
+                        form below. We will get back to you within 24 hours.
+                      </p>
+                      <form onSubmit={handleSubmit}>
+                        <div className="ipt">
+                          <input
+                            type="text"
+                            name="name"
+                            placeholder="Full Name*"
+                            required
+                            value={formData.name}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="ipt">
+                          <input
+                            type="email"
+                            name="email"
+                            placeholder="Email*"
+                            required
+                            value={formData.email}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="ipt">
+                          <input
+                            type="text"
+                            name="listing_title"
+                            placeholder="Listing Title*"
+                            required
+                            value={formData.listing_title}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="ipt">
+                          <textarea
+                            name="enquiry_message"
+                            placeholder="Message*"
+                            required
+                            value={formData.enquiry_message}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="btn-cont">
+                          <button type="submit">SEND MESSAGE</button>
+                        </div>
+                      </form>
+                    </Modal.Body>
+                  </Modal>
 
                   {/* Google Map Section */}
                   <div className="mapLocationDiv">
@@ -658,85 +849,98 @@ function PropertyBuySinglePage() {
                   </div>
                 </div>
               )}
-             <div className="col-3 property-listings-scroll ">
-              {type === "business" && (
-                <>
-                <div className="buy_back">
-                  <h2>SIMILAR LISTINGS</h2> {/* Move this outside the map */}
-                  {homeBusiness.map((list, index) => (
-                    <div className="" key={index}>
-                      <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow">
-                        <div className="propertyBuyClsNameCOL">
-                          <div className="propertyBuyClsNameBox">
-                            <div className="promotedTextWrapper">
-                              <img
-                                className="img-fluid"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handlepropertyNavigate("business", list.id)}
-                                src={(() => {
-                                  try {
-                                    const fileName = list.file_name;
-
-                                    const files =
-                                      typeof fileName === "string" &&
-                                      fileName.startsWith("[")
-                                        ? JSON.parse(fileName)
-                                        : fileName;
-
-                                    if (typeof files === "string") {
-                                      return files.startsWith("http")
-                                        ? files
-                                        : `${BASE_URL}/${files}`;
-                                    } else if (
-                                      Array.isArray(files) &&
-                                      files.length > 0
-                                    ) {
-                                      return files[0].startsWith("http")
-                                        ? files[0]
-                                        : `${BASE_URL}/${files[0]}`;
-                                    } else {
-                                      return "default-image.jpg";
+              <div className="col-3 property-listings-scroll ">
+                {type === "business" && (
+                  <>
+                    <div className="buy_back">
+                      <h2>SIMILAR LISTINGS</h2>{" "}
+                      {/* Move this outside the map */}
+                      {homeBusiness.map((list, index) => (
+                        <div className="" key={index}>
+                          <div className="propertyBuyClsNameRow_1 propertyBuyClsNameExploreRow">
+                            <div className="propertyBuyClsNameCOL">
+                              <div className="propertyBuyClsNameBox">
+                                <div className="promotedTextWrapper">
+                                  <img
+                                    className="img-fluid"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() =>
+                                      handlepropertyNavigate(
+                                        "business",
+                                        list.id
+                                      )
                                     }
-                                  } catch (error) {
-                                    console.error(
-                                      "Error parsing or handling file_name:",
-                                      error
-                                    );
-                                    return "default-image.jpg";
-                                  }
-                                })()}
-                                alt={list.title || "business Image"}
-                              />
-                            </div>
-                            <h5>{list.title}</h5>
-                            <div className="home_price">
+                                    src={(() => {
+                                      try {
+                                        const fileName = list.file_name;
+
+                                        const files =
+                                          typeof fileName === "string" &&
+                                          fileName.startsWith("[")
+                                            ? JSON.parse(fileName)
+                                            : fileName;
+
+                                        if (typeof files === "string") {
+                                          return files.startsWith("http")
+                                            ? files
+                                            : `${BASE_URL}/${files}`;
+                                        } else if (
+                                          Array.isArray(files) &&
+                                          files.length > 0
+                                        ) {
+                                          return files[0].startsWith("http")
+                                            ? files[0]
+                                            : `${BASE_URL}/${files[0]}`;
+                                        } else {
+                                          return "default-image.jpg";
+                                        }
+                                      } catch (error) {
+                                        console.error(
+                                          "Error parsing or handling file_name:",
+                                          error
+                                        );
+                                        return "default-image.jpg";
+                                      }
+                                    })()}
+                                    alt={list.title || "business Image"}
+                                  />
+                                </div>
+                                <h5>{list.title}</h5>
+                                <div className="home_price">
+                                  <h6>
+                                    Price: ₹{" "}
+                                    <span className="ask_price_side">
+                                      {list.asking_price}
+                                    </span>
+                                  </h6>
+                                  <span className="home_con">
+                                    {list.listing_type}
+                                  </span>
+                                </div>
                                 <h6>
-                                  Price: ₹ <span className="ask_price_side">{list.asking_price}</span>
+                                  Reported Sale (yearly):
+                                  <br />₹{" "}
+                                  <span className="green-text">
+                                    {" "}
+                                    {list.reported_turnover_from} -{" "}
+                                    {list.reported_turnover_to}{" "}
+                                  </span>
                                 </h6>
-                                <span className="home_con">{list.listing_type}</span>
+                                <div className="home_call">
+                                  <h6>
+                                    <IoLocation /> {list.city}
+                                  </h6>
+                                  <h6 style={{ cursor: "pointer" }}>Call</h6>
+                                </div>
                               </div>
-                            <h6>Reported Sale (yearly): 
-                              <br />₹ <span className="green-text">
-                                {" "}
-                                {list.reported_turnover_from} -{" "}
-                                {list.reported_turnover_to}{" "}
-                              </span></h6>
-                            <div className="home_call">
-                              <h6>
-                                <IoLocation /> {list.city}
-                              </h6>
-                              <h6 style={{ cursor: "pointer" }}>Call</h6>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-                </>
-              )}
-            </div>
-
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>

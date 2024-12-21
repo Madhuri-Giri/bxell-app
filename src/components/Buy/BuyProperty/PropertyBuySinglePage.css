@@ -365,3 +365,168 @@ text-align: center;
   background-color: #008080; /* Scrollbar thumb color */
   border-radius: 5px; /* Rounded corners */
 }
+
+/* Button style */
+.container_b {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  
+}
+
+.ipt input,
+.ipt textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.ipt input:focus,
+.ipt textarea:focus {
+  border-color: #008080; /* Change border color on focus */
+  outline: none;
+}
+.btn-cont {
+  text-align: center;
+}
+
+.btn-cont button {
+  background-color: #008080;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+ 
+}
+
+.btn-cont button:hover {
+  background-color: #006f6f; /* Darken on hover */
+}
+
+.descriptionSection {
+  flex: 2;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.descriptionSection h3 {
+  font-size: 24px;
+  color: #333;
+}
+
+.descriptionSection p {
+  font-size: 16px;
+  color: #666;
+}
+
+.button_box {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+}
+
+.enquiry-btn {
+  background-color: #008080;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.enquiry-btn:hover {
+  background-color: #006f6f;
+}
+
+/* Modal styling */
+/* Custom modal width */
+.modal-dialog {
+  max-width: 60%; /* Increase the max width as required */
+  width: 80%; /* Adjust the width of the modal */
+}
+
+/* Optional: Adjust modal content padding */
+.modal-content {
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: For very large modals, you can apply a max-width */
+.modal-dialog.modal-lg {
+  max-width: 1200px; /* Adjust the max width */
+}
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header .close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #333;
+}
+
+.modal-body .form-page {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-body .form-page h5 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-body .form-page p {
+  font-size: 14px;
+  color: #666;
+}
+
+.modal-body .form-page .ipt input,
+.modal-body .form-page .ipt textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+/* Centering the button without full width */
+.modal-body .form-page .btn-cont {
+  display: flex;
+  justify-content: center;  /* Center the button horizontally */
+  align-items: center;      /* Optional: Center vertically if needed */
+}
+
+.modal-body .form-page .btn-cont button {
+  background-color: #008080;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: auto; 
+}
+
+.modal-body .form-page .btn-cont button:hover {
+  background-color: #006f6f;
+}
+

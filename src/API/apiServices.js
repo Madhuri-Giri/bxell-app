@@ -17,7 +17,23 @@ export const RATING_PROPERTY_API_URL = `${BASE_URL}/property-rating`;
 export const RATING_BUSINESS_API_URL = `${BASE_URL}/business-rating`;
 export const UPDATE_PROFILE_API_URL = `${BASE_URL}/update-profile`;
 export const USER_PROFILE_API_URL = `${BASE_URL}/user-detail`;
+export const ENQUIRY_API_URL = `${BASE_URL}/business-enquiry`;
+//------------------------------ENQUIRY API-------------------------------------
+const submitpropertyEnquiryForm = async (formData) => {
+  try {
+    const response = await axios.post(ENQUIRY_API_URL, formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
+    console.log("Enquiry Form Response:", response.data);
+    return response.data; 
+  } catch (error) {
+    console.error("Error submitting enquiry form data:", error.response?.data || error.message);
+    throw error;
+  }
+};
 // -----------------------user profile api--------------------------------------
 export const userProfile = async (id) => {
   try {
