@@ -17,25 +17,40 @@ export const RATING_PROPERTY_API_URL = `${BASE_URL}/property-rating`;
 export const RATING_BUSINESS_API_URL = `${BASE_URL}/business-rating`;
 export const UPDATE_PROFILE_API_URL = `${BASE_URL}/update-profile`;
 export const USER_PROFILE_API_URL = `${BASE_URL}/user-detail`;
-export const ENQUIRY_API_URL = `${BASE_URL}/business-enquiry`;
+export const PROPERTY_ENQUIRY_API_URL = `${BASE_URL}/property-enquiry`;
+export const BUSINESS_ENQUIRY_API_URL = `${BASE_URL}/business-enquiry`;
 export const BUSINESS_FAVORITE_API_URL = `${BASE_URL}/business-favorite`;
 export const PROPERTY_FAVORITE_API_URL = `${BASE_URL}/property-favorite`;
-//------------------------------ENQUIRY API-------------------------------------
-const submitpropertyEnquiryForm = async (formData) => {
+export const PROPERTY_FAVORITE_DISPLAY_URL = `${BASE_URL}/property-favorite-detail`;
+export const BUSINESS_FAVORITE_DISPLAY_URL =  `${BASE_URL}/business-favorite-detail`;
+//------------------------------PROPERTY ENQUIRY API-------------------------------------
+export const submitpropertyEnquiryForm = async (formData) => {
   try {
-    const response = await axios.post(ENQUIRY_API_URL, formData, {
+    const response = await axios.post(PROPERTY_ENQUIRY_API_URL, formData, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-
-    console.log("Enquiry Form Response:", response.data);
-    return response.data; 
+    return response.data;
   } catch (error) {
-    console.error("Error submitting enquiry form data:", error.response?.data || error.message);
     throw error;
   }
 };
+
+//------------------------------BUSINESS ENQUIRY API-------------------------------------
+export const submitbusinessEnquiryForm = async (formData) => {
+  try {
+    const response = await axios.post(BUSINESS_ENQUIRY_API_URL, formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // -----------------------user profile api--------------------------------------
 export const userProfile = async (id) => {
   try {
@@ -466,5 +481,27 @@ export const fetchPropertyFav = async (propertyId) => {
     // Log and handle the error
     console.error("Error posting property favorite:", error);
     return { success: false, message: error.message }; // Return error object
+  }
+};
+
+// -----------------------------------property get favorite data------------------------------
+export const fetchPropertyFavoriteRes = async () => { 
+  try {
+    const response = await axios.get(PROPERTY_FAVORITE_DISPLAY_URL);
+    return response.data.property_favorite_detail; // Return the entire property detail
+  } catch (error) {
+    console.error("Error fetching property details:", error);
+    return []; // Return empty array in case of error
+  }
+};
+
+// -----------------------------------property get favorite data------------------------------
+export const fetchBusinessFavoriteRes = async () => {
+  try {
+    const response = await axios.get(BUSINESS_FAVORITE_DISPLAY_URL);
+    return response.data.business_favorite_detail; // Return business details
+  } catch (error) {
+    console.error("Error fetching business details:", error);
+    return []; // Return empty array in case of error
   }
 };
