@@ -1,62 +1,72 @@
-.propertyBuyListingSec{
+.propertyBuyListingSec {
     padding: 50px 0px;
 }
-.propertyBuyListingBox{
+
+.propertyBuyListingBox {
     padding: 5px 5px;
     border-radius: 7px;
     /* margin-bottom: 30px; */
     position: relative;
-    
 }
-.propertyBuyListingBox img{
+
+.propertyBuyListingBox img {
     margin-bottom: 10px;
     border-radius: 2px;
     height: 240px;
     width: 100%;
 }
-.explorePropertyHed{
+
+.explorePropertyHed {
     background-color: #008080;
     color: white;
     padding: 10px 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
-.propertyBuyListingRow_2{
+
+.propertyBuyListingRow_2 {
     /* margin-top: 6px; */
 }
-.propertyBuyListingRow_2 a{
+
+.propertyBuyListingRow_2 a {
     text-decoration: none;
 }
-.propertyBuyListingRow_1 h6{
+
+.propertyBuyListingRow_1 h6 {
     color: gray;
     font-weight: 400;
     margin-bottom: 10px;
 }
-.propertyBuyListingRow_1 h6 span{
+
+.propertyBuyListingRow_1 h6 span {
     color: rgb(86, 181, 86);
     font-weight: 600;
 }
 
-.propertyBuyListingRow_2 h6{
+.propertyBuyListingRow_2 h6 {
     color: gray;
     font-weight: 400;
     margin-bottom: 15px;
 }
-.propertyBuyListingfilterBox{
+
+.propertyBuyListingfilterBox {
     box-shadow: 2px 3px 3px 4px rgba(128, 128, 128, 0.189);
     padding: 15px;
     border-radius: 6px;
 }
-.propertyBuyListingfilterBox label{
+
+.propertyBuyListingfilterBox label {
     color: #008080;
     font-weight: 600;
     margin-left: 5px;
     margin-top: 10px;
 }
-.propertyBuyListingfilterBox select{
+
+.propertyBuyListingfilterBox select {
     padding: 6px 7px;
     font-size: 13px;
 }
-.propertyBuyListingExploreRow img{
+
+.propertyBuyListingExploreRow img {
     height: 240px;
     width: 100%;
 }
@@ -90,7 +100,7 @@
     cursor: pointer;
     z-index: 10;
     margin-left: 10px;
-    float: right; 
+    float: right;
 }
 
 .propertyBuyListingSec .wishlist-icon {
@@ -121,42 +131,61 @@
     border: none;
     cursor: pointer;
 }
+
 .propertyBuyListingSec .call-btn svg {
     font-size: 10px;
     margin-top: -3px;
 }
-.filter_listing_type{
 
-}
+.filter_listing_type {}
 
-.filter_listing_type h6{
+.filter_listing_type h6 {
     color: #008080;
     font-weight: 600;
 }
+
 .filter_listing_type {
     margin: 20px 0;
-  }
-  
+}
 
-  .filter_box {
+
+.filter_box {
     display: flex;
-    gap: 10px; 
-  }
-  
-  .filter-button {
+    gap: 10px;
+}
+
+.filter-button {
     color: #008080;
     padding: 6px 12px;
     font-weight: bold;
-    border: 2px solid #008080; 
-  border-radius: 2px; 
+    border: 2px solid #008080;
+    border-radius: 2px;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s; 
-  }
-  
-  .filter-button.active {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.filter-button.active {
     background-color: #008080;
-    color: white; 
-  }
-  
- 
-  
+    color: white;
+}
+
+.search-bar-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0;
+}
+
+.search-input {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.search-button {
+    padding: 6px 15px;
+    background-color: #008080;
+    color: white;
+    border: 2px solid #008080;
+    border-radius: 2px;
+    text-transform: uppercase;
+}

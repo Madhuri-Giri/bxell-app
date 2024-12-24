@@ -70,43 +70,39 @@ function MainBanner() {
 
   return (
     <section className="homeBanner">
-         
-            {/* Vertical Icons Section */}
-            <div className="vertical-icons">
-  <div style={{cursor:"pointer", }} className="vertical-box">
-    <a
-      href="https://www.instagram.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="clickable-link"
-    >
-      <img src={instagram} alt="Instagram" />
-    </a>
-  </div>
-  <div className="vertical-box">
-    <a
-      href="https://wa.me/<your_number>"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="clickable-link"
-    >
-      <img src={whatsapp} alt="WhatsApp" />
-    </a>
-  </div>
-  <div className="vertical-box">
-    <a
-      href="tel:+123456789"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="clickable-link"
-    >
-      <img src={phone} alt="Phone" />
-    </a>
-  </div>
-</div>
-
-
-
+      {/* Vertical Icons Section */}
+      <div className="vertical-icons">
+        <div style={{ cursor: "pointer" }} className="vertical-box">
+          <a
+            href="https://www.instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="clickable-link"
+          >
+            <img src={instagram} alt="Instagram" />
+          </a>
+        </div>
+        <div className="vertical-box">
+          <a
+            href="https://wa.me/<your_number>"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="clickable-link"
+          >
+            <img src={whatsapp} alt="WhatsApp" />
+          </a>
+        </div>
+        <div className="vertical-box">
+          <a
+            href="tel:+123456789"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="clickable-link"
+          >
+            <img src={phone} alt="Phone" />
+          </a>
+        </div>
+      </div>
 
       <div className="overlay"></div>
       <div className="container text-container">
