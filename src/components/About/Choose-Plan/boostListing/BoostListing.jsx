@@ -357,15 +357,18 @@ try {
                     </h6>
                     <span className="home_conBoost">{business.listing_type}</span>
                   </div>
-                  <h6>Reported Sale (yearly): {business.sale}</h6>
+                  <h6>Reported Sale (yearly) : <br></br> 
+                      ₹ <span>{business.reported_turnover_from} - </span>
+                      <span>{business.reported_turnover_to}</span>
+                  </h6>
                   <div className="home_callBoost">
                     <h6>
                       <IoLocation /> {business.city}
                     </h6>
                     <h6>Call</h6>
                   </div>
-                  <div className="btn_boost"> 
-                  <button className="btn_boost" onClick={() => handlePaymentForBusiness(business.id)}>pay now</button>
+                  <div className="btn_boost" style={{ cursor: "pointer" }} onClick={() => handlePaymentForBusiness(business.id)}> 
+                  <button className="btn_boost">Pay now</button>
                   </div>
                 </div>
               </div>
@@ -398,14 +401,16 @@ try {
                     </h6>
                     <span className="home_conBoost">{property.listing_type}</span>
                   </div>
-                  <h6>Reported Sale (yearly): {property.sale}</h6>
+                  <div>
+                    <h6>Property Type : <strong>{property.property_type}</strong></h6>
+                  </div>
                   <div className="home_callBoost">
                     <h6>
                       <IoLocation /> {property.city}
                     </h6>
                     <h6>Call</h6>
                   </div>
-                  <div className="btn_boost"> <button className="btn_boost"  onClick={() => handlePaymentForProperty(property.id)}>pay now</button> </div>
+                  <div className="btn_boost" style={{cursor:"pointer"}} onClick={() => handlePaymentForProperty(property.id)}>  <button className="btn_boost">Pay now</button> </div>
                  
                 </div>
              

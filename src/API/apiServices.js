@@ -23,6 +23,7 @@ export const BUSINESS_FAVORITE_API_URL = `${BASE_URL}/business-favorite`;
 export const PROPERTY_FAVORITE_API_URL = `${BASE_URL}/property-favorite`;
 export const PROPERTY_FAVORITE_DISPLAY_URL = `${BASE_URL}/property-favorite-detail`;
 export const BUSINESS_FAVORITE_DISPLAY_URL =  `${BASE_URL}/business-favorite-detail`;
+export const ENQUIRY_DETAIL_API_URL = `${BASE_URL}/enquiry-detail`;
 //------------------------------PROPERTY ENQUIRY API-------------------------------------
 export const submitpropertyEnquiryForm = async (formData) => {
   try {
@@ -502,6 +503,21 @@ export const fetchBusinessFavoriteRes = async () => {
     return response.data.business_favorite_detail; // Return business details
   } catch (error) {
     console.error("Error fetching business details:", error);
+    return []; // Return empty array in case of error
+  }
+};
+// -------------------------------------ENQUIRY DETAIL---------------------------------
+export const fetchEnquiryDetailRes = async (userId) => {
+  if (!userId) {
+    throw new Error("User ID is not available. Please log in.");
+  }
+  try {
+    const response = await axios.post(ENQUIRY_DETAIL_API_URL, {
+      user_id: userId,
+    });
+    return response.data.enquiry_details; // Return enquiry details
+  } catch (error) {
+    console.error("Error fetching enquiry details:", error);
     return []; // Return empty array in case of error
   }
 };

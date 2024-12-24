@@ -4,19 +4,45 @@ import { fetchListingDetail } from "../../API/apiServices"; // Import the API fu
 import { IoLocation } from "react-icons/io5";
 import {fetchUpdateBusinessStock, fetchUpdatePropertyStock} from "../../API/apiServices"; 
 import { useSelector } from 'react-redux';
-import { fetchPropertyFavoriteRes, fetchBusinessFavoriteRes } from '../../API/apiServices'; // Import the API functions
+import { fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes } from '../../API/apiServices'; // Import the API functions
 import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
 
 function ProfileListingDetails() {
   const [listingDetails, setListingDetails] = useState(null); // State to store API response
   const [soldStatus, setSoldStatus] = useState({}); // State to track ON/OFF checkbox status
-const user = useSelector((state) => state.auth.user);
+
 
 const [propertyData, setPropertyData] = useState([]);
 const [businessData, setBusinessData] = useState([]);
 const [wishlist, setWishlist] = useState({});
 const [activeTab, setActiveTab] = useState("listings");
 
+const [enquiryDetails, setEnquiryDetails] = useState([]);
+const [loading, setLoading] = useState(true);
+
+ const user = useSelector((state) => state.auth.user);
+
+ useEffect(() => {
+  const fetchData = async () => {
+    if (!user) {
+      setError("User is not logged in.");
+      setLoading(false);
+      return;
+    }
+    try {
+      setLoading(true);
+      const details = await fetchEnquiryDetailRes(user); // Assuming user.id exists
+      setEnquiryDetails(details);
+    } catch (err) {
+      setError("Failed to fetch enquiry details.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [user]);
 
 useEffect(() => {
   const fetchData = async () => {
@@ -143,6 +169,13 @@ const handleWishlistClick = (index, id) => {
           >
            FAVOURITE
           </button>
+          <button
+            className={`tab-button ${activeTab === "enquiry" ? "active" : ""}`}
+            onClick={() => setActiveTab("enquiry")}
+          >
+           Enquiry
+          </button>
+          
         </div>
 
         {activeTab === "listings" && (
@@ -401,6 +434,32 @@ const handleWishlistClick = (index, id) => {
 
 
     </div>
+    )}
+    </section>
+
+    <section>
+    {activeTab === "enquiry" && (
+   <div>
+   <h2>Enquiry Details</h2>
+   <table border="1" style={{ width: "100%", textAlign: "left" }}>
+     <thead>
+       <tr>
+         <th>Name</th>
+         <th>Email</th>
+         <th>Listing Type</th>
+       </tr>
+     </thead>
+     <tbody>
+       {enquiryDetails.map((detail) => (
+         <tr key={detail.id}>
+           <td>{detail.name}</td>
+           <td>{detail.email}</td>
+           <td>{detail.listing_name}</td>
+         </tr>
+       ))}
+     </tbody>
+   </table>
+ </div>
     )}
     </section>
     </>

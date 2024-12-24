@@ -82,13 +82,14 @@ function SellPropertyForm() {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: undefined }));
   };
 
-  const handleListingTypeChange = (event) => {
-    setListingType(event.target.value);
+  const handleListingTypeChange = (type) => {
+    setListingType(type);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      listing_type: event.target.value, // Update listing_type in formData
+      listing_type: type, // Update listing_type in formData
     }));
   };
+
 
  
   const handleNext = () => {
@@ -434,7 +435,7 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
                   <div className="row">
                     {step === 0 && (
                       <>
-                        <div className="col-7">
+                        {/* <div className="col-7">
                           <Form.Group controlId="listing_type" className="businessListingFormsDiv" >
                             <Form.Label>LISTING TYPE</Form.Label>
                             <span className="vallidateRequiredStar">*</span>
@@ -447,8 +448,22 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
                             {errors.listing_type && ( <small className="text-danger">  {errors.listing_type} </small>
                             )}
                           </Form.Group>
+                        </div> */}
+<div className="col-12">
+                          <Form.Group  controlId="listing_type"  className="businessListingFormsDiv propertyFormRadio" >
+                            <Form.Label>Listing TYPE</Form.Label>
+                            <span className="vallidateRequiredStar">*</span>
+                            <div className="row">
+                              <div className="mb-3 propertyTypeButtons property_space">
+                                {[ "Selling", "Renting",  "Leasing"].map((type) => (
+                                  <Button  key={type} type="button"  className={`btn btn-outline-primary propertyTypeButton ${  listing_type === type ? "active" : ""
+                                    }`}
+                                    onClick={() => handleListingTypeChange(type) } > {type} </Button> ))}
+                              </div>
+                            </div>
+                            {errors.listing_type && ( <small className="text-danger"> {errors.listing_type}</small> )}
+                          </Form.Group>
                         </div>
-
                         <div className="col-12">
                           <Form.Group  controlId="property_type"  className="businessListingFormsDiv propertyFormRadio" >
                             <Form.Label>PROPERTY TYPE</Form.Label>

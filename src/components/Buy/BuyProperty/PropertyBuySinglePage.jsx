@@ -410,6 +410,9 @@ function PropertyBuySinglePage() {
                                   <h6>Price: ₹ <span className="ask_price_side">  {property.asking_price}  </span></h6>
                                   <span className="home_con">  {property.listing_type}</span>
                                 </div>
+                                <div>
+                                  <h6>Property Type : <strong>{property.property_type}</strong></h6>
+                                </div>
                                 <div className="home_call">
                                   <h6>  <IoLocation /> {property.city}  </h6>
                                   <h6 style={{ cursor: "pointer" }}>Call</h6>

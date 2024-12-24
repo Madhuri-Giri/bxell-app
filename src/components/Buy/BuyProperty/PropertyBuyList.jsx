@@ -439,6 +439,9 @@ function PropertyBuyList() {
                             <span className="interested">  {listsProperty.interested} Interested </span>
                           </div>
                           <h6>Asking Price: ₹ <span>{listsProperty.asking_price}</span></h6>
+                          <div>
+                                  <h6>Property Type : <strong>{listsProperty.property_type}</strong></h6>
+                                </div>
                           {/* <h6>
                             {" "}
                             Reported Sale (yearly):{" "}

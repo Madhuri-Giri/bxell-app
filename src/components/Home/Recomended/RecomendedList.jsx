@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/ eslint-disable no-unused-vars /
 import React, { useState, useEffect } from "react";
 import "./RecomendedList.css";
 import { IoLocation } from "react-icons/io5";
@@ -73,7 +73,7 @@ function RecomendedList() {
             <h6>RECOMMENDED LISTINGS FOR YOU</h6>
           </div>
 
-          {/* Business Listings */}
+         
           <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
             {homeBusiness.map((list, index) => (
               <div className="col-lg-3 recommendationsClsNameCOL" key={index}>
@@ -143,14 +143,13 @@ function RecomendedList() {
                       <IoLocation /> {list.city}
                     </h6>
                     <h6 style={{ cursor: "pointer" }}>Call </h6>
-                    {/* <h6>{list.phone_number}</h6> */}
+                   
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Property Listings */}
           <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
             {homeProperty.map((property, index) => (
               <div className="col-lg-3 recommendationsClsNameCOL" key={index}>
@@ -205,12 +204,15 @@ function RecomendedList() {
                     </h6>
                     <span className="home_con">{property.listing_type}</span>
                   </div>
-                  {/* <h6>Reported Sale (yearly): {property.sale}</h6> */}
+                  
+                  <div>
+                      <h6>Property Type : <strong>{property.property_type}</strong></h6>
+                  </div>
                   <div className="home_call">
                     <h6>
                       <IoLocation /> {property.city}
                     </h6>
-                    {/* <h6>{property.phone_number}</h6> */}
+                  
                     <h6 style={{ cursor: "pointer" }}>Call </h6>
                   </div>
                 </div>
