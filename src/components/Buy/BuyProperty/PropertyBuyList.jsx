@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import "./PropertyBuyList.css";
+import { useSelector } from 'react-redux';
 import { IoLocation } from "react-icons/io5";
 import { FaHeart, FaPhoneAlt, FaRegHeart } from "react-icons/fa"; // Added icons
 import { useNavigate } from "react-router-dom";
@@ -19,7 +20,8 @@ function PropertyBuyList() {
   const [businessFilter, setBusinessFilter] = useState({});
   const [propertyFilter, setPropertyFilter] = useState({});
   const [loading, setLoading] = useState(true);
-
+  const user_id = useSelector((state) => state.auth.user);
+  
   const [selectedFilters, setSelectedFilters] = useState({
     // for business
     business_type: "",
@@ -177,22 +179,43 @@ function PropertyBuyList() {
   };
 
   const handleBusinessFavorite = async (businessId) => {
-    const result = await fetchBusinessFav(businessId);
-    if (result.success === false) {
-      console.error(result.message); // Handle error
-    } else {
-      console.log("Business favorite added successfully:", result);
+    if (!user_id) {
+      console.error("User ID is not available.");
+      return;
+    }
+  
+    try {
+      const result = await fetchBusinessFav(businessId, user_id);
+      if (!result.success) {
+        console.error(result.message); // Handle error
+      } else {
+        console.log("Business favorite added successfully:", result);
+      }
+    } catch (error) {
+      console.error("Error handling business favorite:", error.message);
     }
   };
-
+  
+  
   const handlePropertyFavorite = async (propertyId) => {
-    const result = await fetchPropertyFav(propertyId);
-    if (result.success === false) {
-      console.error(result.message); // Handle error
-    } else {
-      console.log("Property favorite added successfully:", result);
+    if (!user_id) {
+      console.error("User ID is not available.");
+      return;
+    }
+  
+    try {
+      const result = await fetchPropertyFav(propertyId, user_id);
+      if (!result.success) {
+        console.error(result.message); // Handle error
+      } else {
+        console.log("Property favorite added successfully:", result);
+      }
+    } catch (error) {
+      console.error("Error handling property favorite:", error.message);
     }
   };
+  
+  
 
   useEffect(() => {
     // Load wishlist state from localStorage on component mount
@@ -517,11 +540,12 @@ function PropertyBuyList() {
                               <span className="interested"> {lists.interested} Interested </span>
                             </div>
                             <h6> Asking Price: ₹ <span className="">{lists.asking_price}</span> </h6>
-                            <h6> Reported Sale (yearly): ₹ <span className="green-text"> {lists.reported_turnover_from} - {lists.reported_turnover_to} </span> </h6>
+                            <h6> Reported Sale (yearly): ₹ <span className="green-text"> {lists.reported_turnover_from} - <br />{lists.reported_turnover_to} </span> </h6>
                             <div className="location-call">
                               <h6> <IoLocation /> {lists.city} </h6>
-                              <button className="call-btn"> Call <FaPhoneAlt />
-                              </button>
+                              {/* <button className="call-btn"> Call <FaPhoneAlt />
+                              </button> */}
+                              <a href={`tel:${lists.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
                             </div>
                           </div>
                         </div>
@@ -584,7 +608,8 @@ function PropertyBuyList() {
                           {/* <h6><IoLocation /> {listsProperty.city}</h6> */}
                           <div className="location-call">
                             <h6> <IoLocation /> {listsProperty.city} </h6>
-                            <button className="call-btn"> Call <FaPhoneAlt /> </button>
+                            {/* <button className="call-btn"> Call <FaPhoneAlt /> </button> */}
+                            <a href={`tel:${listsProperty.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
                           </div>
                         </div>
                       </div>

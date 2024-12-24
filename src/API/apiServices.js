@@ -436,52 +436,48 @@ export const fetchPropertyRating = async (propertyListingId, rating, userId) => 
 };
 
 // -----------------------------------business favorite--------------------
-export const fetchBusinessFav = async (businessId) => {
+export const fetchBusinessFav = async (businessId, userId) => {
   try {
-    if (!businessId) {
-      throw new Error("Business ID is required.");
+    if (!businessId || !userId) {
+      throw new Error("Business ID and User ID are required.");
     }
 
-    // Make the API call
     const response = await axios.post(BUSINESS_FAVORITE_API_URL, {
+      user_id: userId,
       business_id: businessId,
     });
 
-    // Check if the response status is 200
     if (response.status === 200 && response.data.result) {
       return response.data; // Successful response
     } else {
       throw new Error(response.data.message || "Failed to add business favorite.");
     }
   } catch (error) {
-    // Log and handle the error
     console.error("Error posting business favorite:", error);
-    return { success: false, message: error.message }; // Return error object
+    return { success: false, message: error.message };
   }
 };
 
 //-----------------------------------property favorite----------------------
-export const fetchPropertyFav = async (propertyId) => {
+export const fetchPropertyFav = async (propertyId, userId) => {
   try {
-    if (!propertyId) {
-      throw new Error("Property ID is required.");
+    if (!propertyId || !userId) {
+      throw new Error("Property ID and User ID are required.");
     }
 
-    // Make the API call
     const response = await axios.post(PROPERTY_FAVORITE_API_URL, {
+      user_id: userId,
       property_id: propertyId,
     });
 
-    // Check if the response status is 200
     if (response.status === 200 && response.data.result) {
       return response.data; // Successful response
     } else {
       throw new Error(response.data.message || "Failed to add property favorite.");
     }
   } catch (error) {
-    // Log and handle the error
     console.error("Error posting property favorite:", error);
-    return { success: false, message: error.message }; // Return error object
+    return { success: false, message: error.message };
   }
 };
 
