@@ -17,10 +17,12 @@
 }
 
 .explorePropertyHed {
-    background-color: #008080;
+    background-color: #75acac;
     color: white;
-    padding: 10px 20px;
+    padding: 5px 10px;
     margin-bottom: 20px;
+    letter-spacing: 1.4px;
+    text-align: left;
 }
 
 .propertyBuyListingRow_2 {
@@ -183,9 +185,16 @@
 
 .search-button {
     padding: 6px 15px;
-    background-color: #008080;
+    background-color: #75acac;
     color: white;
-    border: 2px solid #008080;
+    border: 2px solid #75acac;
     border-radius: 2px;
     text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 1.2px;
+}
+
+.search-button:hover{
+    color:white;
+    background-color: #008080;
 }

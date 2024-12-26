@@ -210,4 +210,76 @@
     gap: 1rem; /* Space between items */
   }
   
- 
+  .enquiry-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .enquiry-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+  }
+  
+  .enquiry-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .enquiry-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .enquiry-table th, .enquiry-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .enquiry-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .enquiry-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .enquiry-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  .tab-button{
+    color: #008080;
+    font-weight: bolder;
+    letter-spacing: 1.3px;
+    font-size: 15px;
+    border-radius: 2px solid #008080;
+    border: none;
+    cursor: pointer;
+}
+
+.tab-button.active{
+    color: #008080;
+    background-color: #c8dbdb;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.listingDetailSecBoost .tab-button.active {
+    background-color: #7ca3a3;
+    color: #008080;
+}  
+.explorePropertyHeding {
+    background-color: #f3f3f3;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    letter-spacing: 1.4px;
+    text-align: left;
+}

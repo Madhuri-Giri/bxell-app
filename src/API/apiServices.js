@@ -449,6 +449,7 @@ export const fetchBusinessFav = async (businessId, userId) => {
 
     if (response.status === 200 && response.data.result) {
       return response.data; // Successful response
+      // return response.data.business_favorite.status;
     } else {
       throw new Error(response.data.message || "Failed to add business favorite.");
     }
@@ -472,6 +473,7 @@ export const fetchPropertyFav = async (propertyId, userId) => {
 
     if (response.status === 200 && response.data.result) {
       return response.data; // Successful response
+      // return response.data.property_favorite.status; 
     } else {
       throw new Error(response.data.message || "Failed to add property favorite.");
     }
@@ -482,9 +484,11 @@ export const fetchPropertyFav = async (propertyId, userId) => {
 };
 
 // -----------------------------------property get favorite data------------------------------
-export const fetchPropertyFavoriteRes = async () => { 
+export const fetchPropertyFavoriteRes = async (userId) => { 
   try {
-    const response = await axios.get(PROPERTY_FAVORITE_DISPLAY_URL);
+    const response = await axios.post(PROPERTY_FAVORITE_DISPLAY_URL, {
+      user_id: userId,
+    });
     return response.data.property_favorite_detail; // Return the entire property detail
   } catch (error) {
     console.error("Error fetching property details:", error);
@@ -493,9 +497,14 @@ export const fetchPropertyFavoriteRes = async () => {
 };
 
 // -----------------------------------property get favorite data------------------------------
-export const fetchBusinessFavoriteRes = async () => {
+export const fetchBusinessFavoriteRes = async (userId) => {
   try {
-    const response = await axios.get(BUSINESS_FAVORITE_DISPLAY_URL);
+    if (!userId) {
+      throw new Error("User ID is not available. Please log in.");
+    }
+    const response = await axios.post(BUSINESS_FAVORITE_DISPLAY_URL, {
+      user_id: userId,
+    });
     return response.data.business_favorite_detail; // Return business details
   } catch (error) {
     console.error("Error fetching business details:", error);

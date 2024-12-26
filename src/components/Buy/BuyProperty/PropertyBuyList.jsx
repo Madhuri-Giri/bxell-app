@@ -4,11 +4,12 @@ import "./PropertyBuyList.css";
 import { useSelector } from 'react-redux';
 import { IoLocation } from "react-icons/io5";
 import { FaHeart, FaPhoneAlt, FaRegHeart } from "react-icons/fa"; // Added icons
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation  } from "react-router-dom";
 import { fetchPropertyRes, fetchBusinessRes, fetchViewPropertyRes, fetchViewBusinessRes, fetchFilterRes, fetchBusinessFav, fetchPropertyFav } from "../../../API/apiServices";
 
 function PropertyBuyList() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("business");
   const [wishlist, setWishlist] = useState({}); // Store wishlist state for each item
   const [businessPrice, setBusinessPrice] = useState(0); // State for business price range
@@ -21,6 +22,8 @@ function PropertyBuyList() {
   const [propertyFilter, setPropertyFilter] = useState({});
   const [loading, setLoading] = useState(true);
   const user_id = useSelector((state) => state.auth.user);
+
+  const { city } = location.state || {};
   
   const [selectedFilters, setSelectedFilters] = useState({
     // for business
@@ -54,6 +57,10 @@ function PropertyBuyList() {
     }
   };
 
+ 
+
+  console.log("city:", city);
+  
   useEffect(() => {
     const fetchFilterData = async () => {
       const response = await fetchFilterRes();
@@ -71,24 +78,41 @@ function PropertyBuyList() {
     fetchFilterData();
   }, []);
 
-  useEffect(() => {
-    const applyFilters = () => {
-      const filtered = homeBusiness.filter((business) => {
-        const matchesBusinessType = !selectedFilters.business_type || business.business_type === selectedFilters.business_type;
-        const matchesCurrentStatus = !selectedFilters.current_status || business.current_status === selectedFilters.current_status;
-        const matchesState = !selectedFilters.state || business.state === selectedFilters.state;
-        const matchesCity = !selectedFilters.city || business.city === selectedFilters.city;
-        const matchesListingType = !selectedFilters.listing_type || business.listing_type === selectedFilters.listing_type;
-
-        return (
-          matchesBusinessType && matchesCurrentStatus && matchesState && matchesCity && matchesListingType
-        );
-      });
-      setFilteredBusiness(filtered);
-    };
-
-    applyFilters();
-  }, [selectedFilters, homeBusiness]);
+ 
+    useEffect(() => {
+      const applyFilters = () => {
+        const filtered = homeBusiness.filter((business) => {
+          const matchesBusinessType = !selectedFilters.business_type || business.business_type === selectedFilters.business_type;
+          const matchesCurrentStatus = !selectedFilters.current_status || business.current_status === selectedFilters.current_status;
+          const matchesState = !selectedFilters.state || business.state === selectedFilters.state;
+    
+          // Adjust the matchesCity condition: give priority to selectedFilters.city over city
+          const matchesCity =
+            // If `selectedFilters.city` is set, use it for filtering
+            (selectedFilters.city && business.city === selectedFilters.city) || 
+            // If `selectedFilters.city` is not set, use `city` for filtering
+            (!selectedFilters.city && city && business.city === city) ||
+            // If neither `selectedFilters.city` nor `city` is set, show all results
+            (!selectedFilters.city && !city);
+    
+          const matchesListingType = !selectedFilters.listing_type || business.listing_type === selectedFilters.listing_type;
+    
+          return (
+            matchesBusinessType && 
+            matchesCurrentStatus && 
+            matchesState && 
+            matchesCity && 
+            matchesListingType
+          );
+        });
+    
+        setFilteredBusiness(filtered);
+      };
+    
+      applyFilters();
+    }, [selectedFilters, homeBusiness, city]); // Ensure `city` is in the dependencies to trigger updates when it changes
+     // Ensure `city` is in the dependencies to trigger updates when it changes
+  
 
   useEffect(() => {
     const applyPropertyFilters = () => {
@@ -96,9 +120,16 @@ function PropertyBuyList() {
         const matchesPropertyType =  !selectedFilters.property_type || property.property_type === selectedFilters.property_type;
         const matchesProjectStatus = !selectedFilters.project_status || property.project_status === selectedFilters.project_status;
         const matchesState = !selectedFilters.state || property.state === selectedFilters.state;
-        const matchesCity =  !selectedFilters.city || property.city === selectedFilters.city;
+          // Adjust the matchesCity condition: give priority to selectedFilters.city over city
+          const matchesCity =
+            // If `selectedFilters.city` is set, use it for filtering
+            (selectedFilters.city && property.city === selectedFilters.city) || 
+            // If `selectedFilters.city` is not set, use `city` for filtering
+            (!selectedFilters.city && city && property.city === city) ||
+            // If neither `selectedFilters.city` nor `city` is set, show all results
+            (!selectedFilters.city && !city);
         const matchesListingType = !selectedFilters.listing_type || property.listing_type === selectedFilters.listing_type;
-
+        
         return (
           matchesPropertyType &&  matchesProjectStatus && matchesState &&  matchesCity && matchesListingType
         );
@@ -107,7 +138,7 @@ function PropertyBuyList() {
     };
 
     applyPropertyFilters();
-  }, [selectedFilters, homeProperty]);
+  }, [selectedFilters, homeProperty, city]);
 
   // Handle filter change
   const handleFilterChange = (event, filterType) => {
@@ -215,8 +246,6 @@ function PropertyBuyList() {
     }
   };
   
-  
-
   useEffect(() => {
     // Load wishlist state from localStorage on component mount
     const savedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
@@ -287,7 +316,7 @@ function PropertyBuyList() {
                     </div>
                     <div className="filter-group">
                       <label>Location</label>
-                      <select name="city" value={selectedFilters.city} onChange={(e) => handleFilterChange(e, "business")}  className="form-select" >
+                      <select name="city" value={selectedFilters.city || city} onChange={(e) => handleFilterChange(e, "business")}  className="form-select" >
                         <option value="">Select Location</option>
                         {businessFilter.city?.map((location) => (
                           <option key={location} value={location}> {location} </option>
@@ -405,7 +434,7 @@ function PropertyBuyList() {
                       <label>Location</label>
                       <select
                         name="city"
-                        value={selectedFilters.city}
+                        value={selectedFilters.city || city}
                         onChange={(e) => handleFilterChange(e, "property")}
                         className="form-select"
                       >
@@ -478,7 +507,7 @@ function PropertyBuyList() {
                     <button className="btn  search-button"  onClick={handleSearch}>  Search </button>
                   </div>
                   <div className="explorePropertyHed">
-                    <h5>EXPLORE BUSINESSES (RECOMMENDED)</h5>
+                  <h5><strong>EXPLORE NOW</strong></h5>
                   </div>
                   {filteredBusiness.map((lists, index) => (
                     <div  className="col-lg-4 recommendationsClsNameCOL" key={index} >
@@ -567,7 +596,7 @@ function PropertyBuyList() {
                     <button className="btn  search-button"  onClick={handleSearch}>  Search </button>
                   </div>
                   <div className="explorePropertyHed">
-                    <h5>EXPLORE PROPERTIES</h5>
+                  <h5><strong>EXPLORE NOW</strong></h5>
                   </div>
                   {filteredProperty.map((listsProperty, index) => (
                     <div className="col-lg-4 recommendationsClsNameCOL" key={index} >

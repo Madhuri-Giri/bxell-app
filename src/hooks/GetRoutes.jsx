@@ -1,8 +1,10 @@
 import BoostListing from "../components/About/Choose-Plan/boostListing/BoostListing";
 import BoostListing1 from "../components/About/Choose-Plan/boostListing/BoostListing1";
+import BlogBanner from "../components/Blog/BlogBanner";
 import BlogDetails from "../components/Blog/BlogDetails";
 import BlogMainContent from "../components/Blog/BlogMainContent";
 import PropertyBuySinglePage from "../components/Buy/BuyProperty/PropertyBuySinglePage";
+import Blog from "../components/Home/Blog/Blog";
 import SingleBlog from "../components/Home/Blog/SingleBlog";
 import HouseApartment from "../components/SellProperty/SellPropertyForm/HouseApartment";
 import Land from "../components/SellProperty/SellPropertyForm/Land";
@@ -11,7 +13,6 @@ import Page3Land from "../components/SellProperty/SellPropertyForm/Page3Land";
 import Page3ROC from "../components/SellProperty/SellPropertyForm/Page3ROC";
 import RentalOfficeComplex from "../components/SellProperty/SellPropertyForm/RentalOfficeComplex";
 import AboutUs from "../pages/AboutUs";
-import Blog from "../pages/Blog";
 import Buy from "../pages/Buy";
 import ExploreAllListing from "../pages/ExploreAllListing";
 import Home from "../pages/Home";
@@ -83,10 +84,14 @@ export const routeArray = [
     path: "/explore-listings",
     element: <ExploreAllListing />,
   },
-  {
-    path: "/blog",
-    element: <Blog />,
-  },
+  // {
+  //   path: "/blog",
+  //   element: <Blog />,
+  // },
+{
+path: "/blog",
+element: <Blog/>
+},
   {
     path: "/blog-details/:id",
     element: <BlogDetails />,

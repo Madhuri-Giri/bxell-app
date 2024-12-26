@@ -4,13 +4,12 @@ import { fetchListingDetail } from "../../API/apiServices"; // Import the API fu
 import { IoLocation } from "react-icons/io5";
 import {fetchUpdateBusinessStock, fetchUpdatePropertyStock} from "../../API/apiServices"; 
 import { useSelector } from 'react-redux';
-import { fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes } from '../../API/apiServices'; // Import the API functions
+import { fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes, fetchBusinessFav, fetchPropertyFav } from '../../API/apiServices'; // Import the API functions
 import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
 
 function ProfileListingDetails() {
   const [listingDetails, setListingDetails] = useState(null); // State to store API response
   const [soldStatus, setSoldStatus] = useState({}); // State to track ON/OFF checkbox status
-
 
 const [propertyData, setPropertyData] = useState([]);
 const [businessData, setBusinessData] = useState([]);
@@ -46,23 +45,30 @@ const [loading, setLoading] = useState(true);
 
 useEffect(() => {
   const fetchData = async () => {
-    const propertyRes = await fetchPropertyFavoriteRes();
-    const businessRes = await fetchBusinessFavoriteRes();
-    console.log("Business Data:", businessRes); // Add logging here
-    setPropertyData(propertyRes);
-    setBusinessData(businessRes);
+    if (!user) {
+      console.error("User ID is not available. Please log in.");
+      return;
+    }
+
+    try {
+      const propertyRes = await fetchPropertyFavoriteRes(user);
+      const businessRes = await fetchBusinessFavoriteRes(user);
+      
+      console.log("Property Data:", propertyRes);
+      console.log("Business Data:", businessRes);
+
+      setPropertyData(propertyRes);
+      setBusinessData(businessRes);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+
   fetchData();
 }, []);
 
 
-const handleWishlistClick = (index, id) => {
-  // Add to or remove from wishlist logic
-  setWishlist((prevWishlist) => ({
-    ...prevWishlist,
-    [index]: !prevWishlist[index],
-  }));
-};
+
 
   useEffect(() => {
     const fetchData = async (userId) => {
@@ -152,31 +158,91 @@ const handleWishlistClick = (index, id) => {
   const businessSale = listingDetails.business_sale || [];
   const propertySale = listingDetails.property_sale || [];
 
+  const handleBusinessFavorite = async (businessId) => {
+    if (!user_id) {
+      console.error("User ID is not available.");
+      return;
+    }
+  
+    try {
+      const result = await fetchBusinessFav(businessId, user_id);
+      if (!result.success) {
+        console.error(result.message); // Handle error
+      } else {
+        console.log("Business favorite added successfully:", result);
+      }
+    } catch (error) {
+      console.error("Error handling business favorite:", error.message);
+    }
+  };
+  
+  const handlePropertyFavorite = async (propertyId) => {
+    if (!user_id) {
+      console.error("User ID is not available.");
+      return;
+    }
+  
+    try {
+      const result = await fetchPropertyFav(propertyId, user_id);
+      if (!result.success) {
+        console.error(result.message); // Handle error
+      } else {
+        console.log("Property favorite added successfully:", result);
+      }
+    } catch (error) {
+      console.error("Error handling property favorite:", error.message);
+    }
+  };
+  
+  const handleWishlistClick = (index, id) => {
+    // Toggle the favorite state
+    const newWishlist = { ...wishlist, [index]: !wishlist[index] };
+  
+    // Save the updated wishlist to localStorage
+    localStorage.setItem("wishlist", JSON.stringify(newWishlist));
+    setWishlist(newWishlist);
+  
+    // Handle the API call to update the favorite status
+    if (activeTab === "business") {
+      handleBusinessFavorite(id);
+    } else if (activeTab === "property") {
+      handlePropertyFavorite(id);
+    }
+  };
+  
   return (
     <>
       <section className="homeListingDetailSECBoost">
       <div className="container">
-      <div className="tab-header explorePropertyHed ">
-          <button 
-            className= {`tab-button ${activeTab === "listings" ? "active" : ""}`}
-            onClick={() => setActiveTab("listings")}
-          >
-            LISTINGS FOR YOU
-          </button>
-          <button
-            className={`tab-button ${activeTab === "explore" ? "active" : ""}`}
-            onClick={() => setActiveTab("explore")}
-          >
-           FAVOURITE
-          </button>
-          <button
-            className={`tab-button ${activeTab === "enquiry" ? "active" : ""}`}
-            onClick={() => setActiveTab("enquiry")}
-          >
-           Enquiry
-          </button>
-          
-        </div>
+      <div className="tab-header explorePropertyHeding ">
+            <div className="row">
+              <div 
+                  className={`col-2 tab-button ${
+                    activeTab === "listings" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("listings")}
+                >
+                  LISTINGS FOR YOU
+                
+              </div>
+              <div
+                  className={`col-2 tab-button ${
+                    activeTab === "explore" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("explore")}
+                >
+                  FAVOURITE
+              </div>
+              <div 
+                  className={`col-2 tab-button ${
+                    activeTab === "enquiry" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("enquiry")}
+                >
+                  Enquiry
+                </div>
+              </div>
+          </div>
 
         {activeTab === "listings" && (
           <>
@@ -262,7 +328,6 @@ const handleWishlistClick = (index, id) => {
   <p>No business listings available.</p>
 )}
 </div>
-
 
         {/* Property Listings */}
         <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
@@ -351,7 +416,6 @@ const handleWishlistClick = (index, id) => {
           )}
         </div>
           </>
-    
     )}
      </div>
     </section>
@@ -368,13 +432,17 @@ const handleWishlistClick = (index, id) => {
             <div className="col-lg-3 recommendationsClsNameCOL" key={index}>
               <div className="recommendationsClsNameBox">
                 <div className="propertyBuyListingBox" style={{ position: "relative" }}>
-                  <div
-                    className="wishlist-heart"
-                    style={{ position: "absolute", top: "10px", right: "10px", zIndex: 10 }}
-                    onClick={() => handleWishlistClick(index, property.id)}
-                  >
-                    {wishlist[index] ? <FaHeart className="wishlist-icon" /> : <FaRegHeart className="wishlist-icon" />}
-                  </div>
+                <div
+                            className="wishlist-heart"
+                            style={{ position: "absolute", top: "10px", right: "10px",  zIndex: 10, }}
+                            onClick={() => handleWishlistClick(property.id)} // Assuming `property` is defined
+                            >
+                            {wishlist[index] ? (
+                              <FaHeart className="wishlist-icon" />
+                            ) : (
+                              <FaRegHeart className="wishlist-icon" />
+                            )}
+                          </div>
                   <img
                     className="img-fluid"
                     src={property.property_sale?.file_name ? JSON.parse(property.property_sale.file_name)[0] : "default-image.jpg"}
@@ -402,13 +470,15 @@ const handleWishlistClick = (index, id) => {
       <div className="col-lg-3 recommendationsClsNameCOL" key={index}>
         <div className="recommendationsClsNameBox">
           <div className="propertyBuyListingBox" style={{ position: "relative" }}>
-            <div
-              className="wishlist-heart"
-              style={{ position: "absolute", top: "10px", right: "10px", zIndex: 10 }}
-              onClick={() => handleWishlistClick(index, business.id)}
-            >
-              {wishlist[index] ? <FaHeart className="wishlist-icon" /> : <FaRegHeart className="wishlist-icon" />}
-            </div>
+          <div
+                            className="wishlist-heart"
+                            style={{ position: "absolute", top: "10px",  right: "10px", zIndex: 10, }} onClick={() => handleWishlistClick(index, business.id)}  >
+                            {wishlist[index] ? (
+                              <FaHeart className="wishlist-icon" />
+                            ) : (
+                              <FaRegHeart className="wishlist-icon" />
+                            )}
+                          </div>
             <img
               className="img-fluid"
               src={business.business_sale?.file_name || "default-image.jpg"} // Corrected
@@ -431,37 +501,36 @@ const handleWishlistClick = (index, id) => {
 ) : (
   <div>No favorite businesses available</div>
 )}
-
-
     </div>
     )}
     </section>
 
-    <section>
-    {activeTab === "enquiry" && (
-   <div>
-   <h2>Enquiry Details</h2>
-   <table border="1" style={{ width: "100%", textAlign: "left" }}>
-     <thead>
-       <tr>
-         <th>Name</th>
-         <th>Email</th>
-         <th>Listing Type</th>
-       </tr>
-     </thead>
-     <tbody>
-       {enquiryDetails.map((detail) => (
-         <tr key={detail.id}>
-           <td>{detail.name}</td>
-           <td>{detail.email}</td>
-           <td>{detail.listing_name}</td>
-         </tr>
-       ))}
-     </tbody>
-   </table>
- </div>
-    )}
-    </section>
+    <section className="enquiry-section">
+  {activeTab === "enquiry" && (
+    <div className="enquiry-container">
+      <h2 className="enquiry-title">Enquiry Details</h2>
+      <table className="enquiry-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Listing Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {enquiryDetails.map((detail) => (
+            <tr key={detail.id}>
+              <td>{detail.name}</td>
+              <td>{detail.email}</td>
+              <td>{detail.listing_name}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</section>
+
     </>
   );
 }
