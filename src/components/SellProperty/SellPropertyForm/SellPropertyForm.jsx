@@ -90,8 +90,6 @@ function SellPropertyForm() {
     }));
   };
 
-
- 
   const handleNext = () => {
     const currentErrors = { ...errors };
 

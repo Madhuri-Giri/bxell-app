@@ -149,18 +149,24 @@ const RentalOfficeComplex = ({ formData, setFormData, errors }) => {
 
       {/* Super Buildup Area (Sqft) */}
       <div className="col-7">
-        <Form.Group controlId="sqft" className="businessListingFormsDiv">
-          <Form.Label>Super Buildup Area (sqft) </Form.Label>
-          <span className="vallidateRequiredStar">*</span>
-          <Form.Control
-            type="text"
-            value={formData.sq_ft}
-            onChange={(e) => setFormData({ ...formData, sq_ft: e.target.value })}
-            placeholder="Enter area sqft"
-          />
-          {errors?.sq_ft && (  <small className="text-danger">{errors.sq_ft}</small>  )}
-        </Form.Group>
-      </div>
+  <Form.Group controlId="sqft" className="businessListingFormsDiv">
+    <Form.Label>
+      Super Buildup Area (sqft)
+      {/* Show asterisk only for specific property types */}
+      {(formData.property_type === "Retail Space" || formData.property_type === "Complex/Entire Property") && (
+        <span className="vallidateRequiredStar">*</span>
+      )}
+    </Form.Label>
+    <Form.Control
+      type="text"
+      value={formData.sq_ft}
+      onChange={(e) => setFormData({ ...formData, sq_ft: e.target.value })}
+      placeholder="Enter area sqft"
+    />
+    {errors?.sq_ft && <small className="text-danger">{errors.sq_ft}</small>}
+  </Form.Group>
+</div>
+
 
       {/* Total Floor */}
       <div className="col-7">
@@ -187,12 +193,18 @@ const RentalOfficeComplex = ({ formData, setFormData, errors }) => {
         <div className="col-7">
           <Form.Group controlId="floorNo" className="businessListingFormsDiv">
             <Form.Label>Floor No</Form.Label>
-            <Form.Select value={formData.floor_no} onChange={handleFloorChange} aria-label="Select Floor">
-              <option value="">Select a floor</option>
-              {["1", "2", "3", "4", "5", "6", "7", "8"].map((floor) => (
-                <option key={floor} value={floor}>Floor {floor}</option>
-              ))}
-            </Form.Select>
+            <Form.Control
+              type="text"
+              value={formData.floor_no}
+              onChange={(e) => {
+                setFormData({ ...formData, floor_no: e.target.value });
+             
+              }}
+              placeholder="Enter floor number"
+              onKeyPress={(e) => {
+                if (!/^[0-9]*$/.test(e.key)) e.preventDefault(); // Allow only numbers
+              }}
+            />
             {errors?.floor_no && (  <small className="text-danger">{errors.floor_no}</small>  )}
           </Form.Group>
         </div>

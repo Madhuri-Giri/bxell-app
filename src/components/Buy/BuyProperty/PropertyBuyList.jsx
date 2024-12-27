@@ -1,11 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import "./PropertyBuyList.css";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import { IoLocation } from "react-icons/io5";
 import { FaHeart, FaPhoneAlt, FaRegHeart } from "react-icons/fa"; // Added icons
-import { useNavigate, useLocation  } from "react-router-dom";
-import { fetchPropertyRes, fetchBusinessRes, fetchViewPropertyRes, fetchViewBusinessRes, fetchFilterRes, fetchBusinessFav, fetchPropertyFav } from "../../../API/apiServices";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  fetchPropertyRes,
+  fetchBusinessRes,
+  fetchViewPropertyRes,
+  fetchViewBusinessRes,
+  fetchFilterRes,
+  fetchBusinessFav,
+  fetchPropertyFav,
+} from "../../../API/apiServices";
 
 function PropertyBuyList() {
   const navigate = useNavigate();
@@ -24,7 +32,7 @@ function PropertyBuyList() {
   const user_id = useSelector((state) => state.auth.user);
 
   const { city } = location.state || {};
-  
+
   const [selectedFilters, setSelectedFilters] = useState({
     // for business
     business_type: "",
@@ -49,6 +57,34 @@ function PropertyBuyList() {
     setSearchQuery(searchQuery);
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // Adjust items per page as needed
+
+  // Calculate the start and end index for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // Slice data for the current page
+  const paginatedBusiness = filteredBusiness.slice(startIndex, endIndex);
+  const paginatedProperty = filteredProperty.slice(startIndex, endIndex);
+
+  // Total pages for pagination
+  const totalBusinessPages = Math.ceil(filteredBusiness.length / itemsPerPage);
+  const totalPropertyPages = Math.ceil(filteredProperty.length / itemsPerPage);
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNextPage = (totalPages) => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   const handleListingTypeClick = (type, section) => {
     if (section === "business") {
       setSelectedFilters({ ...selectedFilters, listing_type: type });
@@ -57,7 +93,7 @@ function PropertyBuyList() {
     }
   };
   console.log("city:", city);
-  
+
   useEffect(() => {
     const fetchFilterData = async () => {
       const response = await fetchFilterRes();
@@ -75,78 +111,97 @@ function PropertyBuyList() {
     fetchFilterData();
   }, []);
 
- 
-    useEffect(() => {
-      const applyFilters = () => {
-        const filtered = homeBusiness.filter((business) => {
-          const matchesBusinessType = !selectedFilters.business_type || business.business_type === selectedFilters.business_type;
-          const matchesCurrentStatus = !selectedFilters.current_status || business.current_status === selectedFilters.current_status;
-          const matchesState = !selectedFilters.state || business.state === selectedFilters.state;
-    
-          // Adjust the matchesCity condition: give priority to selectedFilters.city over city
-          const matchesCity =
-            // If `selectedFilters.city` is set, use it for filtering
-            (selectedFilters.city && business.city === selectedFilters.city) || 
-            // If `selectedFilters.city` is not set, use `city` for filtering
-            (!selectedFilters.city && city && business.city === city) ||
-            // If neither `selectedFilters.city` nor `city` is set, show all results
-            (!selectedFilters.city && !city);
-    
-          const matchesListingType = !selectedFilters.listing_type || business.listing_type === selectedFilters.listing_type;
+  useEffect(() => {
+    const applyFilters = () => {
+      const filtered = homeBusiness.filter((business) => {
+        const matchesBusinessType =
+          !selectedFilters.business_type ||
+          business.business_type === selectedFilters.business_type;
+        const matchesCurrentStatus =
+          !selectedFilters.current_status ||
+          business.current_status === selectedFilters.current_status;
+        const matchesState =
+          !selectedFilters.state || business.state === selectedFilters.state;
 
-          const matchesTitle = !searchQuery || business.title.toLowerCase().includes(searchQuery.toLowerCase()); 
-    
-          return (
-            matchesBusinessType && 
-            matchesCurrentStatus && 
-            matchesState && 
-            matchesCity && 
-            matchesListingType &&
-            matchesTitle
-          );
-        });
-    
-        setFilteredBusiness(filtered);
-      };
-    
-      applyFilters();
-    }, [selectedFilters, homeBusiness, city, searchQuery]); // Ensure `city` is in the dependencies to trigger updates when it changes
-     // Ensure `city` is in the dependencies to trigger updates when it changes
-  
-     useEffect(() => {
-      const applyPropertyFilters = () => {
-        const filtered = homeProperty.filter((property) => {
-          const matchesPropertyType = !selectedFilters.property_type || property.property_type === selectedFilters.property_type;
-          const matchesProjectStatus = !selectedFilters.project_status || property.project_status === selectedFilters.project_status;
-          const matchesState = !selectedFilters.state || property.state === selectedFilters.state;
-    
-          // Adjust the matchesCity condition: give priority to selectedFilters.city over city
-          const matchesCity =
-            (selectedFilters.city && property.city === selectedFilters.city) ||
-            (!selectedFilters.city && city && property.city === city) ||
-            (!selectedFilters.city && !city);
-    
-          const matchesListingType = !selectedFilters.listing_type || property.listing_type === selectedFilters.listing_type;
-    
-          // Ensure property.title is defined before calling toLowerCase()
-          const matchesTitle = !searchQuery || (property.property_title && property.property_title.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-          return (
-            matchesPropertyType &&
-            matchesProjectStatus &&
-            matchesState &&
-            matchesCity &&
-            matchesListingType &&
-            matchesTitle
-          );
-        });
-    
-        setFilteredProperty(filtered);
-      };
-    
-      applyPropertyFilters();
-    }, [selectedFilters, homeProperty, city, searchQuery]); // Ensure `searchQuery` is in the dependencies
-    
+        // Adjust the matchesCity condition: give priority to selectedFilters.city over city
+        const matchesCity =
+          // If `selectedFilters.city` is set, use it for filtering
+          (selectedFilters.city && business.city === selectedFilters.city) ||
+          // If `selectedFilters.city` is not set, use `city` for filtering
+          (!selectedFilters.city && city && business.city === city) ||
+          // If neither `selectedFilters.city` nor `city` is set, show all results
+          (!selectedFilters.city && !city);
+
+        const matchesListingType =
+          !selectedFilters.listing_type ||
+          business.listing_type === selectedFilters.listing_type;
+
+        const matchesTitle =
+          !searchQuery ||
+          business.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+        return (
+          matchesBusinessType &&
+          matchesCurrentStatus &&
+          matchesState &&
+          matchesCity &&
+          matchesListingType &&
+          matchesTitle
+        );
+      });
+
+      setFilteredBusiness(filtered);
+    };
+
+    applyFilters();
+  }, [selectedFilters, homeBusiness, city, searchQuery]); // Ensure `city` is in the dependencies to trigger updates when it changes
+  // Ensure `city` is in the dependencies to trigger updates when it changes
+
+  useEffect(() => {
+    const applyPropertyFilters = () => {
+      const filtered = homeProperty.filter((property) => {
+        const matchesPropertyType =
+          !selectedFilters.property_type ||
+          property.property_type === selectedFilters.property_type;
+        const matchesProjectStatus =
+          !selectedFilters.project_status ||
+          property.project_status === selectedFilters.project_status;
+        const matchesState =
+          !selectedFilters.state || property.state === selectedFilters.state;
+
+        // Adjust the matchesCity condition: give priority to selectedFilters.city over city
+        const matchesCity =
+          (selectedFilters.city && property.city === selectedFilters.city) ||
+          (!selectedFilters.city && city && property.city === city) ||
+          (!selectedFilters.city && !city);
+
+        const matchesListingType =
+          !selectedFilters.listing_type ||
+          property.listing_type === selectedFilters.listing_type;
+
+        // Ensure property.title is defined before calling toLowerCase()
+        const matchesTitle =
+          !searchQuery ||
+          (property.property_title &&
+            property.property_title
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()));
+
+        return (
+          matchesPropertyType &&
+          matchesProjectStatus &&
+          matchesState &&
+          matchesCity &&
+          matchesListingType &&
+          matchesTitle
+        );
+      });
+
+      setFilteredProperty(filtered);
+    };
+
+    applyPropertyFilters();
+  }, [selectedFilters, homeProperty, city, searchQuery]); // Ensure `searchQuery` is in the dependencies
 
   // Handle filter change
   const handleFilterChange = (event, filterType) => {
@@ -222,7 +277,7 @@ function PropertyBuyList() {
       console.error("User ID is not available.");
       return;
     }
-  
+
     try {
       const result = await fetchBusinessFav(businessId, user_id);
       if (!result.success) {
@@ -234,14 +289,13 @@ function PropertyBuyList() {
       console.error("Error handling business favorite:", error.message);
     }
   };
-  
-  
+
   const handlePropertyFavorite = async (propertyId) => {
     if (!user_id) {
       console.error("User ID is not available.");
       return;
     }
-  
+
     try {
       const result = await fetchPropertyFav(propertyId, user_id);
       if (!result.success) {
@@ -253,7 +307,7 @@ function PropertyBuyList() {
       console.error("Error handling property favorite:", error.message);
     }
   };
-  
+
   useEffect(() => {
     // Load wishlist state from localStorage on component mount
     const savedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
@@ -285,9 +339,24 @@ function PropertyBuyList() {
             <div className="col-3">
               <div className="propertyBuyListingfilterBox">
                 <div className="tab-buttons">
-                  <button className={`tab-button ${ activeTab === "business" ? "active" : ""  }`} onClick={() => setActiveTab("business")} > Business </button>
                   <button
-                    className={`tab-button ${ activeTab === "property" ? "active" : ""  }`}  onClick={() => setActiveTab("property")} >   Property </button>
+                    className={`tab-button ${
+                      activeTab === "business" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("business")}
+                  >
+                    {" "}
+                    Business{" "}
+                  </button>
+                  <button
+                    className={`tab-button ${
+                      activeTab === "property" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("property")}
+                  >
+                    {" "}
+                    Property{" "}
+                  </button>
                 </div>
                 <h6>Filter Options</h6>
                 {/* Filter Options for Business */}
@@ -295,56 +364,106 @@ function PropertyBuyList() {
                   <>
                     <div className="filter-group">
                       <label>Business Type</label>
-                      <select name="business_type" value={selectedFilters.business_type} onChange={(e) => handleFilterChange(e, "business")} className="form-select" >
+                      <select
+                        name="business_type"
+                        value={selectedFilters.business_type}
+                        onChange={(e) => handleFilterChange(e, "business")}
+                        className="form-select"
+                      >
                         <option value="">Select Type</option>
                         {businessFilter.business_type?.map((type) => (
-                          <option key={type} value={type}> {type} </option>
+                          <option key={type} value={type}>
+                            {" "}
+                            {type}{" "}
+                          </option>
                         ))}
                       </select>
                     </div>
 
                     <div className="filter-group">
                       <label>Open/Close</label>
-                      <select name="current_status" value={selectedFilters.current_status} onChange={(e) => handleFilterChange(e, "business")} className="form-select" >
+                      <select
+                        name="current_status"
+                        value={selectedFilters.current_status}
+                        onChange={(e) => handleFilterChange(e, "business")}
+                        className="form-select"
+                      >
                         <option value="">Select Status</option>
                         {businessFilter.current_status?.map((status) => (
-                          <option key={status} value={status}> {status}</option>
+                          <option key={status} value={status}>
+                            {" "}
+                            {status}
+                          </option>
                         ))}
                       </select>
                     </div>
 
                     <div className="filter-group">
                       <label>State</label>
-                      <select name="state" value={selectedFilters.state} onChange={(e) => handleFilterChange(e, "business")} className="form-select" >
+                      <select
+                        name="state"
+                        value={selectedFilters.state}
+                        onChange={(e) => handleFilterChange(e, "business")}
+                        className="form-select"
+                      >
                         <option value="">Select State</option>
                         {businessFilter.state?.map((state) => (
-                          <option key={state} value={state}> {state} </option>
+                          <option key={state} value={state}>
+                            {" "}
+                            {state}{" "}
+                          </option>
                         ))}
                       </select>
                     </div>
                     <div className="filter-group">
                       <label>Location</label>
-                      <select name="city" value={selectedFilters.city || city} onChange={(e) => handleFilterChange(e, "business")}  className="form-select" >
+                      <select
+                        name="city"
+                        value={selectedFilters.city || city}
+                        onChange={(e) => handleFilterChange(e, "business")}
+                        className="form-select"
+                      >
                         <option value="">Select Location</option>
                         {businessFilter.city?.map((location) => (
-                          <option key={location} value={location}> {location} </option>
+                          <option key={location} value={location}>
+                            {" "}
+                            {location}{" "}
+                          </option>
                         ))}
                       </select>
                     </div>
 
                     <div className="filter-group">
                       <label>Price Range (Business)</label>
-                      <input type="range" min="0" max="1000000"  step="10000" value={businessPrice} onChange={handleBusinessPriceChange} className="form-range" />
-                      <div className="price-value">  Selected Price: ₹{businessPrice} </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1000000"
+                        step="10000"
+                        value={businessPrice}
+                        onChange={handleBusinessPriceChange}
+                        className="form-range"
+                      />
+                      <div className="price-value">
+                        {" "}
+                        Selected Price: ₹{businessPrice}{" "}
+                      </div>
 
                       <div className="filter_listing_type">
                         <h6>Listing Type</h6>
                         <div className="filter_box">
-                          <p className={`filter-button ${ selectedFilters.listing_type === "Franchising"
+                          <p
+                            className={`filter-button ${
+                              selectedFilters.listing_type === "Franchising"
                                 ? "active"
                                 : ""
                             }`}
-                            onClick={() =>  handleListingTypeClick("Franchising", "business") } >Franchising </p>
+                            onClick={() =>
+                              handleListingTypeClick("Franchising", "business")
+                            }
+                          >
+                            Franchising{" "}
+                          </p>
                           <p
                             className={`filter-button ${
                               selectedFilters.listing_type ===
@@ -484,16 +603,36 @@ function PropertyBuyList() {
                             onClick={() =>
                               handleListingTypeClick("Renting", "property")
                             }
-                          > Renting </p>
+                          >
+                            {" "}
+                            Renting{" "}
+                          </p>
                           <p
                             className={`filter-button ${
                               selectedFilters.listing_type === "Listing"
                                 ? "active"
                                 : ""
                             }`}
-                            onClick={() =>  handleListingTypeClick("Listing", "property") } >  Listing </p>
-                          <p className={`filter-button ${  selectedFilters.listing_type === "Selling"  ? "active" : "" }`}
-                            onClick={() => handleListingTypeClick("Selling", "property")  }  >  Selling </p>
+                            onClick={() =>
+                              handleListingTypeClick("Listing", "property")
+                            }
+                          >
+                            {" "}
+                            Listing{" "}
+                          </p>
+                          <p
+                            className={`filter-button ${
+                              selectedFilters.listing_type === "Selling"
+                                ? "active"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              handleListingTypeClick("Selling", "property")
+                            }
+                          >
+                            {" "}
+                            Selling{" "}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -507,25 +646,47 @@ function PropertyBuyList() {
                 <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow">
                   {/* Search Bar Section */}
                   <div className="search-bar-section">
-        <input
-          type="text"
-          className="form-control search-input"
-          placeholder="Search by title..."
-          value={searchQuery} 
-          onChange={(e) => setSearchQuery(e.target.value)} />
-        <button className="btn search-button" onClick={handleSearch}> Search </button>
-      </div>
-                  <div className="explorePropertyHed">
-                  <h5><strong>EXPLORE NOW</strong></h5>
+                    <input
+                      type="text"
+                      className="form-control search-input"
+                      placeholder="Search by title..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button
+                      className="btn search-button"
+                      onClick={handleSearch}
+                    >
+                      {" "}
+                      Search{" "}
+                    </button>
                   </div>
-                  {filteredBusiness.map((lists, index) => (
-                    <div  className="col-lg-4 recommendationsClsNameCOL" key={index} >
+                  <div className="explorePropertyHed">
+                    <h5>
+                      <strong>EXPLORE NOW</strong>
+                    </h5>
+                  </div>
+                  {paginatedBusiness.map((lists, index) => (
+                    <div
+                      className="col-lg-4 recommendationsClsNameCOL"
+                      key={index}
+                    >
                       <div className="recommendationsClsNameBox">
                         {/* Wishlist Heart */}
-                        <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
+                        <div
+                          className="propertyBuyListingBox"
+                          style={{ position: "relative" }}
+                        >
                           <div
                             className="wishlist-heart"
-                            style={{ position: "absolute", top: "10px",  right: "10px", zIndex: 10, }} onClick={() => handleWishlistClick(index, lists.id)}  >
+                            style={{
+                              position: "absolute",
+                              top: "10px",
+                              right: "10px",
+                              zIndex: 10,
+                            }}
+                            onClick={() => handleWishlistClick(index, lists.id)}
+                          >
                             {wishlist[index] ? (
                               <FaHeart className="wishlist-icon" />
                             ) : (
@@ -567,57 +728,140 @@ function PropertyBuyList() {
                                   return "default-image.jpg";
                                 }
                               } catch (error) {
-                                console.error( "Error parsing or handling file_name:", error );
+                                console.error(
+                                  "Error parsing or handling file_name:",
+                                  error
+                                );
                                 return "default-image.jpg";
                               }
                             })()}
-                            alt={lists.title || "business Image"}/>
+                            alt={lists.title || "business Image"}
+                          />
                           <div className="listing-details">
                             <div className="title-location">
                               <h5>{lists.title}</h5>
-                              <span className="interested"> {lists.interested} Interested </span>
+                              <span className="interested">
+                                {" "}
+                                {lists.interested} Interested{" "}
+                              </span>
                             </div>
-                            <h6> Asking Price: ₹ <span className="">{lists.asking_price}</span> </h6>
-                            <h6> Reported Sale (yearly): ₹ <span className="green-text"> {lists.reported_turnover_from} - <br />{lists.reported_turnover_to} </span> </h6>
+                            <h6>
+                              {" "}
+                              Asking Price: ₹{" "}
+                              <span className="">
+                                {lists.asking_price}
+                              </span>{" "}
+                            </h6>
+                            <h6>
+                              {" "}
+                              Reported Sale (yearly): ₹{" "}
+                              <span className="green-text">
+                                {" "}
+                                {lists.reported_turnover_from} - <br />
+                                {lists.reported_turnover_to}{" "}
+                              </span>{" "}
+                            </h6>
                             <div className="location-call">
-                              <h6> <IoLocation /> {lists.city} </h6>
+                              <h6>
+                                {" "}
+                                <IoLocation /> {lists.city}{" "}
+                              </h6>
                               {/* <button className="call-btn"> Call <FaPhoneAlt />
                               </button> */}
-                              <a href={`tel:${lists.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
+                              <a
+                                href={`tel:${lists.phone_number}`}
+                                className="call-btn"
+                                style={{ textDecoration: "none" }}
+                              >
+                                Call <FaPhoneAlt />
+                              </a>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   ))}
+                  {/* Pagination Controls */}
+                  <div className="pagination-controls">
+                    <button
+                      onClick={handlePreviousPage}
+                      className="page-button"
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    {Array.from(
+                      { length: totalBusinessPages },
+                      (_, i) => i + 1
+                    ).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={`page-button ${
+                          page === currentPage ? "active" : ""
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handleNextPage(totalBusinessPages)}
+                      className="page-button"
+                      disabled={currentPage === totalBusinessPages}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               )}
 
               {activeTab === "property" && (
                 <div className="row propertyBuyListingRow_1">
-                   {/* Search Bar Section */}
-                   <div className="search-bar-section">
-        <input
-          type="text"
-          className="form-control search-input"
-          placeholder="Search by title..."
-          value={searchQuery} 
-          onChange={(e) => setSearchQuery(e.target.value)} />
-        <button className="btn search-button" onClick={handleSearch}> Search </button>
-     
+                  {/* Search Bar Section */}
+                  <div className="search-bar-section">
+                    <input
+                      type="text"
+                      className="form-control search-input"
+                      placeholder="Search by title..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button
+                      className="btn search-button"
+                      onClick={handleSearch}
+                    >
+                      {" "}
+                      Search{" "}
+                    </button>
                   </div>
                   <div className="explorePropertyHed">
-                  <h5><strong>EXPLORE NOW</strong></h5>
+                    <h5>
+                      <strong>EXPLORE NOW</strong>
+                    </h5>
                   </div>
-                  {filteredProperty.map((listsProperty, index) => (
-                    <div className="col-lg-4 recommendationsClsNameCOL" key={index} >
+                  {paginatedProperty.map((listsProperty, index) => (
+                    <div
+                      className="col-lg-4 recommendationsClsNameCOL"
+                      key={index}
+                    >
                       <div className="recommendationsClsNameBox">
                         {/* Wishlist Heart */}
-                        <div className="propertyBuyListingBox" style={{ position: "relative" }} >
+                        <div
+                          className="propertyBuyListingBox"
+                          style={{ position: "relative" }}
+                        >
                           <div
                             className="wishlist-heart"
-                            style={{ position: "absolute", top: "10px", right: "10px",  zIndex: 10, }}
-                            onClick={() => handleWishlistClick(index, listsProperty.id)  }  >
+                            style={{
+                              position: "absolute",
+                              top: "10px",
+                              right: "10px",
+                              zIndex: 10,
+                            }}
+                            onClick={() =>
+                              handleWishlistClick(index, listsProperty.id)
+                            }
+                          >
                             {wishlist[index] ? (
                               <FaHeart className="wishlist-icon" />
                             ) : (
@@ -625,7 +869,12 @@ function PropertyBuyList() {
                             )}
                           </div>
 
-                          <img className="img-fluid" onClick={() => handlepropertyNavigate( "property", listsProperty.id
+                          <img
+                            className="img-fluid"
+                            onClick={() =>
+                              handlepropertyNavigate(
+                                "property",
+                                listsProperty.id
                               )
                             }
                             src={
@@ -638,23 +887,75 @@ function PropertyBuyList() {
                           />
                           <div className="title-location">
                             <h5>{listsProperty.property_title}</h5>
-                            <span className="interested">{listsProperty.interested} Interested </span>
+                            <span className="interested">
+                              {listsProperty.interested} Interested{" "}
+                            </span>
                           </div>
-                          <h6> Asking Price: ₹ <span>{listsProperty.asking_price}</span> </h6>
+                          <h6>
+                            {" "}
+                            Asking Price: ₹{" "}
+                            <span>{listsProperty.asking_price}</span>{" "}
+                          </h6>
                           <div>
-                            <h6> Property Type : <strong>{listsProperty.property_type}</strong> </h6>
+                            <h6>
+                              {" "}
+                              Property Type :{" "}
+                              <strong>
+                                {listsProperty.property_type}
+                              </strong>{" "}
+                            </h6>
                           </div>
                           {/* <h6>  Reported Sale (yearly):  <span>{listsProperty.price}</span> </h6> */}
                           {/* <h6><IoLocation /> {listsProperty.city}</h6> */}
                           <div className="location-call">
-                            <h6> <IoLocation /> {listsProperty.city} </h6>
+                            <h6>
+                              {" "}
+                              <IoLocation /> {listsProperty.city}{" "}
+                            </h6>
                             {/* <button className="call-btn"> Call <FaPhoneAlt /> </button> */}
-                            <a href={`tel:${listsProperty.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
+                            <a
+                              href={`tel:${listsProperty.phone_number}`}
+                              className="call-btn"
+                              style={{ textDecoration: "none" }}
+                            >
+                              Call <FaPhoneAlt />
+                            </a>
                           </div>
                         </div>
                       </div>
                     </div>
                   ))}
+                  {/* Pagination Controls */}
+                  <div className="pagination-controls">
+                    <button
+                      onClick={handlePreviousPage}
+                      className="page-button"
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    {Array.from(
+                      { length: totalPropertyPages },
+                      (_, i) => i + 1
+                    ).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={`page-button ${
+                          page === currentPage ? "active" : ""
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handleNextPage(totalPropertyPages)}
+                      className="page-button"
+                      disabled={currentPage === totalPropertyPages}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

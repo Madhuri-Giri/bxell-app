@@ -245,7 +245,7 @@ function PropertyBuySinglePage() {
                       </div>
 
                       <div className="row propertyBuyListingRow_1 propertySinglePage">
-                        <div className="col-6">
+                        {/* <div className="col-6">
                         <img
                                     className="img-fluid"
                                     style={{ cursor: "pointer" }}
@@ -288,7 +288,42 @@ function PropertyBuySinglePage() {
                                     })()}
                                     alt={property.property_title || "business Image"}
                                   />
-                        </div>
+                        </div> */}
+<div className="col-6">
+  <img
+    className="img-fluid"
+    style={{ cursor: "pointer" }}
+    onClick={() => handlebusinessNavigate("business", list.id)}
+    src={(() => {
+      try {
+        const fileName = property.file_name;
+
+        // Handle string and array cases
+        const files =
+          typeof fileName === "string" && fileName.startsWith("[")
+            ? JSON.parse(fileName) // Parse JSON array
+            : fileName;
+
+        if (typeof files === "string") {
+          // Return single URL string
+          return files.startsWith("http") ? files : `${BASE_URL}/${files}`;
+        } else if (Array.isArray(files) && files.length > 0) {
+          // Return first element from array
+          return files[0].startsWith("http")
+            ? files[0]
+            : `${BASE_URL}/${files[0]}`;
+        } else {
+          // Fallback for unexpected cases
+          return "default-image.jpg";
+        }
+      } catch (error) {
+        console.error("Error parsing or handling file_name:", error);
+        return "default-image.jpg";
+      }
+    })()}
+    alt={property.property_title || "business Image"}
+  />
+</div>
 
                         <div className="col-6">
                           <div className="row">
@@ -316,14 +351,19 @@ function PropertyBuySinglePage() {
                                     {/* <td>Reported sale (yearly): <br /><span className="green-text">82,00,000</span></td> */}
                                     <td>Listing Type: <br /> <span className="green-text"> {property.listing_type} </span></td>
                                     <td> Property Type: <br /> <span className="green-text">  {property.property_type} </span> </td>
+                                    <td> Bathroom: <br /> <span className="green-text">  {property.bathroom} </span> </td>
                                   </tr>
+
                                   <tr>
-                                    
                                     <td> BUSINESS STATUS: <br /><span className="green-text"> {property.project_status} </span> </td>
                                     <td> Furnishing: <br /> <span className="green-text">  {property.furnishing} </span> </td>
+                                    <td> Carpet Area: <br /> <span className="green-text">  {property.sq_ft} </span> </td>
                                   </tr>
+
                                   <tr>
                                     <td> Price: <br /> ₹ <span className="green-text"> {property.asking_price} </span> </td>
+                                    <td> Project Status: <br /> ₹ <span className="green-text"> {property.project_status} </span> </td>
+                                    
                                     <td>
                                       DOCUMENTS UPLOADED: <br />
                                       <span className="green-text">

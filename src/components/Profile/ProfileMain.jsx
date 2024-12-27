@@ -82,21 +82,21 @@ function ProfileMain() {
   
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-  
+
     if (file) {
       // Create a temporary URL for the uploaded file for immediate preview
       const imageUrl = URL.createObjectURL(file);
-      
-      // Store the file temporarily in the formData for later submission
-      setFormData((prevData) => ({ ...prevData, profile: file }));
-  
-      // Update the preview image
-      setFormData((prevData) => ({ ...prevData, profileUrl: imageUrl }));
+
+      // Update state in a single call
+      setFormData((prevData) => ({
+        ...prevData,
+        profile: file, // Store the file for API submission
+        profileUrl: imageUrl, // Store the URL for immediate preview
+      }));
     }
   };
   
 
-  
   // Save profile changes
   const handleSaveChanges = async (e) => {
     e.preventDefault();
@@ -149,12 +149,21 @@ function ProfileMain() {
               </Nav>
 
               <div className="edit-profile-photo">
-                <img src={formData.profile || User_Avtar} alt="User Avatar" />
+                <img
+                  src={formData.profileUrl || formData.profile}
+                  alt="User Avatar"
+                />
                 {activeTab === "edit" && (
                   <div className="change-photo-btn">
                     <div className="photoUpload">
-                      <span>  <i className="fa fa-upload"></i> Upload Photo </span>
-                      <input type="file"  className="upload"  onChange={handleImageChange} />
+                      <span>
+                        <i className="fa fa-upload"></i> Upload Photo
+                      </span>
+                      <input
+                        type="file"
+                        className="upload"
+                        onChange={handleImageChange}
+                      />
                     </div>
                   </div>
                 )}

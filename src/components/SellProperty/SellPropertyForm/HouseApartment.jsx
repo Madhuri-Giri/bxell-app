@@ -121,7 +121,7 @@ const HouseApartment = ({ formData, setFormData, errors }) => {
       <div className="col-7">
         <Form.Group controlId="sqft" className="businessListingFormsDiv">
           <Form.Label>Super Built-up area sqft</Form.Label>
-          <span className="vallidateRequiredStar">*</span>
+        
           <Form.Control type="text" value={formData.sq_ft} onChange={(e) =>
               setFormData((prevData) => ({
                 ...prevData,
@@ -170,12 +170,18 @@ const HouseApartment = ({ formData, setFormData, errors }) => {
       <div className="col-7">
               <Form.Group controlId="floor_no" className="businessListingFormsDiv">
                 <Form.Label>Floor No</Form.Label>
-                <Form.Select value={formData.floor_no} onChange={handleFloorChange} aria-label="Select Floor">
-                  <option value="">Select a floor</option>
-                  {["1", "2", "3", "4", "5", "6", "7", "8"].map((floor) => (
-                    <option key={floor} value={floor}>Floor {floor}</option>
-                  ))}
-                </Form.Select>
+                <Form.Control
+              type="text"
+              value={formData.floor_no}
+              onChange={(e) => {
+                setFormData({ ...formData, floor_no: e.target.value });
+                setErrors((prevErrors) => ({ ...prevErrors, floor_no: "" })); // Clear error on change
+              }}
+              placeholder="Enter floor number"
+              onKeyPress={(e) => {
+                if (!/^[0-9]*$/.test(e.key)) e.preventDefault(); // Allow only numbers
+              }}
+            />
                
               </Form.Group>
             </div>

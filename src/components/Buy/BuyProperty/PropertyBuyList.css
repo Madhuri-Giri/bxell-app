@@ -198,3 +198,29 @@
     color:white;
     background-color: #008080;
 }
+
+/* General pagination button styles */
+.page-button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #75acac;
+    background-color: #008080;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .page-button:hover {
+    background-color: #75acac;
+  }
+  
+  /* Active button styles */
+  .page-button.active {
+    background-color: #fff;
+    color: #008080;
+    border-color: #008080;
+    font-weight: bold;
+  }
+  
