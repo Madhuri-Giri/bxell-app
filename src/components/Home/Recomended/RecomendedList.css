@@ -186,3 +186,21 @@
 text-transform: uppercase;
 text-align: center;
 }
+
+.call-btn {
+    background-color: transparent;
+    color: gray;
+    border: none;
+    cursor: pointer;
+}
+
+ .call-btn svg {
+    font-size: 10px;
+    margin-top: -3px;
+}
+
+ .location-call {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

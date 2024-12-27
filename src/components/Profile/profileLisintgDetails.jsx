@@ -450,12 +450,21 @@ useEffect(() => {
                   />
                   <div className="title-location">
                     <h5>{property.property_sale?.property_title}</h5>
-                    <span className="interested">Interested</span>
+                    {/* <span className="interested">Interested</span> */}
                   </div>
-                  <h6>Asking Price: ₹ {property.property_sale?.asking_price}</h6>
+                  {/* <h6>Asking Price: ₹ {property.property_sale?.asking_price}</h6> */}
+                  <div className="home_price">
+                    <h6>
+                      Asking Price: ₹ <span>{property.property_sale.asking_price}</span>
+                    </h6>
+                    
+                  </div>
                   <div className="location-call">
-                    <h6><IoLocation /> {property.property_sale?.city}</h6>
-                    <button className="call-btn">Call <FaPhoneAlt /></button>
+                    <h6>
+                      <IoLocation /> {property.property_sale.city}
+                    </h6>
+                   
+                    <a href={`tel:${property.property_sale.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
                   </div>
                 </div>
               </div>
@@ -488,10 +497,18 @@ useEffect(() => {
               <h5>{business.business_sale?.title}</h5> {/* Corrected */}
               <span className="interested">Interested</span>
             </div>
-            <h6>Asking Price: ₹ {business.business_sale?.asking_price}</h6> {/* Corrected */}
+            <div className="home_price">
+              <h6>
+                Asking Price: ₹ <span>{business.business_sale.asking_price}</span>
+              </h6>
+          
+            </div>
             <div className="location-call">
-              <h6><IoLocation /> {business.business_sale?.city}</h6> {/* Corrected */}
-              <button className="call-btn">Call <FaPhoneAlt /></button>
+              <h6>
+                <IoLocation /> {business.business_sale.city}
+              </h6>
+            
+              <a href={`tel:${business.business_sale.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
             </div>
           </div>
         </div>

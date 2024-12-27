@@ -530,3 +530,9 @@ text-align: center;
   background-color: #006f6f;
 }
 
+.call-btnn {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

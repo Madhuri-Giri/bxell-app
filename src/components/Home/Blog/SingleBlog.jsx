@@ -1,45 +1,72 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import axios from "axios"; // Assuming you are using axios
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { fetchBlogRes } from "../../../API/apiServices";
+import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
+import './SingleBlog.css'; // Import the CSS file for styling
+import { Container } from 'react-bootstrap';
 
-function SingleBlog() {
-  const { state } = useLocation(); // Get the passed state (blog ID)
-  const { id } = state || {}; // Extract the ID from state
+const SingleBlog = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
 
-  const [blog, setBlog] = useState(null);
+    const [blog, setBlog] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (id) {
-      // Fetch blog data based on the ID
-      axios
-        .get(`https://bxell.com/bxell/admin/api/get-blog/${id}`) // Adjust the URL based on your API
-        .then((response) => {
-          if (response.data.result && response.data.blog) {
-            setBlog(response.data.blog); // Set the blog data
-          } else {
-            console.error("Blog not found");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching blog data:", error);
-        });
+    useEffect(() => {
+        const loadBlog = async () => {
+            const blogFromState = location.state?.blog;
+
+            if (blogFromState) {
+                setBlog(blogFromState);
+                setLoading(false);
+            } else {
+                const blogs = await fetchBlogRes();
+                const id = location.state?.id;
+                const foundBlog = blogs?.find((b) => b.id === id);
+
+                if (foundBlog) {
+                    setBlog(foundBlog);
+                } else {
+                    console.error("Blog not found!");
+                }
+                setLoading(false);
+            }
+        };
+
+        loadBlog();
+    }, [location.state]);
+
+    if (loading) {
+        return <p className="loading-text">Loading blog...</p>;
     }
-  }, [id]);
 
-  if (!blog) {
-    return <p>Loading blog...</p>; // Show loading while fetching
-  }
+    if (!blog) {
+        return <p className="error-text">Blog not found!</p>;
+    }
 
-  return (
-    <section className="singleBlogPage">
-      <div className="container">
-        <h2>{blog.title}</h2>
-        <p><strong>Date:</strong> {blog.date}</p>
-        <div dangerouslySetInnerHTML={{ __html: blog.description }} /> {/* Render HTML content */}
-        <img src={blog.file_name} alt={blog.title} /> {/* Display image */}
-      </div>
-    </section>
-  );
-}
+    return (
+        <>
+            <Header />
+            <Container>
+
+            <section className="single-blog-section">
+                <div className="container single-blog-container">
+                    <h2 className="blog-title">{blog.title}</h2>
+                    <div className="blog-content">
+                        <img className="blog-image" src={blog.file_name} alt={blog.title} />
+                        <div className="blog-text">
+                            <p className="blog-description" dangerouslySetInnerHTML={{ __html: blog.description }}></p>
+                            <p className="blog-date">Date: {blog.date}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            </Container>
+           
+            <Footer />
+        </>
+    );
+};
 
 export default SingleBlog;

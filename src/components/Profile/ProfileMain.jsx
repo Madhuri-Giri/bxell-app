@@ -78,21 +78,40 @@ function ProfileMain() {
   };
 
   // Handle profile image upload
+
+  
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+  
     if (file) {
+      // Create a temporary URL for the uploaded file for immediate preview
       const imageUrl = URL.createObjectURL(file);
-      setFormData((prevData) => ({ ...prevData, profile: imageUrl }));
+      
+      // Store the file temporarily in the formData for later submission
+      setFormData((prevData) => ({ ...prevData, profile: file }));
+  
+      // Update the preview image
+      setFormData((prevData) => ({ ...prevData, profileUrl: imageUrl }));
     }
   };
+  
 
+  
   // Save profile changes
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+  
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      if (formData[key]) {
+        formDataToSend.append(key, formData[key]); // Append file if present
+      }
+    }
+  
     try {
-      await updateProfile(formData, user);
+      await updateProfile(formDataToSend, user); // Pass FormData to API
       alert("Profile updated successfully!");
       setActiveTab("view");
     } catch (err) {
@@ -102,12 +121,11 @@ function ProfileMain() {
       setLoading(false);
     }
   };
-
+  
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
   
-
   return (
     <section className="profileMAinSec">
       <div className="container">

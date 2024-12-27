@@ -10,14 +10,9 @@ function Blog() {
   const navigate = useNavigate();
 
   // Function to handle navigation
-  const handleNavigate = (id) => {
-    console.log("Navigating with ID:", id); // Debugging
-    if (!id) {
-      console.error("Error: Blog ID is missing!");
-      return;
-    }
-    navigate("/single-blog", { state: { id } });
-  };
+  const handleBlogClick = (blog) => {
+    navigate('/single-blog', { state: { blog } }); // Pass blog data or just the ID
+};
   
 
   // Fetch blogs from the API
@@ -51,49 +46,50 @@ function Blog() {
 
           {/* Render blogs */}
           {Array.isArray(homeBlog) && homeBlog.length > 0 ? (
-            homeBlog.slice(0, 4).map((blog) => (
+            homeBlog.slice(0, 4).map((blog) => ( // Display only the first 4 blogs
               <div key={blog.id} className="col-lg-3 col-md-6 homeBlogBox">
-                <div className="image-container">
-                  {/* Blog Image with Dynamic Navigation */}
-                  <img
-                    src={blog.file_name}
-                    alt={blog.title}
-                    className="card-img-top"
-                    onClick={() => handleNavigate(blog.id)} // Pass dynamic ID
-                  />
-
-                  <div className="overlay">
-                    <h6 className="overlay-text">{blog.title}</h6>
-                    <div>
-                      <button className="overlay-button">{blog.date}</button>
-                    </div>
-                    <p className="overlay-text">
-                      {
-                        expandedBlogId === blog.id
-                          ? blog.description.replace(/(<([^>]+)>)/gi, "") // Full description
+                <div
+                  className="image-link"
+                  onClick={() => handleBlogClick(blog)} // Pass the blog data on click
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="image-container">
+                    <img
+                      src={blog.file_name}
+                      alt={blog.title}
+                      className="card-img-top"
+                    />
+                    <div className="overlay">
+                      <h6 className="overlay-text">{blog.title}</h6>
+                      <div>
+                        <button className="overlay-button">{blog.date}</button>
+                      </div>
+                      <p className="overlay-text">
+                        {expandedBlogId === blog.id
+                          ? blog.description.replace(/(<([^>]+)>)/gi, "")
                           : blog.description &&
                             blog.description
-                              .replace(/(<([^>]+)>)/gi, "") // Truncated description
+                              .replace(/(<([^>]+)>)/gi, "")
                               .split(" ")
                               .slice(0, 20)
-                              .join(" ") + "..." // Append ellipsis
-                      }
-                      {blog.description &&
-                        blog.description.split(" ").length > 20 && (
-                          <a
-                            href="#"
-                            className="read-more-link"
-                            onClick={(e) => {
-                              e.preventDefault(); // Prevent page refresh
-                              handleReadMoreClick(blog.id);
-                            }}
-                          >
-                            {expandedBlogId === blog.id
-                              ? "Read Less"
-                              : "Read More"}
-                          </a>
-                        )}
-                    </p>
+                              .join(" ")}
+                        {blog.description &&
+                          blog.description.split(" ").length > 20 && (
+                            <a
+                              href="#"
+                              className="read-more-link"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleReadMoreClick(blog.id);
+                              }}
+                            >
+                              {expandedBlogId === blog.id
+                                ? "Read Less"
+                                : "Read More"}
+                            </a>
+                          )}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

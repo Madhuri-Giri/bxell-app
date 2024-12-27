@@ -6,6 +6,7 @@ import BlogMainContent from "../components/Blog/BlogMainContent";
 import PropertyBuySinglePage from "../components/Buy/BuyProperty/PropertyBuySinglePage";
 import Blog from "../components/Home/Blog/Blog";
 import SingleBlog from "../components/Home/Blog/SingleBlog";
+import News from "../components/Home/MainBanner/news/News";
 import HouseApartment from "../components/SellProperty/SellPropertyForm/HouseApartment";
 import Land from "../components/SellProperty/SellPropertyForm/Land";
 import Page3Common from "../components/SellProperty/SellPropertyForm/Page3Common";
@@ -112,9 +113,10 @@ element: <Blog/>
     element: <BlogMainContent />,
   },
   {
-    path: "/single-blog",
+    path:"/single-blog" ,
     element: <SingleBlog />,
   },
+  
 
   {
     path: "/login",
@@ -124,6 +126,10 @@ element: <Blog/>
   {
     path: "/register",
     element: <RegistrationPage />,
+  },
+  {
+    path: "/news",
+    element: <News/>
   },
 
   // {

@@ -387,8 +387,32 @@ try {
                     {property.file_name ? (
                       <img
                         className="img-fluid"
-                        src={JSON.parse(property.file_name)[0]}
-                        alt="Property Image"
+                        src={(() => {
+                          try {
+                            const fileName = property.file_name;
+                        
+                            // Parse the file_name if it's a JSON string
+                            const files =
+                              typeof fileName === "string" && fileName.startsWith("[")
+                                ? JSON.parse(fileName)
+                                : fileName;
+                        
+                            if (typeof files === "string") {
+                              // Single image case
+                              return files.startsWith("http") ? files : `${BASE_URL}/${files}`;
+                            } else if (Array.isArray(files) && files.length > 0) {
+                              // Multiple images case
+                              return files[0].startsWith("http") ? files[0] : `${BASE_URL}/${files[0]}`;
+                            } else {
+                              // Default image as fallback
+                              return "default-image.jpg";
+                            }
+                          } catch (error) {
+                            console.error("Error parsing or handling file_name:", error);
+                            return "default-image.jpg"; // Fallback in case of error
+                          }
+                        })()}
+                        
                       />
                     ) : (
                       <p>No images available</p>

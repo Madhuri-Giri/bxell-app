@@ -24,6 +24,7 @@ export const PROPERTY_FAVORITE_API_URL = `${BASE_URL}/property-favorite`;
 export const PROPERTY_FAVORITE_DISPLAY_URL = `${BASE_URL}/property-favorite-detail`;
 export const BUSINESS_FAVORITE_DISPLAY_URL =  `${BASE_URL}/business-favorite-detail`;
 export const ENQUIRY_DETAIL_API_URL = `${BASE_URL}/enquiry-detail`;
+export const NEWS_API_URL = `${BASE_URL}/news-details`;
 //------------------------------PROPERTY ENQUIRY API-------------------------------------
 export const submitpropertyEnquiryForm = async (formData) => {
   try {
@@ -82,10 +83,7 @@ export const updateProfile = async (formData, id) => {
   try {
     const response = await fetch(UPDATE_PROFILE_API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...formData, id }), // Include id in the payload
+      body: formData, // Use FormData directly
     });
 
     const data = await response.json();
@@ -99,6 +97,7 @@ export const updateProfile = async (formData, id) => {
     throw error;
   }
 };
+
 
 // ----------------------------Sell Boost Lising API-------------------------------
 export const fetchListingDetail = async (userId) => {
@@ -274,6 +273,7 @@ export const fetchViewBusinessRes = async (business_id) => {
 //       return null;
 //   }
 // };
+
 export const fetchUpdateBusinessStock = async (businessId, stock) => {
   try {
     // Validate inputs
@@ -524,5 +524,16 @@ export const fetchEnquiryDetailRes = async (userId) => {
   } catch (error) {
     console.error("Error fetching enquiry details:", error);
     return []; // Return empty array in case of error
+  }
+};
+
+// ----------------------------------------NEWS API -----------------------------------------
+export const fetchNewsRes = async () => {
+  try {
+    const response = await axios.get(NEWS_API_URL);
+    return response.data; // Extract the data field
+  } catch (error) {
+    console.error("Error fetching news details:", error);
+    return null;
   }
 };

@@ -45,8 +45,8 @@ function PropertyBuyList() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
-    console.log("Searching for:", searchQuery);
-    // Add your search logic here to filter `filteredBusiness` or `filteredProperty`
+    // This will trigger the filters to be applied whenever the search query changes
+    setSearchQuery(searchQuery);
   };
 
   const handleListingTypeClick = (type, section) => {
@@ -56,9 +56,6 @@ function PropertyBuyList() {
       setSelectedFilters({ ...selectedFilters, listing_type: type });
     }
   };
-
- 
-
   console.log("city:", city);
   
   useEffect(() => {
@@ -96,13 +93,16 @@ function PropertyBuyList() {
             (!selectedFilters.city && !city);
     
           const matchesListingType = !selectedFilters.listing_type || business.listing_type === selectedFilters.listing_type;
+
+          const matchesTitle = !searchQuery || business.title.toLowerCase().includes(searchQuery.toLowerCase()); 
     
           return (
             matchesBusinessType && 
             matchesCurrentStatus && 
             matchesState && 
             matchesCity && 
-            matchesListingType
+            matchesListingType &&
+            matchesTitle
           );
         });
     
@@ -110,35 +110,43 @@ function PropertyBuyList() {
       };
     
       applyFilters();
-    }, [selectedFilters, homeBusiness, city]); // Ensure `city` is in the dependencies to trigger updates when it changes
+    }, [selectedFilters, homeBusiness, city, searchQuery]); // Ensure `city` is in the dependencies to trigger updates when it changes
      // Ensure `city` is in the dependencies to trigger updates when it changes
   
-
-  useEffect(() => {
-    const applyPropertyFilters = () => {
-      const filtered = homeProperty.filter((property) => {
-        const matchesPropertyType =  !selectedFilters.property_type || property.property_type === selectedFilters.property_type;
-        const matchesProjectStatus = !selectedFilters.project_status || property.project_status === selectedFilters.project_status;
-        const matchesState = !selectedFilters.state || property.state === selectedFilters.state;
+     useEffect(() => {
+      const applyPropertyFilters = () => {
+        const filtered = homeProperty.filter((property) => {
+          const matchesPropertyType = !selectedFilters.property_type || property.property_type === selectedFilters.property_type;
+          const matchesProjectStatus = !selectedFilters.project_status || property.project_status === selectedFilters.project_status;
+          const matchesState = !selectedFilters.state || property.state === selectedFilters.state;
+    
           // Adjust the matchesCity condition: give priority to selectedFilters.city over city
           const matchesCity =
-            // If `selectedFilters.city` is set, use it for filtering
-            (selectedFilters.city && property.city === selectedFilters.city) || 
-            // If `selectedFilters.city` is not set, use `city` for filtering
+            (selectedFilters.city && property.city === selectedFilters.city) ||
             (!selectedFilters.city && city && property.city === city) ||
-            // If neither `selectedFilters.city` nor `city` is set, show all results
             (!selectedFilters.city && !city);
-        const matchesListingType = !selectedFilters.listing_type || property.listing_type === selectedFilters.listing_type;
-        
-        return (
-          matchesPropertyType &&  matchesProjectStatus && matchesState &&  matchesCity && matchesListingType
-        );
-      });
-      setFilteredProperty(filtered);
-    };
-
-    applyPropertyFilters();
-  }, [selectedFilters, homeProperty, city]);
+    
+          const matchesListingType = !selectedFilters.listing_type || property.listing_type === selectedFilters.listing_type;
+    
+          // Ensure property.title is defined before calling toLowerCase()
+          const matchesTitle = !searchQuery || (property.property_title && property.property_title.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+          return (
+            matchesPropertyType &&
+            matchesProjectStatus &&
+            matchesState &&
+            matchesCity &&
+            matchesListingType &&
+            matchesTitle
+          );
+        });
+    
+        setFilteredProperty(filtered);
+      };
+    
+      applyPropertyFilters();
+    }, [selectedFilters, homeProperty, city, searchQuery]); // Ensure `searchQuery` is in the dependencies
+    
 
   // Handle filter change
   const handleFilterChange = (event, filterType) => {
@@ -499,13 +507,14 @@ function PropertyBuyList() {
                 <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow">
                   {/* Search Bar Section */}
                   <div className="search-bar-section">
-                    <input
-                      type="text"
-                      className="form-control search-input"
-                      placeholder="Search using businesses keyword..."
-                      value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                    <button className="btn  search-button"  onClick={handleSearch}>  Search </button>
-                  </div>
+        <input
+          type="text"
+          className="form-control search-input"
+          placeholder="Search by title..."
+          value={searchQuery} 
+          onChange={(e) => setSearchQuery(e.target.value)} />
+        <button className="btn search-button" onClick={handleSearch}> Search </button>
+      </div>
                   <div className="explorePropertyHed">
                   <h5><strong>EXPLORE NOW</strong></h5>
                   </div>
@@ -588,12 +597,14 @@ function PropertyBuyList() {
                 <div className="row propertyBuyListingRow_1">
                    {/* Search Bar Section */}
                    <div className="search-bar-section">
-                    <input
-                      type="text"
-                      className="form-control search-input"
-                      placeholder="Search using businesses keyword..."
-                      value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                    <button className="btn  search-button"  onClick={handleSearch}>  Search </button>
+        <input
+          type="text"
+          className="form-control search-input"
+          placeholder="Search by title..."
+          value={searchQuery} 
+          onChange={(e) => setSearchQuery(e.target.value)} />
+        <button className="btn search-button" onClick={handleSearch}> Search </button>
+     
                   </div>
                   <div className="explorePropertyHed">
                   <h5><strong>EXPLORE NOW</strong></h5>
