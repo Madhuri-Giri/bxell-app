@@ -341,7 +341,7 @@ function PropertyBuySinglePage() {
                               <table className="propertyInfoTable ">
                                 <thead className=" table_heading">
                                   <tr>
-                                    <th colSpan="2">Proposal</th>
+                                    <th colSpan="3">Proposal</th>
                                     {/* Adjust colSpan to cover all columns */}
                                   </tr>
                                 </thead>

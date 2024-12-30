@@ -425,8 +425,8 @@ useEffect(() => {
     <div>
       {propertyData.length > 0 && (
         <div className="row propertyBuyListingRow_1">
-          <div className=" homeListingDetailBoost">
-            <h5>FAVOURITE</h5>
+          <div className="explorePropertyHed homeListingDetailBoost">
+            <h6>FAVOURITE</h6>
           </div>
           {propertyData.map((property, index) => (
             <div className="col-lg-3 recommendationsClsNameCOL" key={index}>
