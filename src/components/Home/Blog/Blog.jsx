@@ -31,7 +31,8 @@ function Blog() {
   }, []);
 
   // Handle "Read More" toggle
-  const handleReadMoreClick = (id) => {
+  const handleReadMoreClick = (e, id) => {
+    e.stopPropagation();
     setExpandedBlogId(expandedBlogId === id ? null : id); // Toggle expanded state
   };
 

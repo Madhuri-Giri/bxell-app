@@ -336,7 +336,7 @@ function PropertyBuyList() {
       <section className="propertyBuyListingSec">
         <div className="container">
           <div className="row">
-            <div className="col-3 filter_res">
+            <div className="col-lg-3 col-sm-4 filter_res">
               <div className="propertyBuyListingfilterBox">
                 <div className="tab-buttons">
                   <button
@@ -641,7 +641,7 @@ function PropertyBuyList() {
               </div>
             </div>
 
-            <div className="col-9 filter_search">
+            <div className="col-lg-9 col-sm-8 filter_search">
               {activeTab === "business" && (
                 <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow">
                   {/* Search Bar Section */}

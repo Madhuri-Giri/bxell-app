@@ -20,6 +20,8 @@ function SellBusinessForm() {
   const steps = ["Business Info", "Business Details"];
   const [paymentDetails, setPaymentDetails] = useState(null);
   const user = useSelector((state) => state.auth.user);
+  const [amountError, setAmountError] = useState(""); // For displaying error messages
+
 
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -160,9 +162,17 @@ function SellBusinessForm() {
   const handlePayment = async (e) => {
     e.preventDefault();
   
+    // Reset the error message
+    setAmountError("");
+  
     if (!user) {
       navigate("/login");
       return;
+    }
+  
+    if (!formData.amount) {
+      setAmountError("Please select an amount to proceed.");
+      return; // Stop further execution
     }
   
     if (formSubmitting) return; // Prevent multiple submissions
@@ -187,12 +197,8 @@ function SellBusinessForm() {
         image: "https://your-logo-url.com/logo.png",
         handler: async function (response) {
           toast.success("Payment successful!");
-  
           try {
-            // First, handle form submission
             const formSubmissionData = await handleSubmit(e, payment_details.id);
-            
-            // Only proceed with payment update if form submission was successful
             if (formSubmissionData) {
               const isPaymentUpdated = await updateHandlePayment(
                 response.razorpay_payment_id,
@@ -238,6 +244,7 @@ function SellBusinessForm() {
       setFormSubmitting(false);
     }
   };
+  
   
   const handleSubmit = async (e, paymentId) => {
     e.preventDefault();
@@ -419,9 +426,41 @@ function SellBusinessForm() {
                               {errors.country && <div className="error-message">{errors.country}</div>}
                             </Form.Group>
                           </div>
-
-
+                          
                           <div className="col-7">
+                      <Form.Group className="businessListingFormsDiv" controlId="state">
+                        <Form.Label>STATE</Form.Label>
+                        <span className="vallidateRequiredStar">*</span>
+                        <Form.Control
+                          type="text"
+                          name="state"
+                          placeholder="Enter State"
+                          value={formData.state}
+                          onChange={handleChange}
+                          isInvalid={!!errors.state}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+
+                    <div className="col-7">
+                      <Form.Group className="businessListingFormsDiv" controlId="city">
+                        <Form.Label>TOWN/CITY</Form.Label>
+                        <span className="vallidateRequiredStar">*</span>
+                        <Form.Control
+                          type="text"
+                          name="city"
+                          placeholder="Enter City"
+                          value={formData.city}
+                          onChange={handleChange}
+                          isInvalid={!!errors.city}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+
+
+                          {/* <div className="col-7">
                             <Form.Group className="businessListingFormsDiv" controlId="state" >
                               <Form.Label>STATE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -434,9 +473,9 @@ function SellBusinessForm() {
                               </Form.Select>
                               <Form.Control.Feedback type="invalid"> {errors.state} </Form.Control.Feedback>
                             </Form.Group>
-                          </div>
+                          </div> */}
 
-                          <div className="col-7">
+                          {/* <div className="col-7">
                             <Form.Group className="businessListingFormsDiv" controlId="city"  >
                               <Form.Label>TOWn/CITY</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -449,7 +488,7 @@ function SellBusinessForm() {
                               </Form.Select>
                               <Form.Control.Feedback type="invalid"> {errors.city} </Form.Control.Feedback>
                             </Form.Group>
-                          </div>
+                          </div> */}
 
                           <div className="col-7">
                             <Form.Group className="businessListingFormsDiv" controlId="description" >
@@ -631,11 +670,17 @@ function SellBusinessForm() {
                           <Button variant="primary"  onClick={handleNext}  type="button" > Next </Button>
                         )}
                         {step === steps.length - 1 && (
+                          <>
                           <Button  variant="primary"  onClick={handlePayment}  type="submit" > Pay Now </Button>
+                        
+                          </>
                         )}
                       </div>
                       {step === steps.length - 1 && (
-                      <div className="price_radio">
+
+                        <> 
+                           <div className="price_radio">
+                           {amountError && <p style={{ color: "red", margin: "0px", padding: "0px" }}>{amountError}</p>}
                     {/* Radio button for Basic Listing */}
                     <div className="radio-item">
                       <label className="price-option">
@@ -678,6 +723,8 @@ function SellBusinessForm() {
                       </label>
                     </div>
                   </div>
+                  </>
+                   
                       )}
                     </div>
                   </div>

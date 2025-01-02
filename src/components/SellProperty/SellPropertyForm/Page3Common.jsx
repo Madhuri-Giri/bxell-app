@@ -23,7 +23,31 @@ const handleCountryInputChange = (e) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
 
+    if (type === "file" && files && files.length > 0) {
+      if (files.length === 1) {
+        // Single file: store it as a single file object
+        setFormData((prev) => ({
+          ...prev,
+          [name]: files[0], // Store single file directly
+        }));
+      } else {
+        // Multiple files: store them as an array
+        setFormData((prev) => ({
+          ...prev,
+          [name]: Array.from(files), // Convert FileList to Array
+        }));
+      }
+    } else {
+      // Handle other input types
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
   return (
     <>
      
@@ -60,7 +84,7 @@ const handleCountryInputChange = (e) => {
         </Form.Group>
       </div>
 
-      <div className="col-7">
+      {/* <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="state">
           <Form.Label>STATE</Form.Label> <span className="vallidateRequiredStar">*</span>
           <Form.Select name="state" value={formData.state} onChange={handleInputChange}  >
@@ -87,9 +111,40 @@ const handleCountryInputChange = (e) => {
           </Form.Select>
           {errors?.city && (  <small className="text-danger">{errors.city}</small>  )}
         </Form.Group>
-      </div>
+      </div> */}
+                     <div className="col-7">
+                      <Form.Group className="businessListingFormsDiv" controlId="state">
+                        <Form.Label>STATE</Form.Label>
+                        <span className="vallidateRequiredStar">*</span>
+                        <Form.Control
+                          type="text"
+                          name="state"
+                          placeholder="Enter State"
+                          value={formData.state}
+                          onChange={handleChange}
+                          isInvalid={!!errors.state}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
 
-      <div className="col-7">
+                    <div className="col-7">
+                      <Form.Group className="businessListingFormsDiv" controlId="city">
+                        <Form.Label>TOWN/CITY</Form.Label>
+                        <span className="vallidateRequiredStar">*</span>
+                        <Form.Control
+                          type="text"
+                          name="city"
+                          placeholder="Enter City"
+                          value={formData.city}
+                          onChange={handleChange}
+                          isInvalid={!!errors.city}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+
+                  <div className="col-7">
         <Form.Group controlId="asking_price" className="businessListingFormsDiv" >
         {formData.listing_type === "Selling" && (
             <>

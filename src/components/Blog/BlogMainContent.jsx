@@ -28,7 +28,8 @@ const BlogMainContent = () => {
 
     const [expandedBlogId, setExpandedBlogId] = useState(null);
 
-    const handleReadMoreClick = (id) => {
+    const handleReadMoreClick = (e, id) => {
+        e.stopPropagation();
         setExpandedBlogId(expandedBlogId === id ? null : id);
     };
 

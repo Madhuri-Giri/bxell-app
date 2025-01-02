@@ -368,9 +368,6 @@ function PropertyBuySinglePage() {
           <img
             className="img-fluid"
             style={{
-              cursor: "pointer",
-              width: "100%",
-              height: "300px",
               objectFit: "contain",
             }}
             src={images[0].startsWith("http") ? images[0] : `${BASE_URL}/${images[0]}`}
@@ -383,7 +380,7 @@ function PropertyBuySinglePage() {
                         </div>
 
                         <div className="col-lg-6 col-sm-12">
-                          <div className="row margin_asking">
+                          <div className="row margin_asking price_location">
                             <div className="col-6 ask_price">
                               <span>
                                 {" "}
@@ -778,9 +775,7 @@ function PropertyBuySinglePage() {
                             <img
                               className="img-fluid"
                               style={{
-                                cursor: "pointer",
-                                width: "100%",
-                                height: "300px",
+                               
                                 objectFit: "contain",
                               }}
                               src={
@@ -794,7 +789,7 @@ function PropertyBuySinglePage() {
                         </div>
                         <div className="col-lg-6 col-sm-12">
                           <div className="row margin_asking">
-                            <div className="d-flex justify-content-between">
+                            <div className="d-flex justify-content-between price_location">
                               <div className="col-6 ask_price">
                                 <span>
                                   {" "}

@@ -164,6 +164,7 @@
     border-radius: 2px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
 }
 
 .filter-button.active {
@@ -245,4 +246,17 @@
 }
 
   }
-  
+  @media (max-width: 1440px) {
+   
+    .filter_box{
+        display: inline;
+    }
+
+    .filter-button{
+        font-size: 14px;
+        padding: 0px 6px;
+        text-align: center;
+        border-radius: 5px;
+    }
+
+}

@@ -86,7 +86,7 @@ const Page3ROC = ({ formData, setFormData, errors }) => {
   </Form.Group>
 </div>
 
-      <div className="col-7">
+      {/* <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="state">
           <Form.Label>STATE</Form.Label>
           <span className="vallidateRequiredStar">*</span>
@@ -128,7 +128,40 @@ const Page3ROC = ({ formData, setFormData, errors }) => {
             <small className="text-danger">{errors.city}</small>
           )}
         </Form.Group>
-      </div>
+      </div> */}
+
+         <div className="col-7">
+                            <Form.Group className="businessListingFormsDiv" controlId="state">
+                              <Form.Label>STATE</Form.Label>
+                              <span className="vallidateRequiredStar">*</span>
+                              <Form.Control
+                                type="text"
+                                name="state"
+                                placeholder="Enter State"
+                                value={formData.state}
+                                onChange={handleChange}
+                                isInvalid={!!errors.state}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
+                            </Form.Group>
+                          </div>
+      
+                          <div className="col-7">
+                            <Form.Group className="businessListingFormsDiv" controlId="city">
+                              <Form.Label>TOWN/CITY</Form.Label>
+                              <span className="vallidateRequiredStar">*</span>
+                              <Form.Control
+                                type="text"
+                                name="city"
+                                placeholder="Enter City"
+                                value={formData.city}
+                                onChange={handleChange}
+                                isInvalid={!!errors.city}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+                            </Form.Group>
+                          </div>
+      
 
       <div className="col-7">
         <Form.Group controlId="asking_price" className="businessListingFormsDiv">
