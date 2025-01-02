@@ -777,7 +777,11 @@ function PropertyBuyList() {
                                 Call <FaPhoneAlt />
                               </a>
                             </div>
-                            
+                            {lists.subscription && lists.subscription.length > 0 && lists.subscription[0].status === 'Valid' && (
+                      <div className="promotedText">
+                        {lists.subscription[0].type}
+                      </div>
+                    )}
                           </div>
                         </div>
                       </div>
@@ -910,6 +914,11 @@ function PropertyBuyList() {
                               </strong>{" "}
                             </h6>
                           </div>
+                          {listsProperty.subscription && listsProperty.subscription.length > 0 && listsProperty.subscription[0].status === 'Valid' &&(
+                      <div className="promotedText">
+                          {listsProperty.subscription[0].type}
+                      </div>
+                  )}
                           {/* <h6>  Reported Sale (yearly):  <span>{listsProperty.price}</span> </h6> */}
                           {/* <h6><IoLocation /> {listsProperty.city}</h6> */}
                           <div className="location-call">
