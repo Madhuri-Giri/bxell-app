@@ -2,8 +2,10 @@
     position: relative;
     background-image: url('../../../assets/Images/about-3.jpg');
     background-attachment: fixed;
-    background-position: 50% -63.2626px;
+    background-size: cover;
+    background-position: center;
     margin: 90px 0px;
+    color: white;
 }
 
 .aboutBannerSec-2 .aboutBanner_2_Overlay {
@@ -18,33 +20,60 @@
 
 .aboutBanner_2-text-container {
     position: relative;
-    z-index: 3;
+    z-index: 2;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    min-height: 400px; /* Set a minimum height for consistent layout */
     text-align: center;
-    z-index: 1;
-    color: white;
-    padding: 100px 10px;
-}
-
-.aboutBanner_2-text-container p {
-    line-height: 33px;
-    color: rgb(228, 222, 222);
-    font-weight: 500;
-    margin-bottom: 30px;
+    padding: 50px 15px; /* Reduced padding for smaller screens */
 }
 
 .aboutbanner_2hed {
-    padding: 0px 130px;
+    max-width: 800px;
+    margin: 0 auto 20px;
+    padding: 0 20px;
+}
+
+.aboutbanner_2hed h1 {
+    font-size: 2rem; /* Responsive font size */
+    line-height: 1.5;
     margin-bottom: 20px;
 }
 
+.aboutBanner_2-text-container p {
+    max-width: 700px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: rgba(228, 222, 222, 0.9);
+}
+
 .aboutBannerSec-2 a {
-    background: #008080 ;
+    background: #008080;
     color: #fff;
     padding: 12px 29px;
     border-radius: 3px;
     text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.aboutBannerSec-2 a:hover {
+    background: #005959;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .aboutbanner_2hed h1 {
+        font-size: 1.5rem;
+    }
+
+    .aboutBanner_2-text-container p {
+        font-size: 0.9rem;
+    }
+
+    .aboutBannerSec-2 {
+        margin: 50px 0px;
+    }
 }

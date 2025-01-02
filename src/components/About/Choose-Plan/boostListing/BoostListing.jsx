@@ -63,7 +63,7 @@ const fetchPaymentPropertyDetails = async (propertyId) => {
       amount: 49,
       user_id: user,
       property_id: propertyId,
-      boost_name: "month",
+      boost_name: "week",
     };
 
     console.log("Sending payload for property payment:", payload);
@@ -183,7 +183,7 @@ const fetchPaymentBusinessDetails = async (businessId) => {
       amount:49,
       user_id: user,
       business_id: businessId,
-      boost_name: "month",
+      boost_name: "week",
     };
 
     console.log("Sending payload for property payment:", payload);

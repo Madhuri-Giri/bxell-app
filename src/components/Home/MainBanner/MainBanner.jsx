@@ -116,9 +116,9 @@ function MainBanner() {
                 className="headerSigninbtn"
                 onClick={handleSell} >  SELL </Button>
               {/* Add instant image below SELL button */}
-              <div className="instant-img-wrapper">
-                <img  src={instant_img}  alt="Instant Listing" className="instant-img" />
-              </div>
+              <span className="instant-img-wrapper">
+                  <img  src={instant_img}  alt="Instant Listing" className="instant-imgg" />
+                </span>
             </div>
 
             {/* BUY Section */}

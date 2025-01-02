@@ -284,3 +284,23 @@
     text-align: left;
 }
 
+.enquiry-table th{
+    letter-spacing: 1px;
+    font-size: large;
+    color: #008080;
+}
+
+.enquiry-table td{
+    font-size: 17px;
+    color: #808080;
+}
+
+.propertyBuyListingBox .wishlist-heart {
+    position: absolute;
+    font-size: 25px;
+    color: red;
+    cursor: pointer;
+    z-index: 10;
+    margin-left: 10px;
+}
+

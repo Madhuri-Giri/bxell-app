@@ -13,18 +13,6 @@
     transition: transform 1s ease; /* Slower and smoother zoom transition */
 }
 
-/* .homeMostPopularcitySecMainCard:hover .overlay {
-    background: linear-gradient(
-        to bottom right, 
-        rgba(75, 0, 130, 0.8),  
-        rgba(139, 0, 0, 0.8),   
-        rgba(49, 0, 98, 0.8)    
-    );
-}
-.homeMostPopularcitySecMainCard:hover {
-    transform: scale(1.1); 
-} */
-
 .homeMostPopularcitySecMainCard .overlay {
     position: absolute;
     top: 0;
@@ -74,3 +62,4 @@
     text-align: center;
     border-radius: 4px;
 }
+

@@ -41,14 +41,34 @@ function MostVisitedPlace() {
           <div className="2 homeMostVisitedPlaceHed">
             <h4>Choose your city to Explore</h4>
           </div>
-          <div className='chooseCityMain row'>
-            {cities.map((city, index) => (
-              <div className="col-md-2 col-6 chooseCityChilds text-center" key={index} onClick={() => handleCityClick(city)}>
-                <FaCity />
-                <h6>{city}</h6>
-              </div>
-            ))}
-          </div>
+          <div className='chooseCityMain'>
+  <div className='chooseCityWrapper'>
+    <div className='chooseCityWrapperInner'>
+      {cities.map((city, index) => (
+        <div 
+          className="chooseCityChilds" 
+          key={`original-${index}`} 
+          onClick={() => handleCityClick(city)}
+        >
+          <FaCity />
+          <h6>{city}</h6>
+        </div>
+      ))}
+      {/* Duplicate the list for seamless circular animation */}
+      {cities.map((city, index) => (
+        <div 
+          className="chooseCityChilds" 
+          key={`duplicate-${index}`} 
+          onClick={() => handleCityClick(city)}
+        >
+          <FaCity />
+          <h6>{city}</h6>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
     </section>

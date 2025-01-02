@@ -1,13 +1,18 @@
+
+
 .homeMostVisitedPlace {
   padding: 40px 0;
 }
+
 .homeMostVisitedPlaceROW{
   display: flex;
   justify-content: space-between;
+
 }
 
 .homeMostVisitedPlace .homeMostVisitedPlaceHed {
   text-align: center;
+ 
 }
 
 .homeMostVisitedPlace .card {
@@ -20,6 +25,7 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
   position: relative;
   margin-bottom: 30px;
+  
 }
 
 .homeMostVisitedPlace .card:hover {
@@ -216,21 +222,130 @@
 }
 
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 .chooseCityMain {
   display: flex;
-  justify-content: space-evenly;
+  overflow: hidden; /* Hide overflow for smooth sliding */
+  position: relative;
   margin-top: 20px;
+  width: 100%;
+  height: auto;
 }
-.chooseCityMain svg{
-  font-size: 35px;
+
+.chooseCityWrapper {
+  display: flex;
+  gap: 20px; /* Space between cities */
+  animation: scroll 15s linear infinite; /* Circular slide animation */
+  width: max-content;
 }
+
+.chooseCityWrapperInner {
+  display: flex;
+  gap: 10px;
+}
+
 .chooseCityChilds {
   border: 1px solid #0080803b;
   padding: 7px 12px;
   border-radius: 10px;
   color: #008080;
-  width: 100px;
   background: #00808014;
   cursor: pointer;
   margin-bottom: 10px;
+ 
+  text-align: center;
+  width: 120px;
+  flex-shrink: 0; /* Prevent shrinking of cards */
+}
+
+.chooseCityChilds h6 {
+  font-size: 14px;
+}
+
+.chooseCityMain svg {
+  font-size: 35px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chooseCityChilds {
+    width: 100px;
+  }
+  .chooseCityMain svg {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chooseCityChilds {
+    width: 80px;
+    padding: 5px 8px;
+  }
+  .chooseCityMain svg {
+    font-size: 25px;
+  }
+}
+
+
+/* Responsive layout adjustments */
+@media (max-width: 1200px) {
+  .homeMostPopularcitySecMainCard {
+      height: 250px; /* Reduce height for medium screens */
+  }
+}
+
+@media (max-width: 992px) {
+  .homeMostPopularcitySecMainCard {
+      height: 220px; /* Further reduce height for tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .homeMostPopularcitySecMainCard {
+      height: 200px; 
+  }
+  .homeMostPopularcitySecHED {
+      font-size: 18px; 
+  }
+  .chooseCityChilds {
+      margin-bottom: 15px; 
+  }
+  .exploreMoreListingBtn {
+      padding: 8px 20px; 
+  }
+}
+
+@media (max-width: 576px) {
+  .homeMostPopularcitySecMainCard {
+      height: 180px;
+  }
+  .homeMostPopularcitySecHED {
+      font-size: 16px; 
+  }
+  .chooseCityChilds {
+      font-size: 12px; 
+      margin-bottom: 10px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .homeMostPopularcitySecMainCard {
+      height: 150px; 
+  }
+  .chooseCityMain {
+      display: block; 
+      margin: 5px;
+  }
+  .chooseCityChilds {
+      width: 100%; 
+      
+  }
 }

@@ -1,4 +1,4 @@
-/ eslint-disable no-unused-vars /
+
 import React, { useState, useEffect } from "react";
 import "./RecomendedList.css";
 import { IoLocation } from "react-icons/io5";
@@ -14,154 +14,136 @@ import { FaSearch } from "react-icons/fa";
 import { fetchFilterRes } from "../../../API/apiServices";
 
 function RecomendedList() {
-  const [homeBusiness, setHomeBusiness] = useState([]); // Initialize as an empty array
+  const [homeBusiness, setHomeBusiness] = useState([]);
   const [homeProperty, setHomeProperty] = useState([]);
+  const [filteredHomeBusiness, setFilteredHomeBusiness] = useState([]);
+  const [filteredHomeProperty, setFilteredHomeProperty] = useState([]);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [filterData, setFilterData] = useState(null);
   const navigate = useNavigate();
 
-   const [searchTitle, setSearchTitle] = useState(""); // State for search input
-    const [selectedCountry, setSelectedCountry] = useState(""); // State for selected country
-    const [filterData, setFilterData] = useState(null); // Store filter data
-    const [filteredResults, setFilteredResults] = useState([]); // Store filtered results
-  
-    // Fetch filter data on component mount
-    useEffect(() => {
-      const fetchFilters = async () => {
-        const response = await fetchFilterRes();
-        if (response?.data) {
-          setFilterData(response.data);
-        }
-      };
-      fetchFilters();
-    }, []);
-  
-    const handleSearch = () => {
-      if (filterData) {
-        const businessTitles = filterData.business_filter_fields?.title || [];
-        const propertyTitles = filterData.property_filter_fields?.title || [];
-        const selectedCountryLower = selectedCountry.toLowerCase();
-    
-        // Filter based on search title and country
-        const filteredBusinesses = homeBusiness.filter(
-          (list) =>
-            list.title.toLowerCase().includes(searchTitle.toLowerCase()) ||
-            filterData.business_filter_fields?.country?.some(
-              (country) => country.toLowerCase() === selectedCountryLower
-            )
-        );
-    
-        const filteredProperties = homeProperty.filter(
-          (property) =>
-            property.property_title.toLowerCase().includes(searchTitle.toLowerCase()) ||
-            filterData.property_filter_fields?.country?.some(
-              (country) => country.toLowerCase() === selectedCountryLower
-            )
-        );
-    
-        // Combine and update filtered results
-        setHomeBusiness(filteredBusinesses);
-        setHomeProperty(filteredProperties);
+  useEffect(() => {
+    const fetchFilters = async () => {
+      const response = await fetchFilterRes();
+      if (response?.data) {
+        setFilterData(response.data);
       }
     };
-    
-    const handleSelectCountry = (country) => {
-      console.log("Selected Country: ", country); // Log selected country for debugging
-      setSelectedCountry(country);
-      handleSearch(); // Trigger search when country is selected
-    };
-    
-  const handlepropertyNavigate = (type, id) => {
-    console.log("Navigating with type:", type, "and ID:", id);
-    fetchViewPropertyRes(id); // Ensure you call the function here
-    navigate("/single-page", { state: { type, id } });
-  };
-
-  const handlebusinessNavigate = (type, id) => {
-    console.log("Navigating with type:", type, "and ID:", id);
-    fetchViewBusinessRes(id); // Ensure you call the function here
-    navigate("/single-page", { state: { type, id } });
-  };
+    fetchFilters();
+  }, []);
 
   useEffect(() => {
     const fetchProperty = async () => {
       const data = await fetchPropertyRes();
-      console.log("Fetched Property Data:", data); // Log the full fetched data
-
       if (data && Array.isArray(data)) {
         setHomeProperty(data);
+        setFilteredHomeProperty(data);
+      }
+    };
 
-        // Extract and log IDs
-        const propertyIds = data.map((item) => item.id);
-        console.log("Property IDs:", propertyIds); // Log all property IDs
-      } else {
-        console.error("Error: Fetched property data is not an array");
+    const fetchBusiness = async () => {
+      const data = await fetchBusinessRes();
+      if (data && Array.isArray(data)) {
+        setHomeBusiness(data);
+        setFilteredHomeBusiness(data);
       }
     };
 
     fetchProperty();
-  }, []);
-
-  useEffect(() => {
-    const fetchBusiness = async () => {
-      const data = await fetchBusinessRes();
-      console.log("Fetched Business Data:", data); // Log the full fetched data
-
-      if (data && Array.isArray(data)) {
-        setHomeBusiness(data);
-
-        // Extract and log IDs
-        const businessIds = data.map((item) => item.id);
-        console.log("Business IDs:", businessIds); // Log all business IDs
-      } else {
-        console.error("Error: Fetched business data is not an array");
-      }
-    };
-
     fetchBusiness();
   }, []);
 
+  const handleSearch = () => {
+    console.log('Search Title:', searchTitle);
+    console.log('Selected City:', selectedCity);  // Check if selected city is correct
+  
+    if (searchTitle || selectedCity) {
+      const filteredBusinesses = homeBusiness.filter(
+        (list) => {
+          const isTitleMatch = list.title.toLowerCase().includes(searchTitle.toLowerCase());
+          const isCityMatch = list.city?.toLowerCase() === selectedCity.toLowerCase();
+          console.log('Business City:', list.city, 'Matches:', isCityMatch); // Debug
+          return (searchTitle ? isTitleMatch : true) && (selectedCity ? isCityMatch : true);
+        }
+      );
+  
+      const filteredProperties = homeProperty.filter(
+        (property) => {
+          const isTitleMatch = property.property_title.toLowerCase().includes(searchTitle.toLowerCase());
+          const isCityMatch = property.city?.toLowerCase() === selectedCity.toLowerCase();
+          console.log('Property City:', property.city, 'Matches:', isCityMatch); // Debug
+          return (searchTitle ? isTitleMatch : true) && (selectedCity ? isCityMatch : true);
+        }
+      );
+  
+      setFilteredHomeBusiness(filteredBusinesses);
+      setFilteredHomeProperty(filteredProperties);
+    } else {
+      // Reset to original data if no search criteria
+      setFilteredHomeBusiness(homeBusiness);
+      setFilteredHomeProperty(homeProperty);
+    }
+  };
+  
+  
+  const handleSelectCity = (city) => {
+    console.log('City Selected:', city);  // Debugging the selected city
+    setSelectedCity(city);
+    handleSearch();
+  };
+  
+
+  const handlepropertyNavigate = (type, id) => {
+    fetchViewPropertyRes(id);
+    navigate("/single-page", { state: { type, id } });
+  };
+
+  const handlebusinessNavigate = (type, id) => {
+    fetchViewBusinessRes(id);
+    navigate("/single-page", { state: { type, id } });
+  };
+
   return (
     <>
-     {/* Home search Section */}
-     <Form className="search-form">
-            <div className="row formSearchRow">
-              {/* Country Dropdown */}
-              <div className="col-md-3 col-4 formSearchCOL">
-              <DropdownButton
-                  id="dropdown-basic-button"
-                  title={selectedCountry || "Select Country"}
-                  className="country-dropdown"
-                  onSelect={handleSelectCountry}
-                >
-                  {filterData &&
-                    filterData.business_filter_fields?.country?.length > 0 &&
-                    filterData.business_filter_fields.country
-                      .concat(filterData.property_filter_fields?.country || [])
-                      .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
-                      .map((country, index) => (
-                        <Dropdown.Item key={index} eventKey={country}>
-                          {country}
-                        </Dropdown.Item>
-                      ))}
-                </DropdownButton>
-              </div>
+      <div className="container">
+        <Form className="search-form">
+          <div className="row formSearchRow d-flex">
+            <div className="col-lg-4 col-4 formSearchCOL">
+            <DropdownButton
+  id="dropdown-basic-button"
+  title={selectedCity || "Select City"}
+  className="country-dropdown"
+  onSelect={(city) => handleSelectCity(city)} // Ensure city is passed correctly
+>
+  {filterData &&
+    filterData.business_filter_fields?.city &&
+    [...new Set([...filterData.business_filter_fields.city, ...filterData.property_filter_fields?.city || []])].map((city, index) => (
+      <Dropdown.Item key={index} eventKey={city}>
+        {city}
+      </Dropdown.Item>
+    ))}
+</DropdownButton>
 
-              {/* Search Input */}
-              <div className="col-md-7 col-8 formSearchCOL">
-              <InputGroup>
-                  <FormControl
-                    type="text"
-                    placeholder="Search a Business, Property for you..."
-                    className="search-input"
-                    value={searchTitle}
-                    onChange={(e) => setSearchTitle(e.target.value)}
-                  />
-                  <InputGroup.Text className="search-icon" onClick={handleSearch}>
-                    <FaSearch />
-                  </InputGroup.Text>
-                </InputGroup>
-              </div>
             </div>
-          </Form>
+            <div className="col-lg-8 col-8 formSearchCOL">
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  placeholder="Search a Business, Property for you..."
+                  className="search-input"
+                  value={searchTitle}
+                  onChange={(e) => setSearchTitle(e.target.value)}
+                />
+                <InputGroup.Text className="search-icon" onClick={handleSearch}>
+                  <FaSearch />
+                </InputGroup.Text>
+              </InputGroup>
+            </div>
+          </div>
+        </Form>
+      </div>
+    
 
       <section className="homeRecomendedListSEC">
         <div className="container">
@@ -170,8 +152,8 @@ function RecomendedList() {
           </div>
 
           <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
-            {homeBusiness.slice(0, 4).map((list, index) => (
-              <div className="col-lg-3 recommendationsClsNameCOL" key={index}>
+            {filteredHomeBusiness.slice(0, 4).map((list, index) => (
+              <div className="col-lg-3 col-md-6 recommendationsClsNameCOL" key={index}>
                 <div className="recommendationsClsNameBox">
                   <div className="promotedTextWrapper">
                     <img
@@ -215,8 +197,12 @@ function RecomendedList() {
                       })()}
                       alt={list.title || "business Image"}
                     />
-
-                    <h5 className="promotedText">{list.promoting}</h5>
+             {list.subscription && list.subscription.length > 0 && list.subscription[0].status === 'Valid' && (
+                      <div className="promotedText">
+                        {list.subscription[0].type}
+                      </div>
+                    )}
+                    {/* <h5 className="promotedText">{list.promoting}</h5> */}
                   </div>
                   <h5>{list.title}</h5>
                   <div className="home_price">
@@ -246,8 +232,8 @@ function RecomendedList() {
           </div>
 
           <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
-            {homeProperty.slice(0, 4).map((property, index) => (
-              <div className="col-lg-3 recommendationsClsNameCOL" key={index}>
+            {filteredHomeProperty.slice(0, 4).map((property, index) => (
+              <div className="col-lg-3 col-md-6 recommendationsClsNameCOL" key={index}>
                 <div className="recommendationsClsNameBox">
                   <div className="promotedTextWrapper">
                     <img
@@ -299,9 +285,16 @@ function RecomendedList() {
                     </h6>
                     <span className="home_con">{property.listing_type}</span>
                   </div>
-                  
                   <div>
                       <h6>Property Type : <strong>{property.property_type}</strong></h6>
+                  </div>
+                  {property.subscription && property.subscription.length > 0 && property.subscription[0].status === 'Valid' &&(
+                      <div className="promotedText">
+                          {property.subscription[0].type}
+                      </div>
+                  )}
+                  <div>
+                      {/* <h6>Property Type : <strong>{property.property_type}</strong></h6> */}
                   </div>
                   <div className="location-call">
                     <h6>

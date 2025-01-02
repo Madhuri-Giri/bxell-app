@@ -13,7 +13,7 @@
     border-radius: 7px;
 }
 
-.businessListingFormMainBox .radio_space{
+.businessListingFormMainBox .radio_space {
     padding-left: 40px;
 }
 
@@ -164,13 +164,14 @@
 
 .listing-type-container {
     display: flex;
-    gap: 10px; /* Space between boxes */
+    gap: 10px;
+    /* Space between boxes */
 }
 
 .listing-type-box {
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-transform: uppercase;
     padding: 10px 20px;
     border-radius: 5px;
@@ -179,7 +180,7 @@
     border: 1px solid #008080;
     background-color: transparent;
     transition: background-color 0.2s ease, color 0.2s ease;
-    text-align: center; 
+    text-align: center;
 }
 
 .listing-type-box:hover {
@@ -202,17 +203,18 @@
     font-size: 12px;
     margin-top: 5px;
 }
+
 /* ---------------------country----------------- */
 .country-box-container {
-    display: flex; 
-    gap: 10px; 
-  }
-  
-  .country-box {
-    display: flex; 
+    display: flex;
+    gap: 10px;
+}
+
+.country-box {
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px; 
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     color: #008080;
@@ -220,37 +222,38 @@
     text-align: center;
     text-transform: uppercase;
     transition: all 0.3s ease;
-  }
-  
-  .country-box:hover {
+}
+
+.country-box:hover {
     background-color: #008080;
     color: white;
-  }
-  
-  .country-box.selected {
+}
+
+.country-box.selected {
     background-color: #008080;
     color: white;
     font-weight: bold;
     border: 2px solid #008080;
-  }
-  
-  .error-message {
+}
+
+.error-message {
     color: red;
     font-size: 12px;
     margin-top: 5px;
-  }
-  /* -------------------------------ARE YOU?-------------- */
-  .you-are-box-container {
-    display: flex; 
-    gap: 10px; 
-  }
-  
-  .you-are-box {
+}
+
+/* -------------------------------ARE YOU?-------------- */
+.you-are-box-container {
     display: flex;
-    justify-content: center; 
-    align-items: center; 
-    text-transform: uppercase; 
-    padding: 10px 20px; 
+    gap: 10px;
+}
+
+.you-are-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     color: #008080;
@@ -258,32 +261,199 @@
     background-color: white;
     text-align: center;
     transition: all 0.3s ease;
-  }
-  
-  .you-are-box:hover {
+}
+
+.you-are-box:hover {
     background-color: #008080;
     color: white;
-  }
-  
-  .you-are-box.selected {
+}
+
+.you-are-box.selected {
     background-color: #008080;
     color: white;
     font-weight: bold;
     border: 2px solid #008080;
-  }
-  
-  .invalid-feedback {
+}
+
+.invalid-feedback {
     color: red;
     font-size: 12px;
     margin-top: 5px;
-  }
- /* CSS to remove spinner from number input */
+}
+
+/* CSS to remove spinner from number input */
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .no-spinner[type="number"] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .businessListingFormMainBox {
+        width: 90%;
+        /* Allow the form box to take 90% of the container width */
+    }
+
+    .businessListingFormMAinRow .col-7 {
+        flex: 1 1 100%;
+        /* Stack the columns in a single column */
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .businessListingFormMainBox {
+        width: 100%;
+    }
+
+    .business_width {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .businessListingFormHed h4 {
+        font-size: 18px;
+    }
+
+    .listing-type-box,
+    .country-box,
+    .you-are-box {
+        width: 100%;
+        /* Make each option take full width */
+        margin-bottom: 10px;
+    }
+
+    .propertyListingSubmitButton button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .businesListingSubmitButton button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .col-7 {
+        flex: 1 1 100%;
+        margin-bottom: 15px; /* Add space below for stacked elements */
+      }  
+}
+
+/* Mobile View */
+@media (max-width: 480px) {
+
+    .listing-type-container,
+    .country-box-container,
+    .you-are-box-container {
+        flex-direction: column;
+    }
+
+    .businessListingFormMainBox {
+        padding: 15px;
+        width: 100%;
+    }
+
+    .businessListingFormMAinSec {
+        padding: 0;
+    }
+
+    .business_width {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .listing-type-box,
+    .country-box,
+    .you-are-box {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    .businessListingFormHed h4 {
+        font-size: 16px;
+    }
+
+    .css-ibtndc-MuiStepper-root {
+    
+        display: none !important;
+      }
+}
+/* Container for the radio buttons and content */
+.price_radio {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-left: auto; /* Pushes the container to the right */
+    width: fit-content; /* Ensures the container takes up only as much width as needed */
+    position: relative; /* Required for absolute positioning of inner items, if needed */
+  }
+  
+  /* Each radio button item */
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0px 4px 10px rgba(63, 60, 60, 0.3); 
+    padding: 10px;
+    border-radius: 10px; 
+    background-color: white;
+    z-index: 1;
+    width: 100%; /* Allows radio items to expand within the parent div */
+  }
+  
+  /* Label around the radio button and content */
+  .price-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Div holding price and content */
+  .price-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Price styling */
+  .price {
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+  }
+  
+  /* Content (heading and description) styling */
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  /* Heading styling */
+  .content h3 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #008080;
+  }
+  
+  /* Paragraph styling for description */
+  .content p {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: #008080;
+  }
+  
+  /* Radio button styling */
+  .radio-input {
+    width: 10px;
+    height: 10px;
+  }
+  

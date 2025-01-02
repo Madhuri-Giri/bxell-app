@@ -25,21 +25,38 @@
     transition: transform 0.3s ease-in-out;
 }
 
-.testimonialBox {
-    background-color: lightgray; /* Default background color for inactive slides */
+/* .testimonialBox {
+    background-color: lightgray;
     color: black;
     border-radius: 10px;
     padding: 40px 50px;
     transition: background-color 0.4s, opacity 0.4s;
-    opacity: 0.5; /* Make inactive testimonials slightly transparent */
+    opacity: 0.5; 
     cursor: grab;
-    max-width: 90%; /* Makes the slides wider */
+    max-width: 90%; 
+} */
+
+.testimonialBox {
+    background-color: lightgray; 
+    color: black;
+    border-radius: 10px;
+    padding: 20px; 
+    transition: background-color 0.4s, opacity 0.4s;
+    opacity: 0.5; 
+    cursor: grab;
+    max-width: 90%; 
+    height: 220px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
 }
 
 .testimonial.active .testimonialBox {
-    background-color: #008080 ; /* Background color for active slide */
-    color: white; /* Light text for active slides */
-    opacity: 1; /* Fully opaque for active slide */
+    background-color: #008080 ; 
+    color: white; 
+    opacity: 1;
 }
 
 .testimonialBox p {

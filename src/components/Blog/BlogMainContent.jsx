@@ -1,47 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchBlogRes } from "../../API/apiServices";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
-import { useNavigate } from 'react-router-dom';
 
 const BlogMainContent = () => {
-   
     const navigate = useNavigate();
-    const [homeBlog, setHomeBlog] = useState([]);  // Initialize as an empty array
-    
+    const [homeBlog, setHomeBlog] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const blogsPerPage = 8;
+
     const handleBlogClick = (blog) => {
-        navigate('/single-blog', { state: { blog } }); // Pass blog data or just the ID
+        navigate('/single-blog', { state: { blog } });
     };
+
     useEffect(() => {
         const fetchBlog = async () => {
             const data = await fetchBlogRes();
-            console.log("Fetched Data:", data); // Log the fetched data
-
             if (data && Array.isArray(data)) {
                 setHomeBlog(data);
             } else {
                 console.error("Error: Fetched data is not an array");
             }
         };
-
         fetchBlog();
     }, []);
 
-    const [expandedBlogId, setExpandedBlogId] = useState(null); // Track the expanded blog
+    const [expandedBlogId, setExpandedBlogId] = useState(null);
 
     const handleReadMoreClick = (id) => {
-        setExpandedBlogId(expandedBlogId === id ? null : id); // Toggle between expanded and collapsed
+        setExpandedBlogId(expandedBlogId === id ? null : id);
+    };
+
+    const indexOfLastBlog = currentPage * blogsPerPage;
+    const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+    const currentBlogs = homeBlog.slice(indexOfFirstBlog, indexOfLastBlog);
+
+    const totalPages = Math.ceil(homeBlog.length / blogsPerPage);
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
     };
 
     return (
         <>
-              <Header/>
-              <section className='homeBrowserListingSec'>
+            <Header />
+            <section className='homeBrowserListingSec'>
                 <div className="overlay"></div>
                 <div className="container homeBrowserListingSecHED">
                     <div className="row">
-                        <div className="col-12 ">
+                        <div className="col-12">
                             <h2>Browse Blog List</h2>
                         </div>
                     </div>
@@ -55,12 +71,12 @@ const BlogMainContent = () => {
                             <h5>Latest Tips & Blog</h5>
                             <p>Discover & connect with top-rated local businesses</p>
                         </div>
-                        {Array.isArray(homeBlog) && homeBlog.length > 0 ? (
-                            homeBlog.map((blog) => (
+                        {currentBlogs.length > 0 ? (
+                            currentBlogs.map((blog) => (
                                 <div key={blog.id} className="col-lg-3 col-md-6 homeBlogBox">
                                     <div
                                         className="image-link"
-                                        onClick={() => handleBlogClick(blog)} // Pass the blog data on click
+                                        onClick={() => handleBlogClick(blog)}
                                         style={{ cursor: 'pointer' }}
                                     >
                                         <div className="image-container">
@@ -103,9 +119,38 @@ const BlogMainContent = () => {
                             <p>Loading blogs...</p>
                         )}
                     </div>
+
+                    {/* Pagination Controls */}
+                    <div className="row">
+                        <div className="col-12 pagination">
+                            <button
+                                onClick={handlePreviousPage}
+                                disabled={currentPage === 1}
+                                className="page-button"
+                            >
+                                Previous
+                            </button>
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <button
+                                    key={index + 1}
+                                    onClick={() => setCurrentPage(index + 1)}
+                                    className={`page-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                            <button
+                                onClick={handleNextPage}
+                                disabled={currentPage === totalPages}
+                                className="page-button"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
-        <Footer/>
+            <Footer />
         </>
     );
 };

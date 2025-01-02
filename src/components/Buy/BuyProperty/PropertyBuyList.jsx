@@ -336,7 +336,7 @@ function PropertyBuyList() {
       <section className="propertyBuyListingSec">
         <div className="container">
           <div className="row">
-            <div className="col-3">
+            <div className="col-3 filter_res">
               <div className="propertyBuyListingfilterBox">
                 <div className="tab-buttons">
                   <button
@@ -433,7 +433,7 @@ function PropertyBuyList() {
                       </select>
                     </div>
 
-                    <div className="filter-group">
+                    {/* <div className="filter-group">
                       <label>Price Range (Business)</label>
                       <input
                         type="range"
@@ -447,7 +447,7 @@ function PropertyBuyList() {
                       <div className="price-value">
                         {" "}
                         Selected Price: ₹{businessPrice}{" "}
-                      </div>
+                      </div> */}
 
                       <div className="filter_listing_type">
                         <h6>Listing Type</h6>
@@ -496,7 +496,7 @@ function PropertyBuyList() {
                           </p>
                         </div>
                       </div>
-                    </div>
+                    {/* </div> */}
                   </>
                 )}
 
@@ -575,7 +575,7 @@ function PropertyBuyList() {
                       </select>
                     </div>
 
-                    <div className="filter-group">
+                    {/* <div className="filter-group">
                       <label>Price Range (Property)</label>
                       <input
                         type="range"
@@ -589,7 +589,7 @@ function PropertyBuyList() {
                       <div className="price-value">
                         {" "}
                         Selected Price: ₹{propertyPrice}{" "}
-                      </div>
+                      </div> */}
 
                       <div className="filter_listing_type">
                         <h6>Listing Type</h6>
@@ -635,13 +635,13 @@ function PropertyBuyList() {
                           </p>
                         </div>
                       </div>
-                    </div>
+                    {/* </div> */}
                   </>
                 )}
               </div>
             </div>
 
-            <div className="col-9">
+            <div className="col-9 filter_search">
               {activeTab === "business" && (
                 <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow">
                   {/* Search Bar Section */}
@@ -668,7 +668,7 @@ function PropertyBuyList() {
                   </div>
                   {paginatedBusiness.map((lists, index) => (
                     <div
-                      className="col-lg-4 recommendationsClsNameCOL"
+                      className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL"
                       key={index}
                     >
                       <div className="recommendationsClsNameBox">
@@ -761,6 +761,7 @@ function PropertyBuyList() {
                                 {lists.reported_turnover_to}{" "}
                               </span>{" "}
                             </h6>
+                            
                             <div className="location-call">
                               <h6>
                                 {" "}
@@ -776,6 +777,7 @@ function PropertyBuyList() {
                                 Call <FaPhoneAlt />
                               </a>
                             </div>
+                            
                           </div>
                         </div>
                       </div>
@@ -841,7 +843,7 @@ function PropertyBuyList() {
                   </div>
                   {paginatedProperty.map((listsProperty, index) => (
                     <div
-                      className="col-lg-4 recommendationsClsNameCOL"
+                      className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL"
                       key={index}
                     >
                       <div className="recommendationsClsNameBox">
@@ -870,21 +872,24 @@ function PropertyBuyList() {
                           </div>
 
                           <img
-                            className="img-fluid"
-                            onClick={() =>
-                              handlepropertyNavigate(
-                                "property",
-                                listsProperty.id
-                              )
-                            }
-                            src={
-                              listsProperty.file_name &&
-                              Array.isArray(JSON.parse(listsProperty.file_name))
-                                ? JSON.parse(listsProperty.file_name)[0]
-                                : "default-image.jpg"
-                            }
-                            alt={listsProperty.property_title}
-                          />
+                className="img-fluid"
+                onClick={() =>
+                  handlepropertyNavigate("property", listsProperty.id)
+                }
+                src={(() => {
+                  try {
+                    const fileNames = JSON.parse(listsProperty.file_name);
+                    return Array.isArray(fileNames) && fileNames.length > 0
+                      ? fileNames[0]
+                      : "default-image.jpg";
+                  } catch (error) {
+                    console.error("Error parsing file_name:", error);
+                    return listsProperty.file_name || "default-image.jpg";
+                  }
+                })()}
+                alt={listsProperty.property_title}
+              />
+
                           <div className="title-location">
                             <h5>{listsProperty.property_title}</h5>
                             <span className="interested">

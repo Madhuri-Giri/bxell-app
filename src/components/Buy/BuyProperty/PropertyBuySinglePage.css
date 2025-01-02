@@ -146,10 +146,6 @@
   color: rgb(12, 212, 12);
 }
 
-
-
-
-
 .propertyBuyClsNameSec {
   padding: 50px 0px;
   display: flex;
@@ -536,3 +532,213 @@ text-align: center;
   border: none;
   cursor: pointer;
 }
+
+
+.custom-modal-width .modal-dialog {
+  max-width: 100%;
+  margin: auto; 
+  top: 50%; 
+  transform: translateY(-50%);
+}
+
+.custom-modal-width .modal-content {
+  width: 100%;
+}
+
+
+@media(max-width:375px){
+
+  .property-listings-scroll{
+    display: none;
+  }
+
+  .propertyBuyListingActions button{
+    padding: 2px 8px;
+    
+    font-size: 10px;
+    background-color: #008080;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 2px;
+    text-transform: uppercase;
+  }
+
+  .prop_type h6 {
+    font-size: 14px;
+  }
+
+  .prop_type h6 span {
+    font-size: 18px;
+  }
+
+  .business_rating{
+    font-size: 20px;
+  }
+  .business_rating{
+    size: 10px;
+  }
+  
+  .propertyInfoTable td{
+    padding: 4px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .ask_price {
+    font-size: 14px;
+  }
+
+  .ask_price .green-text {
+    font-size: 16px;
+  }
+
+  .pro_city{
+    font-size: 20px;
+  }
+
+  .pro_city span {
+    font-size: 20px;
+  }
+
+  .margin_class{
+    margin-bottom: 10px;
+  }
+
+  .margin_asking{
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+@media (min-width: 376px) and (max-width: 768px){
+  .property-listings-scroll{
+    display: none;
+  }
+
+  .propertyBuyListingActions button{
+    padding: 4px 12px;
+   
+    font-size: 14px;
+    background-color: #008080;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 2px;
+    text-transform: uppercase;
+  }
+
+  .prop_type h6 {
+    font-size: 18px;
+  }
+
+  .prop_type h6 span {
+    font-size: 20px;
+  }
+
+  .business_rating{
+    font-size: 20px;
+  }
+
+  .business_rating{
+    size: 10px;
+  }
+  
+  .propertyInfoTable td{
+    padding: 4px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .ask_price {
+    font-size: 16px;
+  }
+
+  .ask_price .green-text {
+    font-size: 18px;
+  }
+
+  .pro_city{
+    font-size: 20px;
+  }
+
+  .pro_city span {
+    font-size: 20px;
+  }
+
+  .margin_class{
+    margin-bottom: 10px;
+  }
+
+  .margin_asking{
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px){
+
+
+  .propertyBuyListingActions button{
+    padding: 4px 12px;
+   
+    font-size: 14px;
+    background-color: #008080;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 2px;
+    text-transform: uppercase;
+  }
+
+  .prop_type h6 {
+    font-size: 18px;
+  }
+
+  .prop_type h6 span {
+    font-size: 20px;
+  }
+
+  .business_rating{
+    font-size: 20px;
+  }
+
+  .business_rating{
+    size: 10px;
+  }
+  
+  .propertyInfoTable td{
+    padding: 4px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .ask_price {
+    font-size: 16px;
+  }
+
+  .ask_price .green-text {
+    font-size: 18px;
+  }
+
+  .pro_city{
+    font-size: 20px;
+  }
+
+  .pro_city span {
+    font-size: 20px;
+  }
+
+  .margin_class{
+    margin-bottom: 10px;
+  }
+
+  .margin_asking{
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+}
+

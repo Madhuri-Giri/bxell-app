@@ -1,16 +1,20 @@
-.aboutFirstSec{
+.aboutFirstSec {
     padding: 30px 0px;
 }
-.aboutFirstSecBorder{
+
+.aboutFirstSecBorder {
     border: 2px solid #008080;
     width: 50px;
     margin-bottom: 10px;
-    /* height: 10px; */
 }
-.aboutFirstSecColImg img{
+
+.aboutFirstSecColImg img {
     border-radius: 5px;
+    width: 100%; /* Ensure image fits its container */
+    height: auto;
 }
-.aboutFirstSecColTxt span{
+
+.aboutFirstSecColTxt span {
     color: #008080;
     font-weight: bold;
 }

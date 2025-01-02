@@ -153,12 +153,12 @@
 
 .filter_box {
     display: flex;
-    gap: 10px;
+    gap: 5px;
 }
 
 .filter-button {
     color: #008080;
-    padding: 6px 12px;
+    padding: 4px 8px;
     font-weight: bold;
     border: 2px solid #008080;
     border-radius: 2px;
@@ -204,12 +204,12 @@
     padding: 8px 12px;
     margin: 0 5px;
     border: 1px solid #75acac;
-    background-color: #008080;
-    color: #fff;
     cursor: pointer;
     border-radius: 4px;
     font-weight: bold;
     transition: background-color 0.3s ease;
+    background-color: #fff;
+    color: #008080;
   }
   
   .page-button:hover {
@@ -218,9 +218,31 @@
   
   /* Active button styles */
   .page-button.active {
-    background-color: #fff;
-    color: #008080;
+    background-color: #008080;
+    color: #fff;
     border-color: #008080;
     font-weight: bold;
+  }
+  
+
+  @media (max-width: 768px) {
+   
+.filter_res{
+    width: 100%;
+}
+
+.filter_search{
+    width: 100%;
+}
+
+.search-bar-section{
+    padding: 10px;
+
+}
+
+.filter_box{
+    font-size: 12px;
+}
+
   }
   

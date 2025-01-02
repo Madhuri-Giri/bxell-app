@@ -1,12 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-/* Existing styles */
+
 .homeBanner {
-    /* background-image: url('../../../assets/Images/city_search_background.jpg'); */
     background-size: cover;
     background-repeat: no-repeat;
-    /* height: 500px; */
-    /* height: 620px; */
     position: relative;
     z-index: 1;
     padding: 20px 10px;
@@ -36,9 +33,7 @@
     font-family: 'Merriweather';
     font-weight: 400;
     font-size: 2.5rem;
-    /* Adjust the size as needed */
     color: #333;
-    /* Optional: Set text color */
 }
 
 .homeBanner .business-color,
@@ -54,7 +49,7 @@
     color: gray;
     text-align: center !important;
     font-size: 16px;
-    margin: 0; /* Removes top and bottom margins */
+    margin: 0; 
     padding: 0; 
 }
 
@@ -65,7 +60,7 @@
 }
 
 .homeBannerSellBuyBtn {
-    /* margin: 15px 0px; */
+   
     margin-bottom: -25px;
     display: flex;
     justify-content: center;
@@ -94,8 +89,6 @@
     border-radius: 10px;
     color: #008080;
     padding: 3px 40px;
-    /* max-width: 150px; */
-    /* width: 100%; */
     border-radius: 40px;
 }
 
@@ -115,7 +108,6 @@
 
 .homeBanner .boxx h5 {
     font-size: 17px;
-
 }
 
 .homeBannerRow {
@@ -128,19 +120,7 @@
     text-decoration: none;
 }
 
-/* .homeSell {
-    text-align: end;
-}
-.homeBuy {
-    text-align: start;
-} */
-
-/* Search form styles */
 .search-form {
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 4px; */
     margin-top: 8px;
 }
 
@@ -150,14 +130,14 @@
 }
 
 .search-input {
-    /* width: 250px; */
+   
     padding: 8px;
     border-radius: 5px;
     border: 2px solid #0b57574b;
     font-size: 16px;
 }
 
-/* Style for search input and icon */
+
 .search-input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -180,7 +160,7 @@
     width: 100%;
     text-align: start;
     border: 2px solid #0b57574b;
-    /* border: 1px solid #ccc; */
+
 }
 
 .country-dropdown .dropdown-menu.show {
@@ -203,7 +183,7 @@
 
 .listingLogo img {
     height: 25px;
-    /* margin-right: -11px; */
+   
 }
 
 .listingLogoCOL {
@@ -215,8 +195,7 @@
     color: #21c521;
     font-style: italic;
     position: relative;
-    left: 85px;
-    
+    left: 85px;  
 }
 
 .listingLogoCOLP2 {
@@ -232,18 +211,12 @@
 .formSearchCOL {
     padding: 0px 4px;
 }
-/* Adjust the layout for the instant image and explore text */
-/* Styles for instant image below SELL button */
-/* .instant-img-wrapper {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-} */
 
-.instant-img {
-    height: 30px;
-    max-width: 100%;
-    margin-right: 310px;
+.instant-imgg {
+ width: 130px;
+ float: left;
+ margin-top: 5px;
+ margin-left: 30px;
 }
 
 .instant-img-wrapper {
@@ -261,21 +234,21 @@
 }
 
 .explore-text span {
-    color: #27ae60; /* Color the "Free" part, if needed */
+    color: #27ae60; 
     font-weight: bold;
 }
 .text-with-image {
     display: flex;
-    align-items: center; /* Vertically align text and image */
-    gap: 40px; /* Space between the image and text */
+    align-items: center; 
+    gap: 40px; 
     margin-bottom: 0 !important;
   padding-top: 0 !important;
   margin-left: 35px;
 }
 
 .razorpay-img {
-    width: 80px; /* Adjust image width */
-    height: auto; /* Maintain aspect ratio */
+    width: 80px;
+    height: auto; 
 }
 
 .homeBanner .vertical-icons {
@@ -311,22 +284,22 @@
 
 .homeBanner .vertical-icons a:hover img {
     transform: scale(1.2);
-    
 }
 
-/* Animation for blinking cursor */
+
 @keyframes blink {
     50% {
         opacity: 0;
     }
 }
 
-
-/* Responsive css */
 @media (max-width: 1200px) {
     .listingLogoCOL {
-        left: 66px;
-        
+        left: 66px;  
+    }
+
+    .homeBanner .button-text {
+        font-size: 14px;
     }
 }
 
@@ -336,6 +309,33 @@
         margin-left: 12px; 
         padding-left: 12px; 
     }
+
+    .homeBannerSellBuyBtn button {
+        font-size: 24px;
+    }
+    .razorpay-img {
+        width: 60px; 
+    }
+
+    .instant-img {
+        height: 20px;
+        max-width: 100%;
+        margin-right: 310px;
+    }
+
+    .homeBanner .button-text {
+        font-size: 10px;
+    }
+    .text-with-image {
+      margin-left: 15px;
+    }
+    .instant-img-wrapper {
+        margin-top: 2px; 
+    }
+    .homeBanner .banner-title{
+        font-size: 2rem;
+    }
+
 }
 
 @media (max-width: 992px) {
@@ -346,12 +346,30 @@
     }
 }
 
-@media (max-width: 768px) {
-    .listingLogoCOL {
-        left: -15px;
-        top: -6px;
-        margin-left: 30px; 
-        padding-left: 30px; 
+@media (max-width: 480px) {
+    .razorpay-img {
+        width: 50px; 
+    }
+
+    .instant-imgg{
+        width: 100px;
+        margin-left: 20px;
+    }
+
+    .homeBanner .vertical-icons {
+        display: none;
+    }
+    .homeBanner .button-text {
+        font-size: 10px;
+    }
+    .text-with-image {
+      margin-left: 15px;
+    }
+    .instant-img-wrapper {
+        margin-top: 2px; 
+    }
+    .homeBanner .banner-title{
+        font-size: 2rem;
     }
 }
 
@@ -359,6 +377,13 @@
     .homeBanner .boxx {
         padding: 2px 20px;
     }
+
+    .homeBanner .vertical-icons {
+        display: none;
+    }
+    
+
+
     .listingLogoCOL {
         left: -15px;
         top: -20px;
@@ -383,5 +408,43 @@
     }
     .search-input {
         font-size: 11px;
+    }
+}
+@media (max-width: 768px) {
+ 
+    .homeBanner .vertical-icons {
+        display: none;
+    }
+        .listingLogoCOL {
+            left: -15px;
+            top: -6px;
+            margin-left: 30px; 
+            padding-left: 30px; 
+        }
+    
+    .homeBannerSellBuyBtn button {
+        font-size: 24px;
+    }
+    .razorpay-img {
+        width: 50px; 
+    }
+
+    .instant-img {
+        height: 20px;
+        max-width: 100%;
+        margin-right: 310px;
+    }
+
+    .homeBanner .button-text {
+        font-size: 10px;
+    }
+    .text-with-image {
+      margin-left: 15px;
+    }
+    .instant-img-wrapper {
+        margin-top: 2px; 
+    }
+    .homeBanner .banner-title{
+        font-size: 2rem;
     }
 }
