@@ -266,7 +266,7 @@ function SellPropertyForm() {
         payment_id: paymentId,
       };
   
-      const response = await submitSellBusinessForm(updatedFormData, user);
+      const response = await submitSellPropertyForm(updatedFormData, user);
       toast.success(response.message || "Form submitted successfully!");
       setFormData({}); // Clear form data after submission
       navigate("/");
@@ -471,7 +471,7 @@ function SellPropertyForm() {
                         <div className="price-details">
                           <span className="price">₹49</span>
                           <div className="content">
-                            <h3>Basic Boost Listing</h3>
+                            <h3>Basic Boost Listing  (for 1 week)</h3>
                             <p>Promotion Listing to Attract More Buyers</p>
                           </div>
                         </div>

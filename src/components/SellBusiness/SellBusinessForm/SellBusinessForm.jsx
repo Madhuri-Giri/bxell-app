@@ -716,7 +716,7 @@ function SellBusinessForm() {
                         <div className="price-details">
                           <span className="price">₹49</span>
                           <div className="content">
-                            <h3>Basic Boost Listing</h3>
+                            <h3>Basic Boost Listing (for 1 week)</h3>
                             <p>Promotion Listing to Attract More Buyers</p>
                           </div>
                         </div>

@@ -449,53 +449,53 @@ function PropertyBuyList() {
                         Selected Price: ₹{businessPrice}{" "}
                       </div> */}
 
-                      <div className="filter_listing_type">
-                        <h6>Listing Type</h6>
-                        <div className="filter_box">
-                          <p
-                            className={`filter-button ${
-                              selectedFilters.listing_type === "Franchising"
-                                ? "active"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleListingTypeClick("Franchising", "business")
-                            }
-                          >
-                            Franchising{" "}
-                          </p>
-                          <p
-                            className={`filter-button ${
-                              selectedFilters.listing_type ===
-                              "Seeking Investment"
-                                ? "active"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleListingTypeClick(
-                                "Seeking Investment",
-                                "business"
-                              )
-                            }
-                          >
-                            {" "}
-                            Seeking Investment{" "}
-                          </p>
-                          <p
-                            className={`filter-button ${
-                              selectedFilters.listing_type === "Selling"
-                                ? "active"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleListingTypeClick("Selling", "business")
-                            }
-                          >
-                            {" "}
-                            Selling{" "}
-                          </p>
-                        </div>
+                    <div className="filter_listing_type">
+                      <h6>Listing Type</h6>
+                      <div className="filter_box">
+                        <p
+                          className={`filter-button ${
+                            selectedFilters.listing_type === "Franchising"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleListingTypeClick("Franchising", "business")
+                          }
+                        >
+                          Franchising{" "}
+                        </p>
+                        <p
+                          className={`filter-button ${
+                            selectedFilters.listing_type ===
+                            "Seeking Investment"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleListingTypeClick(
+                              "Seeking Investment",
+                              "business"
+                            )
+                          }
+                        >
+                          {" "}
+                          Seeking Investment{" "}
+                        </p>
+                        <p
+                          className={`filter-button ${
+                            selectedFilters.listing_type === "Selling"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleListingTypeClick("Selling", "business")
+                          }
+                        >
+                          {" "}
+                          Selling{" "}
+                        </p>
                       </div>
+                    </div>
                     {/* </div> */}
                   </>
                 )}
@@ -591,50 +591,50 @@ function PropertyBuyList() {
                         Selected Price: ₹{propertyPrice}{" "}
                       </div> */}
 
-                      <div className="filter_listing_type">
-                        <h6>Listing Type</h6>
-                        <div className="filter_box">
-                          <p
-                            className={`filter-button ${
-                              selectedFilters.listing_type === "Renting"
-                                ? "active"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleListingTypeClick("Renting", "property")
-                            }
-                          >
-                            {" "}
-                            Renting{" "}
-                          </p>
-                          <p
-                            className={`filter-button ${
-                              selectedFilters.listing_type === "Listing"
-                                ? "active"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleListingTypeClick("Listing", "property")
-                            }
-                          >
-                            {" "}
-                            Listing{" "}
-                          </p>
-                          <p
-                            className={`filter-button ${
-                              selectedFilters.listing_type === "Selling"
-                                ? "active"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleListingTypeClick("Selling", "property")
-                            }
-                          >
-                            {" "}
-                            Selling{" "}
-                          </p>
-                        </div>
+                    <div className="filter_listing_type">
+                      <h6>Listing Type</h6>
+                      <div className="filter_box">
+                        <p
+                          className={`filter-button ${
+                            selectedFilters.listing_type === "Renting"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleListingTypeClick("Renting", "property")
+                          }
+                        >
+                          {" "}
+                          Renting{" "}
+                        </p>
+                        <p
+                          className={`filter-button ${
+                            selectedFilters.listing_type === "Listing"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleListingTypeClick("Listing", "property")
+                          }
+                        >
+                          {" "}
+                          Listing{" "}
+                        </p>
+                        <p
+                          className={`filter-button ${
+                            selectedFilters.listing_type === "Selling"
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleListingTypeClick("Selling", "property")
+                          }
+                        >
+                          {" "}
+                          Selling{" "}
+                        </p>
                       </div>
+                    </div>
                     {/* </div> */}
                   </>
                 )}
@@ -754,14 +754,15 @@ function PropertyBuyList() {
                             </h6>
                             <h6>
                               {" "}
-                              Reported Sale (yearly): ₹{" "}
+                              Reported Sale (yearly):
+                              <br /> ₹
                               <span className="green-text">
                                 {" "}
-                                {lists.reported_turnover_from} - <br />
+                                {lists.reported_turnover_from} -
                                 {lists.reported_turnover_to}{" "}
                               </span>{" "}
                             </h6>
-                            
+
                             <div className="location-call">
                               <h6>
                                 {" "}
@@ -777,11 +778,13 @@ function PropertyBuyList() {
                                 Call <FaPhoneAlt />
                               </a>
                             </div>
-                            {lists.subscription && lists.subscription.length > 0 && lists.subscription[0].status === 'Valid' && (
-                      <div className="promotedText">
-                        {lists.subscription[0].type}
-                      </div>
-                    )}
+                            {lists.subscription &&
+                              lists.subscription.length > 0 &&
+                              lists.subscription[0].status === "Valid" && (
+                                <div className="promotedText">
+                                  {lists.subscription[0].type}
+                                </div>
+                              )}
                           </div>
                         </div>
                       </div>
@@ -876,23 +879,34 @@ function PropertyBuyList() {
                           </div>
 
                           <img
-                className="img-fluid"
-                onClick={() =>
-                  handlepropertyNavigate("property", listsProperty.id)
-                }
-                src={(() => {
-                  try {
-                    const fileNames = JSON.parse(listsProperty.file_name);
-                    return Array.isArray(fileNames) && fileNames.length > 0
-                      ? fileNames[0]
-                      : "default-image.jpg";
-                  } catch (error) {
-                    console.error("Error parsing file_name:", error);
-                    return listsProperty.file_name || "default-image.jpg";
-                  }
-                })()}
-                alt={listsProperty.property_title}
-              />
+                            className="img-fluid"
+                            onClick={() =>
+                              handlepropertyNavigate(
+                                "property",
+                                listsProperty.id
+                              )
+                            }
+                            src={(() => {
+                              try {
+                                const fileNames = JSON.parse(
+                                  listsProperty.file_name
+                                );
+                                return Array.isArray(fileNames) &&
+                                  fileNames.length > 0
+                                  ? fileNames[0]
+                                  : "default-image.jpg";
+                              } catch (error) {
+                                console.error(
+                                  "Error parsing file_name:",
+                                  error
+                                );
+                                return (
+                                  listsProperty.file_name || "default-image.jpg"
+                                );
+                              }
+                            })()}
+                            alt={listsProperty.property_title}
+                          />
 
                           <div className="title-location">
                             <h5>{listsProperty.property_title}</h5>
@@ -914,11 +928,14 @@ function PropertyBuyList() {
                               </strong>{" "}
                             </h6>
                           </div>
-                          {listsProperty.subscription && listsProperty.subscription.length > 0 && listsProperty.subscription[0].status === 'Valid' &&(
-                      <div className="promotedText">
-                          {listsProperty.subscription[0].type}
-                      </div>
-                  )}
+                          {listsProperty.subscription &&
+                            listsProperty.subscription.length > 0 &&
+                            listsProperty.subscription[0].status ===
+                              "Valid" && (
+                              <div className="promotedText">
+                                {listsProperty.subscription[0].type}
+                              </div>
+                            )}
                           {/* <h6>  Reported Sale (yearly):  <span>{listsProperty.price}</span> </h6> */}
                           {/* <h6><IoLocation /> {listsProperty.city}</h6> */}
                           <div className="location-call">

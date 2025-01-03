@@ -437,7 +437,7 @@ function PropertyBuySinglePage() {
                                   <tr>
                                     <td>
                                       {" "}
-                                      BUSINESS STATUS: <br />
+                                      Business Status: <br />
                                       <span className="green-text">
                                         {" "}
                                         {property.project_status}{" "}
@@ -472,7 +472,7 @@ function PropertyBuySinglePage() {
                                     </td>
                                     <td>
                                       {" "}
-                                      Project Status: <br /> ₹{" "}
+                                      Project Status: <br />
                                       <span className="green-text">
                                         {" "}
                                         {property.project_status}{" "}
@@ -480,7 +480,7 @@ function PropertyBuySinglePage() {
                                     </td>
 
                                     <td>
-                                      DOCUMENTS UPLOADED: <br />
+                                      Documents Uploaded: <br />
                                       <span className="green-text">
                                         {(() => {
                                           try {
