@@ -148,118 +148,153 @@ function ProfileMain() {
                 </Nav.Item>
               </Nav>
 
-              <div className="edit-profile-photo">
-                <img
-                  src={formData.profileUrl || formData.profile}
-                  alt="User Avatar"
-                />
-                {activeTab === "edit" && (
-                  <div className="change-photo-btn">
-                    <div className="photoUpload">
-                      <span>
-                        <i className="fa fa-upload"></i> Upload Photo
-                      </span>
-                      <input
-                        type="file"
-                        className="upload"
-                        onChange={handleImageChange}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
               {/* Display Profile Info or Edit Form Based on Active Tab */}
               {activeTab === "view" ? (
                 // View Profile Tab Content
                 <div className="profileForms row">
-                  <div className="col-md-4">  <p>  <strong>Name:</strong> {formData.name}  </p> </div>
-                  <div className="col-md-4">  <p> <strong>Phone:</strong> {formData.phone_number} </p>   </div>
-                  <div className="col-md-4"><p> <strong>Company:</strong> {formData.company} </p> </div>
-                  <div className="col-md-4">  <p>  <strong>Email:</strong> {formData.email} </p>  </div>
-                  <div className="col-md-4">  <p>  <strong>Designation:</strong> {formData.designation} </p>  </div>
-                  <div className="col-md-4">  <p> <strong>State:</strong> {formData.state} </p> </div>
-                  <div className="col-md-4">  <p> <strong>Birth:</strong> {formData.birth} </p>  </div>
-                  <div className="col-md-4"> <p>  <strong>Country:</strong> {formData.country}  </p>  </div>
-                  <div className="col-md-4">  <p>   <strong>Age:</strong> {formData.age}  </p> </div>
-                  <div className="col-12">  <p>  <strong>Address:</strong> {formData.address}  </p>  </div>
-                </div>
+
+                    <div className="col-lg-4">
+                      <div className="row">
+                        <div className="col-lg-12">
+                          <div className="edit-profile-photo">
+                      <img
+                        src={formData.profileUrl || formData.profile}
+                        alt="User Avatar"
+                      />
+                      {activeTab === "edit" && (
+                        <div className="change-photo-btn">
+                          <div className="photoUpload">
+                            <span>
+                              <i className="fa fa-upload"></i> Upload Photo
+                            </span>
+                            <input
+                              type="file"
+                              className="upload"
+                              onChange={handleImageChange}
+                            />
+                          </div>
+                        </div>
+                      )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+                    <div className="col-lg-8">
+                      <div className="row profile_detail">
+                        <div className="col-md-4 col-lg-4">  <p>  <strong>Name:</strong> {formData.name}  </p> </div>
+                        <div className="col-md-4  col-lg-4">  <p> <strong>Phone:</strong> {formData.phone_number} </p>   </div>
+                        <div className="col-md-4 col-lg-4"><p> <strong>Company:</strong> {formData.company} </p> </div>
+                        <div className="col-md-4 col-lg-4">  <p>  <strong>Email:</strong> {formData.email} </p>  </div>
+                        <div className="col-md-4 col-lg-4">  <p>  <strong>Designation:</strong> {formData.designation} </p>  </div>
+                        <div className="col-md-4 col-lg-4">  <p> <strong>State:</strong> {formData.state} </p> </div>
+                        <div className="col-md-4 col-lg-4">  <p> <strong>Birth:</strong> {formData.birth} </p>  </div>
+                        <div className="col-md-4 col-lg-4"> <p>  <strong>Country:</strong> {formData.country}  </p>  </div>
+                        <div className="col-md-4 col-lg-4">  <p>   <strong>Age:</strong> {formData.age}  </p> </div>
+                        <div className="col-12 col-lg-4 ">  <p>  <strong>Address:</strong> {formData.address}  </p>  </div>  
+                      </div>
+                    </div>
+                  </div>
+                
               ) : (
                 // Edit Profile Tab Content
                 <Form onSubmit={handleSaveChanges}>
                   <div className="container profileForms">
                     <div className="row">
-                      <div className="col-md-4">
-                        <Form.Group  className="profileFormsDiv"  controlId="name" >
-                          <Form.Label>Name</Form.Label>
-                          <Form.Control  type="text"  placeholder="Name" name="name"   value={formData.name} onChange={handleChange} />
-                        </Form.Group>
+                      <div className="col-lg-4 d-flex justify-content-center align-items-center">
+                        <div className="row  ">
+                          <div className="col-lg-12">
+                            <div className="edit-profile-photo">
+                              <img
+                                src={formData.profileUrl || formData.profile}
+                                alt="User Avatar"
+                              />
+                              {activeTab === "edit" && (
+                                <div className="change-photo-btn">
+                                  <div className="photoUpload">
+                                    <span>
+                                      <i className="fa fa-upload"></i> Upload Photo
+                                    </span>
+                                    <input
+                                      type="file"
+                                      className="upload"
+                                      onChange={handleImageChange}
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="col-md-4">
-                        <Form.Group  className="profileFormsDiv"  controlId="phone"  >
-                          <Form.Label>Phone</Form.Label>
-                          <Form.Control type="number"  placeholder="Phone" name="phone_number"  value={formData.phone_number} onChange={handleChange}  />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-md-4">
-                        <Form.Group className="profileFormsDiv" controlId="company"  >
-                          <Form.Label>Company</Form.Label>
-                          <Form.Control  type="text" placeholder="Company" name="company" value={formData.company}  onChange={handleChange} />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-md-4">
-                        <Form.Group className="profileFormsDiv" controlId="email"  >
-                          <Form.Label>Email</Form.Label>
-                          <Form.Control  type="email"  placeholder="Email"  name="email" value={formData.email} readOnly  />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-md-4">
-                        <Form.Group className="profileFormsDiv" controlId="designation" >
-                          <Form.Label>Designation</Form.Label>
-                          <Form.Control type="text" placeholder="Designation"   name="designation" value={formData.designation} onChange={handleChange} />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-md-4">
-                        <Form.Group className="profileFormsDiv"  controlId="state" >
-                          <Form.Label>State</Form.Label>
-                          <Form.Control  type="text" placeholder="State"  name="state"  value={formData.state} onChange={handleChange} />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-md-4">
-                        <Form.Group className="profileFormsDiv" controlId="birth" >
-                          <Form.Label>Birth</Form.Label>
-                          <Form.Control   type="text" placeholder="dd/mm/yyyy" name="birth"  value={formData.birth} onChange={handleChange} />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-md-4">
-                        <Form.Group className="profileFormsDiv"  controlId="country" >
-                          <Form.Label>Country</Form.Label>
-                          <Form.Control type="text" placeholder="Country" name="country"  value={formData.country} onChange={handleChange}  />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-md-4">
-                        <Form.Group className="profileFormsDiv" controlId="age">
-                          <Form.Label>Age</Form.Label>
-                          <Form.Control  type="number"  placeholder="Age" name="age" value={formData.age} onChange={handleChange} />
-                        </Form.Group>
-                      </div>
-
-                      <div className="col-12">
-                        <Form.Group className="profileFormsDiv" controlId="address" >
-                          <Form.Label>Address</Form.Label>
-                          <Form.Control  as="textarea" rows={5} placeholder="Enter your address" name="address"  value={formData.address} onChange={handleChange} />
-                        </Form.Group>
-                      </div>
-                      <div className="col-12 profileSaveChangesButton">
-                        <Button type="submit"> Save Changes </Button>
+                      <div className="col-lg-8">
+                        <div className="row profile_detail">
+                      
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group  className="profileFormsDiv"  controlId="name" >
+                              <Form.Label>Name</Form.Label>
+                              <Form.Control  type="text"  placeholder="Name" name="name"   value={formData.name} onChange={handleChange} />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group  className="profileFormsDiv"  controlId="phone"  >
+                              <Form.Label>Phone</Form.Label>
+                              <Form.Control type="number"  placeholder="Phone" name="phone_number"  value={formData.phone_number} onChange={handleChange}  />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group className="profileFormsDiv" controlId="company"  >
+                              <Form.Label>Company</Form.Label>
+                              <Form.Control  type="text" placeholder="Company" name="company" value={formData.company}  onChange={handleChange} />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group className="profileFormsDiv" controlId="email"  >
+                              <Form.Label>Email</Form.Label>
+                              <Form.Control  type="email"  placeholder="Email"  name="email" value={formData.email} readOnly  />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group className="profileFormsDiv" controlId="designation" >
+                              <Form.Label>Designation</Form.Label>
+                              <Form.Control type="text" placeholder="Designation"   name="designation" value={formData.designation} onChange={handleChange} />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group className="profileFormsDiv"  controlId="state" >
+                              <Form.Label>State</Form.Label>
+                              <Form.Control  type="text" placeholder="State"  name="state"  value={formData.state} onChange={handleChange} />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group className="profileFormsDiv" controlId="birth" >
+                              <Form.Label>Birth</Form.Label>
+                              <Form.Control   type="text" placeholder="dd/mm/yyyy" name="birth"  value={formData.birth} onChange={handleChange} />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group className="profileFormsDiv"  controlId="country" >
+                              <Form.Label>Country</Form.Label>
+                              <Form.Control type="text" placeholder="Country" name="country"  value={formData.country} onChange={handleChange}  />
+                            </Form.Group>
+                          </div>
+                          <div className="col-md-4 col-lg-4">
+                            <Form.Group className="profileFormsDiv" controlId="age">
+                              <Form.Label>Age</Form.Label>
+                              <Form.Control  type="number"  placeholder="Age" name="age" value={formData.age} onChange={handleChange} />
+                            </Form.Group>
+                          </div>
+                          <div className="col-lg-12 col-md-12">
+                            <Form.Group className="profileFormsDiv" controlId="address" >
+                              <Form.Label>Address</Form.Label>
+                              <Form.Control  as="textarea" rows={5} placeholder="Enter your address" name="address"  value={formData.address} onChange={handleChange} />
+                            </Form.Group>
+                          </div>
+                          <div className="col-12 profileSaveChangesButton">
+                            <Button type="submit"> Save Changes </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

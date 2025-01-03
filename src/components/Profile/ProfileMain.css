@@ -180,3 +180,16 @@
 .recentIquiies h6{
    margin: 0px;
 }
+
+.profile_detail{
+    margin-top: 30px;
+}
+
+@media(max-width:425px){
+    .profileMAinSec{
+        padding: 0;
+    }
+    .profileMAinSec .profileMainBox{
+        padding: 0;
+    }
+}

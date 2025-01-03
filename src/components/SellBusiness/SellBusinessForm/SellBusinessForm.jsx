@@ -245,7 +245,6 @@ function SellBusinessForm() {
     }
   };
   
-  
   const handleSubmit = async (e, paymentId) => {
     e.preventDefault();
   
@@ -278,6 +277,7 @@ function SellBusinessForm() {
     }
   };
   
+
   const updateHandlePayment = async (razorpay_payment_id, Id) => {
     try {
       if (!razorpay_payment_id || !Id) {
@@ -312,7 +312,6 @@ function SellBusinessForm() {
       return false;
     }
   };
-  
   
   return (
     <>
