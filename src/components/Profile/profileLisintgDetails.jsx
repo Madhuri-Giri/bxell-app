@@ -12,8 +12,7 @@ import {
   fetchBusinessFavoriteRes,
   fetchEnquiryDetailRes,
   fetchBusinessFav,
-  fetchPropertyFav,
-} from "../../API/apiServices"; // Import the API functions
+  fetchPropertyFav } from "../../API/apiServices"; // Import the API functions
 import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
 
 function ProfileListingDetails() {
@@ -223,7 +222,7 @@ function ProfileListingDetails() {
           <div className="tab-header explorePropertyHeding ">
             <div className="row">
               <div
-                className={`col-2 tab-button ${
+                className={`col-lg-3 col-md-4 col-sm-4 tab-button listing ${
                   activeTab === "listings" ? "active" : ""
                 }`}
                 onClick={() => setActiveTab("listings")}
@@ -231,7 +230,7 @@ function ProfileListingDetails() {
                 LISTINGS FOR YOU
               </div>
               <div
-                className={`col-2 tab-button ${
+                className={`col-lg-3 col-md-4 col-sm-4 tab-button listing ${
                   activeTab === "explore" ? "active" : ""
                 }`}
                 onClick={() => setActiveTab("explore")}
@@ -239,12 +238,12 @@ function ProfileListingDetails() {
                 FAVOURITE
               </div>
               <div
-                className={`col-2 tab-button ${
+                className={`col-lg-3 col-md-4 col-sm-4 tab-button listing ${
                   activeTab === "enquiry" ? "active" : ""
                 }`}
                 onClick={() => setActiveTab("enquiry")}
               >
-                Enquiry
+                ENQUIRY
               </div>
             </div>
           </div>
@@ -258,7 +257,7 @@ function ProfileListingDetails() {
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
                 {businessSale.length > 0 ? (
                   businessSale.map((business, index) => (
-                    <div className="col-lg-3 listingDetailCOLBoost" key={index}>
+                    <div className="col-lg-3 col-md-6 col-sm-6 listingDetailCOLBoost" key={index}>
                       <div className="listingDetailBoxBoost">
                         <div className="promotedTextWrapperBoost">
                           {business.file_name ? (
@@ -314,7 +313,14 @@ function ProfileListingDetails() {
                             {business.listing_type}
                           </span>
                         </div>
-                        <h6>Reported Sale (yearly): {business.sale}</h6>
+                        <div className="home_priceBoost">
+                          <h6>Reported Sale (yearly): <br></br>
+                            <span>
+                              {business.reported_turnover_from} - 
+                              {business.reported_turnover_to}
+                            </span>
+                          </h6>
+                        </div>
                         <div className="home_callBoost">
                           <h6>
                             <IoLocation /> {business.city}
@@ -370,11 +376,11 @@ function ProfileListingDetails() {
                 )}
               </div>
 
-              {/* Property Listings */}
+              {/* {/ Property Listings /} */}
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
                 {propertySale.length > 0 ? (
                   propertySale.map((property, index) => (
-                    <div className="col-lg-3 listingDetailCOLBoost" key={index}>
+                    <div className="col-lg-3 col-md-6 col-sm-6 listingDetailCOLBoost" key={index}>
                       <div className="listingDetailBoxBoost">
                         <div className="promotedTextWrapperBoost">
                           {property.file_name ? (
@@ -414,7 +420,9 @@ function ProfileListingDetails() {
                             {property.listing_type}
                           </span>
                         </div>
-                        <h6>Reported Sale (yearly): {property.sale}</h6>
+                        <div>
+                              <h6>Property Type : <strong>{property.property_type}</strong></h6>
+                          </div>
                         <div className="home_callBoost">
                           <h6>
                             <IoLocation /> {property.city}
@@ -488,7 +496,7 @@ function ProfileListingDetails() {
                   
                   {propertyData.map((property, index) => (
                     <div
-                      className="col-lg-3 recommendationsClsNameCOL"
+                      className="col-lg-3 col-md-6 col-sm-6 recommendationsClsNameCOL"
                       key={index}
                     >
                       <div className="recommendationsClsNameBox">
@@ -533,6 +541,9 @@ function ProfileListingDetails() {
                               <span>{property.property_sale.asking_price}</span>
                             </h6>
                           </div>
+                          <div>
+                              <h6>Property Type : <strong>{property.property_sale.property_type}</strong></h6>
+                          </div>
                           <div className="location-call">
                             <h6>
                               <IoLocation /> {property.property_sale.city}
@@ -556,7 +567,7 @@ function ProfileListingDetails() {
                 <div className="row propertyBuyListingRow_1">
                   {businessData.map((business, index) => (
                     <div
-                      className="col-lg-3 recommendationsClsNameCOL"
+                      className="col-lg-3 col-md-6 col-sm-6 recommendationsClsNameCOL"
                       key={index}
                     >
                       <div className="recommendationsClsNameBox">
@@ -600,6 +611,14 @@ function ProfileListingDetails() {
                               <span>{business.business_sale.asking_price}</span>
                             </h6>
                           </div>
+                          <div className="home_priceBoost">
+                            <h6>Reported Sale (yearly): <br></br>
+                              <span>
+                                {business.business_sale.reported_turnover_from} - 
+                                {business.business_sale.reported_turnover_to}
+                              </span>
+                            </h6>
+                          </div>
                           <div className="location-call">
                             <h6>
                               <IoLocation /> {business.business_sale.city}
@@ -638,24 +657,28 @@ function ProfileListingDetails() {
                   <h6>Enquiry Details</h6>
                 </div>
               <div className="enquiry-container enquiry-section">
-                <table className="enquiry-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Listing Type</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {enquiryDetails.map((detail) => (
-                      <tr key={detail.id}>
-                        <td>{detail.name}</td>
-                        <td>{detail.email}</td>
-                        <td>{detail.listing_name}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="row">
+                  <div className="col-lg-12 col-md-12 col-sm-12">
+                    <table className="enquiry-table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Listing Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {enquiryDetails.map((detail) => (
+                          <tr key={detail.id}>
+                            <td>{detail.name}</td>
+                            <td>{detail.email}</td>
+                            <td>{detail.listing_name}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                  </table>
+                  </div>
+                </div>
               </div>
             </>
           )}
