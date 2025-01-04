@@ -2,17 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./ProfileListingDetails.css";
 import { fetchListingDetail } from "../../API/apiServices"; // Import the API function
 import { IoLocation } from "react-icons/io5";
-import {
-  fetchUpdateBusinessStock,
-  fetchUpdatePropertyStock,
-} from "../../API/apiServices";
+import { fetchUpdateBusinessStock, fetchUpdatePropertyStock } from "../../API/apiServices";
 import { useSelector } from "react-redux";
-import {
-  fetchPropertyFavoriteRes,
-  fetchBusinessFavoriteRes,
-  fetchEnquiryDetailRes,
-  fetchBusinessFav,
-  fetchPropertyFav } from "../../API/apiServices"; // Import the API functions
+import { fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes, fetchBusinessFav, fetchPropertyFav } from "../../API/apiServices"; // Import the API functions
 import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
 
 function ProfileListingDetails() {
@@ -50,6 +42,8 @@ function ProfileListingDetails() {
 
     fetchData();
   }, [user]);
+
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -251,7 +245,7 @@ function ProfileListingDetails() {
           {activeTab === "listings" && (
             <>
               <div className="explorePropertyHed homeListingDetailBoost">
-                <h6>LISTINGS FOR YOU</h6>
+                <h6> BUSINESS LISTINGS FOR YOU</h6>
               </div>
 
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
@@ -376,7 +370,10 @@ function ProfileListingDetails() {
                 )}
               </div>
 
-              {/* {/ Property Listings /} */}
+              {/* {/ Property Listings /} */} 
+                 <div className="explorePropertyHed homeListingDetailBoost">
+                <h6> PROPERTY LISTINGS FOR YOU</h6>
+              </div>
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
                 {propertySale.length > 0 ? (
                   propertySale.map((property, index) => (
@@ -488,7 +485,7 @@ function ProfileListingDetails() {
           {activeTab === "explore" && (
             <>
             <div className="explorePropertyHed homeListingDetailBoost">
-              <h6>FAVOURITE</h6>
+              <h6>PROPERTY FAVOURITE</h6>
             </div>
             <div>
               {propertyData.length > 0 && (
@@ -563,6 +560,10 @@ function ProfileListingDetails() {
                   ))}
                 </div>
               )}
+
+<div className="explorePropertyHed homeListingDetailBoost">
+              <h6>BUSINESS FAVOURITE</h6>
+            </div>
               {businessData.length > 0 ? (
                 <div className="row propertyBuyListingRow_1">
                   {businessData.map((business, index) => (
