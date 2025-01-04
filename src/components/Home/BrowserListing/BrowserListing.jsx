@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 import React from 'react'
 import "./BrowserListing.css";
 
@@ -10,7 +10,7 @@ function BrowserListing() {
                 <div className="container homeBrowserListingSecHED">
                     <div className="row">
                         <div className="col-12 ">
-                            <h2>Browse Listings Attractions List</h2>
+                            {/* <h2>Browse Listings Attractions List</h2> */}
                         </div>
                     </div>
                 </div>

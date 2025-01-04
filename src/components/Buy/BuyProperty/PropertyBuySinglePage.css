@@ -632,8 +632,7 @@ text-align: center;
   }
 
   .propertyBuyListingActions button{
-    padding: 4px 12px;
-   
+    padding: 4px 10px;
     font-size: 14px;
     background-color: #008080;
     color: white;
@@ -691,13 +690,14 @@ text-align: center;
     margin-bottom: 5px;
   }
 }
+
+
 
 @media (min-width: 769px) and (max-width: 1200px){
 
 
   .propertyBuyListingActions button{
-    padding: 4px 12px;
-   
+    padding: 4px 8px;
     font-size: 14px;
     background-color: #008080;
     color: white;
@@ -756,3 +756,30 @@ text-align: center;
   }
 }
 
+
+
+@media(min-width: 1200px) and (max-width: 1440px){
+  .propertyBuyListingActions button{
+    padding: 4px 12px;
+    font-size: 14px;
+    background-color: #008080;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 2px;
+    text-transform: uppercase;
+  }
+}
+
+.recommendationsClsName_1 .buy_titles {
+  color: gray;
+  font-weight: 400;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.recommendationsClsName_1 .buy_titles span {
+  color: #21c521;
+  font-weight: 600;
+}

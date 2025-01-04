@@ -20,10 +20,9 @@ function SellBusinessForm() {
   const steps = ["Business Info", "Business Details"];
   const [paymentDetails, setPaymentDetails] = useState(null);
   const user = useSelector((state) => state.auth.user);
-  const [amountError, setAmountError] = useState(""); // For displaying error messages
-
-
+  const [amountError, setAmountError] = useState(""); 
   const [formSubmitting, setFormSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     user_id: user ,
     business_type: "",
@@ -121,6 +120,7 @@ function SellBusinessForm() {
   const handleBack = () => {
     setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
+
   const handleAmountChange = (e) => {
     const selectedAmount = e.target.value;
     setFormData(prevFormData => ({
@@ -128,8 +128,111 @@ function SellBusinessForm() {
       amount: parseInt(selectedAmount), // Set the selected amount in formData
     }));
   };
-  // --------------  payment ------------
+// ------------------------boost payment--------------------------------------
+const fetchPaymentBusinessDetails = async () => {
+  try {
+    if (!user || !formData.amount) {
+      throw new Error("Login ID");
+    }
 
+    const payload = {
+      amount: 49,
+      user_id: user,
+      form_boost: "Form Boost",
+      boost_name: "week",
+    };
+
+    const response = await axios.post(
+      "https://bxell.com/bxell/admin/api/create-business-boost-payment",
+      payload
+    );
+
+    if (response.data.result === true && response.data.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message || "Failed to fetch payment details.");
+    }
+  } catch (error) {
+    console.error("Error fetching payment details:", error.message);
+    alert("Failed to initiate payment. Please try again.");
+    return null;
+  }
+};
+
+const handlePaymentForBusiness = async () => {
+  const paymentData = await fetchPaymentBusinessDetails();
+
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+
+  if (paymentData) {
+    const { payment_details, user_details, razorpay_key } = paymentData;
+    const { razorpay_order_id, amount } = payment_details;
+
+    const options = {
+      key: razorpay_key,
+      amount: amount * 100,
+      currency: "INR",
+      order_id: razorpay_order_id,
+      name: "SRN Infotech",
+      description: "Boost Listing",
+      image: "https://your-logo-url.com/logo.png",
+      handler: async function (response) {
+        try {
+          await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
+        } catch (error) {
+          alert("Error updating payment status. Please contact support.");
+        }
+      },
+      prefill: {
+        name: user_details?.name || "User Name",
+        email: user_details?.email || "user@example.com",
+        contact: user_details?.phone_number || "9999999999",
+      },
+      theme: { color: "#3399cc" },
+    };
+
+    const rzp1 = new window.Razorpay(options);
+    rzp1.on("payment.failed", function (response) {
+      alert(`Payment failed: ${response.error.description}`);
+    });
+    rzp1.open();
+  }
+};
+
+const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
+
+  try {
+    const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
+    const payload = { payment_id: razorpay_payment_id, id };
+  
+    console.log("Updating property payment status with payload:", payload);
+  
+    const response = await axios.post(url, payload);
+  
+    console.log("API Response for payment status update:", response.data);
+  
+    // Check success conditions based on the actual API response structure
+    if (response.data?.result === true && response.data?.status === 200) {
+      toast.success("Payment successful and verified!"); // Show success message
+  
+      // Navigate to the home page after a delay
+      setTimeout(() => {
+        navigate("/"); // Adjust the route based on your routing setup
+      }, 3000); // Navigate after 3 seconds
+    } else {
+      toast.error("Payment verification failed. Please contact support."); // Show error message
+      console.error("Payment verification failed response:", response.data);
+    }
+  } catch (error) {
+    console.error("Error updating payment status:", error.message);
+    toast.error("Failed to update payment status. Please try again."); // Show error message
+  }
+  };
+   
+  // --------------  payment ------------
   const fetchPaymentDetails = async () => {
     try {
       if (!user || !formData.amount) {
@@ -277,7 +380,6 @@ function SellBusinessForm() {
     }
   };
   
-
   const updateHandlePayment = async (razorpay_payment_id, Id) => {
     try {
       if (!razorpay_payment_id || !Id) {
@@ -334,7 +436,7 @@ function SellBusinessForm() {
                     <div className="row">
                     {step === 0 && (
                         <>
-                        <div className="col-7">
+                        <div className="col-lg-7 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="businessType">
                             <Form.Label>BUSINESS TYPE</Form.Label>
                             <span className="vallidateRequiredStar">*</span>
@@ -362,7 +464,7 @@ function SellBusinessForm() {
                           </Form.Group>
                         </div>
 
-                        <div className="col-7">
+                        <div className="col-lg-12 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="listingType">
                             <Form.Label>LISTING TYPE</Form.Label>
                             <span className="vallidateRequiredStar">*</span>
@@ -390,7 +492,7 @@ function SellBusinessForm() {
                           </Form.Group>
                         </div>
 
-                        <div className="col-7">
+                        <div className="col-lg-7 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="title">
                             <Form.Label>TITLE</Form.Label>
                             <span className="vallidateRequiredStar">*</span>
@@ -404,7 +506,7 @@ function SellBusinessForm() {
                     )}
                       {step === 1 && (
                         <>
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="country">
                               <Form.Label>COUNTRY</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -426,7 +528,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
                           
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                       <Form.Group className="businessListingFormsDiv" controlId="state">
                         <Form.Label>STATE</Form.Label>
                         <span className="vallidateRequiredStar">*</span>
@@ -442,7 +544,7 @@ function SellBusinessForm() {
                       </Form.Group>
                     </div>
 
-                    <div className="col-7">
+                    <div className="col-lg-7 col-md-12 col-sm-12">
                       <Form.Group className="businessListingFormsDiv" controlId="city">
                         <Form.Label>TOWN/CITY</Form.Label>
                         <span className="vallidateRequiredStar">*</span>
@@ -489,7 +591,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div> */}
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="description" >
                               <Form.Label>DESCRIPTION</Form.Label>
                               <Form.Control  as="textarea" rows={ 4 }  name="description" value={formData.description} onChange={handleChange}  placeholder="Tell us about your Business, Product, or Services" isInvalid={!!errors.description} />
@@ -509,7 +611,7 @@ function SellBusinessForm() {
                             </div>
                           )}
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="reportedTurnover" >
                               <Form.Label>TURNOVER RANGE (Yearly)</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -529,7 +631,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="ebitdaMargin" >
                               <Form.Label> EBITDA MARGIN (PROFIT PERCENTAGE)  </Form.Label>
                               <Form.Select  name="ebitda_margin"  value={formData.ebitda_margin} onChange={handleChange}  aria-label="Select EBITDA Margin" >
@@ -550,7 +652,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv"  controlId="asking_price" >
                               <Form.Label>PRICE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -562,7 +664,7 @@ function SellBusinessForm() {
                             <h6>ADDITIONAL DETAILS</h6>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-12 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="you_are" >
                               <Form.Label>YOU ARE?</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -596,7 +698,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group  className="businessListingFormsDiv"  controlId="yearEstablished" >
                               <Form.Label>YEAR OF ESTABLISHMENT</Form.Label>
                               <Form.Select  name="year_of_establishment"  value={formData.year_of_establishment} onChange={handleChange}  >
@@ -607,7 +709,7 @@ function SellBusinessForm() {
                               </Form.Select>
                             </Form.Group>
                           </div>
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="no_of_employees" >
                               <Form.Label>NUMBER OF EMPLOYEES</Form.Label>
                               <Form.Control  type="text" name="no_of_employees"  value={formData.no_of_employees} onChange={handleChange} placeholder="Enter number of employees" isInvalid={!!errors.no_of_employees} maxLength={10} onKeyPress={(e) => {
@@ -620,7 +722,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv"  controlId="business_link" >
                               <Form.Label>BUSINESS WEBSITE LINK</Form.Label>
                               <Form.Control type="text"  name="business_link"  value={formData.business_link} onChange={handleChange}  placeholder="Paste your website link here" isInvalid={!!errors.business_link}  />
@@ -628,7 +730,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group  className="businessListingFormsDiv"  controlId="file_name" >
                               <Form.Label>CHOOSE IMAGES</Form.Label>
                               <Form.Control  type="file" name="file_name" multiple  onChange={handleChange}  accept="image/*" />
@@ -636,7 +738,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsRadioDiv">
                               <Form.Label>CURRENT STATUS</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -650,7 +752,7 @@ function SellBusinessForm() {
                             </Form.Group>
                           </div>
 
-                          <div className="col-7">
+                          <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="phone_number"  >
                               <Form.Label>MOBILE NUMBER</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -670,8 +772,13 @@ function SellBusinessForm() {
                         )}
                         {step === steps.length - 1 && (
                           <>
-                          <Button  variant="primary"  onClick={handlePayment}  type="submit" > Pay Now </Button>
-                        
+                          {/* <Button  variant="primary"  onClick={handlePayment}  type="submit" > Pay Now </Button> */}
+                          <Button
+        variant="primary"
+        onClick={formData.amount === 49 ? () => handlePaymentForBusiness() : handlePayment}
+      >
+        Pay Now
+      </Button>
                           </>
                         )}
                       </div>

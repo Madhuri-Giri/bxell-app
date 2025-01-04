@@ -304,7 +304,32 @@
     margin-left: 10px;
 }
 
-
+/* General pagination button styles */
+.page-button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #75acac;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    background-color: #fff;
+    color: #008080;
+    margin-bottom: 10px;
+  }
+  
+  .page-button:hover {
+    background-color: #75acac;
+  }
+  
+  /* Active button styles */
+  .page-button.active {
+    background-color: #008080;
+    color: #fff;
+    border-color: #008080;
+    font-weight: bold;
+  }
+  
 @media(max-width:768px){
     .listing{
         font-size: 13px;

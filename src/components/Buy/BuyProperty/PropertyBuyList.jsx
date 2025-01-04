@@ -5,15 +5,7 @@ import { useSelector } from "react-redux";
 import { IoLocation } from "react-icons/io5";
 import { FaHeart, FaPhoneAlt, FaRegHeart } from "react-icons/fa"; // Added icons
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  fetchPropertyRes,
-  fetchBusinessRes,
-  fetchViewPropertyRes,
-  fetchViewBusinessRes,
-  fetchFilterRes,
-  fetchBusinessFav,
-  fetchPropertyFav,
-} from "../../../API/apiServices";
+import { fetchPropertyRes, fetchBusinessRes, fetchViewPropertyRes, fetchViewBusinessRes, fetchFilterRes, fetchBusinessFav, fetchPropertyFav } from "../../../API/apiServices";
 
 function PropertyBuyList() {
   const navigate = useNavigate();
@@ -41,6 +33,8 @@ function PropertyBuyList() {
     country: "",
     city: "",
     listing_type: "",
+    ebitda_margin: "",
+    asking_price:"",
     // for property
     property_type: "",
     project_status: "",
@@ -122,6 +116,16 @@ function PropertyBuyList() {
           business.current_status === selectedFilters.current_status;
         const matchesState =
           !selectedFilters.state || business.state === selectedFilters.state;
+          
+          const matchesMargin =
+          !selectedFilters.ebitda_margin ||
+          business.ebitda_margin === selectedFilters.ebitda_margin;
+
+          const matchesCountry =
+          !selectedFilters.country ||
+          business.country === selectedFilters.country;
+
+          const matchesPrice = !selectedFilters.asking_price || business.asking_price === selectedFilters.asking_price;
 
         // Adjust the matchesCity condition: give priority to selectedFilters.city over city
         const matchesCity =
@@ -140,13 +144,17 @@ function PropertyBuyList() {
           !searchQuery ||
           business.title.toLowerCase().includes(searchQuery.toLowerCase());
 
+
         return (
           matchesBusinessType &&
           matchesCurrentStatus &&
           matchesState &&
+          matchesMargin &&
           matchesCity &&
           matchesListingType &&
-          matchesTitle
+          matchesTitle &&
+          matchesPrice &&
+          matchesCountry 
         );
       });
 
@@ -168,6 +176,20 @@ function PropertyBuyList() {
           property.project_status === selectedFilters.project_status;
         const matchesState =
           !selectedFilters.state || property.state === selectedFilters.state;
+
+          const matchesPrice =
+          !selectedFilters.asking_price || property.asking_price === selectedFilters.asking_price;
+
+          const matchesCountry =
+          !selectedFilters.country || property.country === selectedFilters.country;
+    
+        const matchesFurnishing =
+          !selectedFilters.furnishing ||
+          property.furnishing === selectedFilters.furnishing;
+    
+        const matchesCarParking =
+          !selectedFilters.car_parking ||
+          property.car_parking === selectedFilters.car_parking;
 
         // Adjust the matchesCity condition: give priority to selectedFilters.city over city
         const matchesCity =
@@ -193,7 +215,11 @@ function PropertyBuyList() {
           matchesState &&
           matchesCity &&
           matchesListingType &&
-          matchesTitle
+          matchesCountry &&
+          matchesFurnishing &&
+          matchesCarParking &&
+          matchesTitle && 
+          matchesPrice
         );
       });
 
@@ -397,7 +423,23 @@ function PropertyBuyList() {
                         ))}
                       </select>
                     </div>
-
+                    <div className="filter-group">
+                      <label>Country</label>
+                      <select
+                        name="country"
+                        value={selectedFilters.country}
+                        onChange={(e) => handleFilterChange(e, "business")}
+                        className="form-select"
+                      >
+                        <option value="">Select Country</option>
+                        {businessFilter.country?.map((country) => (
+                          <option key={country} value={country}>
+                            {" "}
+                            {country}{" "}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <div className="filter-group">
                       <label>State</label>
                       <select
@@ -432,7 +474,40 @@ function PropertyBuyList() {
                         ))}
                       </select>
                     </div>
-
+                    <div className="filter-group">
+                      <label>Margin</label>
+                      <select
+                        name="ebitda_margin"
+                        value={selectedFilters.ebitda_margin}
+                        onChange={(e) => handleFilterChange(e, "business")}
+                        className="form-select"
+                      >
+                        <option value="">Select Status</option>
+                        {businessFilter.ebitda_margin?.map((ebitda_margin) => (
+                          <option key={ebitda_margin} value={ebitda_margin}>
+                            {" "}
+                            {ebitda_margin}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="filter-group">
+                      <label>Price</label>
+                      <select
+                        name="asking_price"
+                        value={selectedFilters.asking_price}
+                        onChange={(e) => handleFilterChange(e, "business")}
+                        className="form-select"
+                      >
+                        <option value="">Select Status</option>
+                        {businessFilter.asking_price?.map((asking_price) => (
+                          <option key={asking_price} value={asking_price}>
+                            {" "}
+                            {asking_price}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     {/* <div className="filter-group">
                       <label>Price Range (Business)</label>
                       <input
@@ -538,7 +613,23 @@ function PropertyBuyList() {
                         ))}{" "}
                       </select>
                     </div>
-
+                    <div className="filter-group">
+                      <label>Country</label>
+                      <select
+                        name="country"
+                        value={selectedFilters.country}
+                        onChange={(e) => handleFilterChange(e, "property")}
+                        className="form-select"
+                      >
+                        <option value="">Select State</option>{" "}
+                        {propertyFilter.country?.map((country) => (
+                          <option key={country} value={country}>
+                            {" "}
+                            {country}{" "}
+                          </option>
+                        ))}{" "}
+                      </select>
+                    </div>
                     <div className="filter-group">
                       <label>State</label>
                       <select
@@ -574,7 +665,55 @@ function PropertyBuyList() {
                         ))}{" "}
                       </select>
                     </div>
-
+                    <div className="filter-group">
+                  <label>Furnishing</label>
+                  <select
+                    name="furnishing"
+                    value={selectedFilters.furnishing}
+                    onChange={(e) => handleFilterChange(e, "property")}
+                    className="form-select"
+                  >
+                    <option value="">Select Furnishing</option>
+                    {propertyFilter.furnishing?.map((furnishing) => (
+                      <option key={furnishing} value={furnishing}>
+                        {furnishing}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="filter-group">
+                  <label>Car Parking</label>
+                  <select
+                    name="car_parking"
+                    value={selectedFilters.car_parking}
+                    onChange={(e) => handleFilterChange(e, "property")}
+                    className="form-select"
+                  >
+                    <option value="">Select Car Parking</option>
+                    {propertyFilter.car_parking?.map((car_parking) => (
+                      <option key={car_parking} value={car_parking}>
+                        {car_parking}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                    <div className="filter-group">
+                      <label>Price</label>
+                      <select
+                        name="asking_price"
+                        value={selectedFilters.asking_price}
+                        onChange={(e) => handleFilterChange(e, "property")}
+                        className="form-select"
+                      >
+                        <option value="">Select Status</option>
+                        {propertyFilter.asking_price?.map((asking_price) => (
+                          <option key={asking_price} value={asking_price}>
+                            {" "}
+                            {asking_price}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     {/* <div className="filter-group">
                       <label>Price Range (Property)</label>
                       <input
@@ -643,7 +782,7 @@ function PropertyBuyList() {
 
             <div className="col-lg-9 col-sm-8 filter_search">
               {activeTab === "business" && (
-                <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow">
+                <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow recommendationsClsName_1">
                   {/* Search Bar Section */}
                   <div className="search-bar-section">
                     <input
@@ -737,7 +876,7 @@ function PropertyBuyList() {
                             })()}
                             alt={lists.title || "business Image"}
                           />
-                          <div className="listing-details">
+                         <div className="listing-details">
                             <div className="title-location">
                               <h5>{lists.title}</h5>
                               <span className="interested">
@@ -745,14 +884,13 @@ function PropertyBuyList() {
                                 {lists.interested} Interested{" "}
                               </span>
                             </div>
-                            <h6>
-                              {" "}
-                              Asking Price: ₹{" "}
-                              <span className="">
-                                {lists.asking_price}
-                              </span>{" "}
-                            </h6>
-                            <h6>
+                            <div className="home_price">
+                              <span className="buy_titles">
+                                Asking Price: ₹ <span>{lists.asking_price}</span>
+                              </span>
+                              <span className="home_con">{lists.listing_type}</span>
+                            </div>
+                            <span className="buy_titles">
                               {" "}
                               Reported Sale (yearly):
                               <br /> ₹
@@ -761,7 +899,7 @@ function PropertyBuyList() {
                                 {lists.reported_turnover_from} -
                                 {lists.reported_turnover_to}{" "}
                               </span>{" "}
-                            </h6>
+                              </span>
 
                             <div className="location-call">
                               <h6>
@@ -853,7 +991,7 @@ function PropertyBuyList() {
                       className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL"
                       key={index}
                     >
-                      <div className="recommendationsClsNameBox">
+                      <div className="recommendationsClsNameBox recommendationsClsName_1">
                         {/* Wishlist Heart */}
                         <div
                           className="propertyBuyListingBox"
@@ -908,25 +1046,26 @@ function PropertyBuyList() {
                             alt={listsProperty.property_title}
                           />
 
-                          <div className="title-location">
+                        <div className="title-location">
                             <h5>{listsProperty.property_title}</h5>
                             <span className="interested">
                               {listsProperty.interested} Interested{" "}
                             </span>
                           </div>
-                          <h6>
-                            {" "}
-                            Asking Price: ₹{" "}
-                            <span>{listsProperty.asking_price}</span>{" "}
-                          </h6>
+                          <div className="home_price">
+                            <span className="buy_titles">
+                              Price: ₹ <span>{listsProperty.asking_price}</span>
+                            </span>
+                            <span className="home_con">{listsProperty.listing_type}</span>
+                          </div>
                           <div>
-                            <h6>
+                            <span className="buy_titles">
                               {" "}
                               Property Type :{" "}
                               <strong>
                                 {listsProperty.property_type}
                               </strong>{" "}
-                            </h6>
+                            </span>
                           </div>
                           {listsProperty.subscription &&
                             listsProperty.subscription.length > 0 &&

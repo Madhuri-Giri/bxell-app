@@ -141,6 +141,7 @@ button {
   margin-left: auto; /* Pushes the container to the right */
   width: fit-content; /* Ensures the container takes up only as much width as needed */
   position: relative; /* Required for absolute positioning of inner items, if needed */
+  margin-bottom: 30px;
 }
 
 /* Each radio button item */
@@ -203,4 +204,31 @@ button {
 .radio-input {
   width: 10px;
   height: 10px;
+}
+
+@media(max-width:992px){
+  .businessListingFormMainBox .stepper{
+    display: none;
+  }
+
+  .propertyTypeButtons,
+  .country-options {
+    gap: 8px;
+  }
+
+  .propertyTypeButton,
+  .country-option-box {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  
+  .propertyTypeButtons{
+    flex-direction: column;
+  }
+}
+
+@media(max-width:1200px){
+  .propertyTypeButtons{
+    font-size: 13px;
+  }
 }

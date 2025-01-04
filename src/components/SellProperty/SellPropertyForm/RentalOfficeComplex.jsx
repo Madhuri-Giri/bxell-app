@@ -20,7 +20,7 @@ const RentalOfficeComplex = ({ formData, setFormData, errors }) => {
   return (
     <>
       {/* Project Status */}
-      <div className="col-12">
+      <div className="col-lg-12">
         <Form.Group controlId="projectStatus" className="businessListingFormsDiv propertyFormRadio">
           <Form.Label>Project Status </Form.Label>
           <span className="vallidateRequiredStar">*</span>
@@ -45,7 +45,7 @@ const RentalOfficeComplex = ({ formData, setFormData, errors }) => {
       </div>
 
       {/* Listed By */}
-      <div className="col-12">
+      <div className="col-lg-12">
         <Form.Group controlId="listedBy" className="businessListingFormsDiv propertyFormRadio">
           <Form.Label>Listed By </Form.Label>
           <span className="vallidateRequiredStar">*</span>
@@ -97,11 +97,11 @@ const RentalOfficeComplex = ({ formData, setFormData, errors }) => {
       )} */}
 
       {/* Bathroom */}
-      <div className="col-12">
+      <div className="col-lg-12">
         <Form.Group controlId="bathroom" className="businessListingFormsDiv propertyFormRadio">
           <Form.Label>Bathroom </Form.Label>
           <div className="row">
-            <div className="mb-3 propertyTypeButtons col-sm-3">
+            <div className="mb-3 propertyTypeButtons">
               {["1", "2", "3", "4", "5", "6", "7", "8"].map((type) => (
                 <Button
                   key={type}
@@ -122,12 +122,12 @@ const RentalOfficeComplex = ({ formData, setFormData, errors }) => {
 
       {/* Car Parking */}
        {/* Car Parking */}
-<div className="col-12">
+<div className="col-lg-12">
   <Form.Group controlId="carParking" className="businessListingFormsDiv">
     <Form.Label>Car Parking </Form.Label>
     <span className="vallidateRequiredStar">*</span>
     <div className="row">
-      <div className="mb-3 propertyTypeButtons col-sm-3">
+      <div className="mb-3 propertyTypeButtons">
         {["0", "1", "2", "3", "3+"].map((type) => (
           <Button
             key={type}

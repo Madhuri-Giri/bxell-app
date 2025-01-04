@@ -343,7 +343,7 @@ function SellPropertyForm() {
                   <div className="row">
                     {step === 0 && (
                       <>
-                        <div className="col-12">
+                        <div className="col-lg-12">
                           <Form.Group controlId="listing_type" className="businessListingFormsDiv propertyFormRadio" >
                             <Form.Label>Listing TYPE</Form.Label>
                             <span className="vallidateRequiredStar">*</span>
@@ -358,7 +358,7 @@ function SellPropertyForm() {
                          {errors.listing_type && (<small className="text-danger"> {errors.listing_type}  </small> )}
                           </Form.Group>
                         </div>
-                        <div className="col-12">
+                        <div className="col-lg-12">
                           <Form.Group  controlId="property_type" className="businessListingFormsDiv propertyFormRadio" >
                             <Form.Label>PROPERTY TYPE</Form.Label>
                             <span className="vallidateRequiredStar">*</span>

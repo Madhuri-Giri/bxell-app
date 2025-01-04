@@ -22,7 +22,7 @@
     color: white;
     text-align: center;
     padding: 10px 0px;
-    /* display: flex; */
+   
 }
 
 .businessListingFormsDiv small {
@@ -97,9 +97,7 @@
     color: black;
 }
 
-/* .businessListingCurrentStratusRadioDiv label {
-    color: black;
-} */
+
 
 .businesListingSubmitButton {
     display: flex;
@@ -165,7 +163,7 @@
 .listing-type-container {
     display: flex;
     gap: 10px;
-    /* Space between boxes */
+   
 }
 
 .listing-type-box {
@@ -204,7 +202,7 @@
     margin-top: 5px;
 }
 
-/* ---------------------country----------------- */
+
 .country-box-container {
     display: flex;
     gap: 10px;
@@ -242,7 +240,7 @@
     margin-top: 5px;
 }
 
-/* -------------------------------ARE YOU?-------------- */
+
 .you-are-box-container {
     display: flex;
     gap: 10px;
@@ -261,6 +259,7 @@
     background-color: white;
     text-align: center;
     transition: all 0.3s ease;
+    font-size: 14px;
 }
 
 .you-are-box:hover {
@@ -281,7 +280,7 @@
     margin-top: 5px;
 }
 
-/* CSS to remove spinner from number input */
+
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -293,17 +292,17 @@
 }
 
 
-/* Container for the radio buttons and content */
+
 .price_radio {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-left: auto; /* Pushes the container to the right */
-    width: fit-content; /* Ensures the container takes up only as much width as needed */
-    position: relative; /* Required for absolute positioning of inner items, if needed */
+    margin-left: auto;
+    width: fit-content; 
+    position: relative; 
   }
   
-  /* Each radio button item */
+  
   .radio-item {
     display: flex;
     align-items: center;
@@ -313,38 +312,38 @@
     border-radius: 10px; 
     background-color: white;
     z-index: 1;
-    width: 100%; /* Allows radio items to expand within the parent div */
+    width: 100%;
   }
   
-  /* Label around the radio button and content */
+ 
   .price-option {
     display: flex;
     align-items: center;
     gap: 10px;
   }
   
-  /* Div holding price and content */
+  
   .price-details {
     display: flex;
     align-items: center;
     gap: 10px;
   }
   
-  /* Price styling */
+  
   .price {
     font-size: 13px;
     font-weight: bold;
     color: #666;
   }
   
-  /* Content (heading and description) styling */
+  
   .content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
   
-  /* Heading styling */
+  
   .content h3 {
     margin: 0;
     font-size: 12px;
@@ -352,29 +351,35 @@
     color: #008080;
   }
   
-  /* Paragraph styling for description */
+
   .content p {
     margin: 5px 0 0;
     font-size: 12px;
     color: #008080;
   }
   
-  /* Radio button styling */
+  
   .radio-input {
     width: 10px;
     height: 10px;
   }
+
+
+ .turnover{
+    display: flex;
+    gap: 30px;
+  }
   
-  /* Responsive Styles */
+ 
 @media (max-width: 1200px) {
     .businessListingFormMainBox {
         width: 90%;
-        /* Allow the form box to take 90% of the container width */
+       
     }
 
     .businessListingFormMAinRow .col-7 {
         flex: 1 1 100%;
-        /* Stack the columns in a single column */
+      
         margin-bottom: 15px;
     }
 }
@@ -398,7 +403,7 @@
     .country-box,
     .you-are-box {
         width: 100%;
-        /* Make each option take full width */
+       
         margin-bottom: 10px;
     }
 
@@ -414,12 +419,17 @@
 
     .col-7 {
         flex: 1 1 100%;
-        margin-bottom: 15px; /* Add space below for stacked elements */
+        margin-bottom: 15px; 
       }  
 }
 
-/* Mobile View */
+
 @media (max-width: 480px) {
+
+    .turnover{
+        flex-direction: column;
+        gap: 10px;
+    }
 
     .listing-type-container,
     .country-box-container,
@@ -458,3 +468,32 @@
         display: none !important;
       }
 }
+
+@media(max-width:768px){
+    .listing-type-container,
+    .country-box-container,
+    .you-are-box-container {
+        flex-direction: column;
+        padding: 0px;
+        font-size: 12px;
+    }
+}
+
+@media(max-width:1024px){
+    .listing-type-box,
+    .country-box,
+    .you-are-box {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+}
+
+@media(max-width:1440px){
+    .listing-type-box,
+    .country-box,
+    .you-are-box {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+

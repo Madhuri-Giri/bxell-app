@@ -297,7 +297,7 @@ function PropertyBuySinglePage() {
                   <>
                     <div className="single_box mb-4">
                       <div className="row">
-                        <div className="col-lg-5 col-sm-12">
+                        <div className="col-lg-6 col-sm-12">
                           <h1>{property.property_title}</h1>
                           <div className="boldBorder"></div>
                           <div className="prop_type">
@@ -308,28 +308,7 @@ function PropertyBuySinglePage() {
                             </h6>
                           </div>
                         </div>
-                        <div className="col-lg-7 col-sm-12  d-flex justify-content-between align-items-center margin_class">
-                          <div className="propertyBuyListingActions">
-                            <button>
-                              <IoShareSocial /> Share
-                            </button>
-                            <button>
-                              {" "}
-                              <IoMail /> Mail{" "}
-                            </button>
-                            <button>
-                              {" "}
-                              <a
-                                href={`tel:${property.phone_number}`}
-                                className="call-btnn"
-                                style={{ textDecoration: "none" }}
-                              >
-                                {" "}
-                                <IoCall /> Call{" "}
-                              </a>{" "}
-                            </button>
-                          </div>
-
+                        <div className="col-lg-6 col-sm-12  d-flex justify-content-between align-items-center margin_class">
                           <div className="business_rating">
                             <ReactStars
                               className="rating"
@@ -339,44 +318,73 @@ function PropertyBuySinglePage() {
                               onChange={handleRatingChange}
                             />
                           </div>
+                          <div className="propertyBuyListingActions">
+                            <button>
+                              <IoShareSocial /> Share
+                            </button>
+                            <button>
+                              {" "}
+                              <IoMail /> Mail{" "}
+                            </button>
+                            <a
+                                href={`tel:${property.phone_number}`}
+                                className="call-btnn"
+                                style={{ textDecoration: "none" }}
+                              >
+                            <button>
+                              {" "}
+                              
+                                {" "}
+                                <IoCall /> Call{" "}
+                                </button>
+                              </a>
+                            
+                          </div>
                         </div>
                       </div>
 
                       <div className="row propertyBuyListingRow_1 propertySinglePage">
                         <div className="col-lg-6 col-sm-12">
-                        {images.length > 1 ? (
-          <Slider {...sliderSettings}>
-            {images.map((image, index) => (
-              <div key={index}>
-                <img
-                  className="img-fluid"
-                  style={{
-                    cursor: "pointer",
-                    width: "100%",
-                    height: "300px",
-                    objectFit: "contain",
-                  }}
-                  src={image.startsWith("http") ? image : `${BASE_URL}/${image}`}
-                  alt={property.property_title || "Property Image"}
-              
-                />
-              </div>
-            ))}
-          </Slider>
-        ) : (
-          // Render a single image if there's only one
-          <img
-            className="img-fluid"
-            style={{
-              objectFit: "contain",
-            }}
-            src={images[0].startsWith("http") ? images[0] : `${BASE_URL}/${images[0]}`}
-            alt={property.property_title || "Property Image"}
-           
-          />
-        )}
-      
-
+                          {images.length > 1 ? (
+                            <Slider {...sliderSettings}>
+                              {images.map((image, index) => (
+                                <div key={index}>
+                                  <img
+                                    className="img-fluid"
+                                    style={{
+                                      cursor: "pointer",
+                                      width: "100%",
+                                      height: "300px",
+                                      objectFit: "contain",
+                                    }}
+                                    src={
+                                      image.startsWith("http")
+                                        ? image
+                                        : `${BASE_URL}/${image}`
+                                    }
+                                    alt={
+                                      property.property_title ||
+                                      "Property Image"
+                                    }
+                                  />
+                                </div>
+                              ))}
+                            </Slider>
+                          ) : (
+                          
+                            <img
+                              className="img-fluid"
+                              style={{
+                                objectFit: "contain",
+                              }}
+                              src={
+                                images[0].startsWith("http")
+                                  ? images[0]
+                                  : `${BASE_URL}/${images[0]}`
+                              }
+                              alt={property.property_title || "Property Image"}
+                            />
+                          )}
                         </div>
 
                         <div className="col-lg-6 col-sm-12">
@@ -395,20 +403,20 @@ function PropertyBuySinglePage() {
                               <IoLocation /> <span> {property.city} </span>
                             </div>
                           </div>
-                          {/* Property Financials in table format */}
+                         
                           <div>
                             <div className="propertyInfoTableContainer">
                               <table className="propertyInfoTable ">
                                 <thead className=" table_heading">
                                   <tr>
                                     <th colSpan="3">Proposal</th>
-                                    {/* Adjust colSpan to cover all columns */}
+                                  
                                   </tr>
                                 </thead>
 
                                 <tbody>
                                   <tr>
-                                    {/* <td>Reported sale (yearly): <br /><span className="green-text">82,00,000</span></td> */}
+                                  
                                     <td>
                                       Listing Type: <br />{" "}
                                       <span className="green-text">
@@ -464,10 +472,10 @@ function PropertyBuySinglePage() {
                                   <tr>
                                     <td>
                                       {" "}
-                                      Price: <br /> ₹{" "}
+                                      Listed By: <br /> ₹{" "}
                                       <span className="green-text">
                                         {" "}
-                                        {property.asking_price}{" "}
+                                        {property.listed_by}{" "}
                                       </span>{" "}
                                     </td>
                                     <td>
@@ -509,7 +517,7 @@ function PropertyBuySinglePage() {
                       </div>
                     </div>
 
-                    {/* Description Section */}
+                   
                     <div className="container_b">
                       <div className="descriptionSection">
                         <h3>Description</h3>
@@ -524,8 +532,7 @@ function PropertyBuySinglePage() {
                       </div>
                     </div>
 
-                    {/* Form Section */}
-                    {/* Modal for Enquiry Form */}
+                  
                     <Modal show={showModal} onHide={toggleModal} centered>
                       <Modal.Header closeButton>
                         <Modal.Title>Send Us A Message</Modal.Title>
@@ -583,7 +590,7 @@ function PropertyBuySinglePage() {
                       </Modal.Body>
                     </Modal>
 
-                    {/* Google Map Section */}
+                  
                     <div className="mapLocationDiv">
                       <iframe
                         style={{ width: "100%" }}
@@ -699,12 +706,13 @@ function PropertyBuySinglePage() {
             </div>
 
             <div className=" row single_container">
-              {type === "business" && business && (
+
+            {type === "business" && business && (
                 <div className="col-lg-9 col-sm-12">
                   <div className="single_box mb-4">
                     <>
                       <div className="row">
-                        <div className="col-lg-5 col-sm-12">
+                        <div className="col-lg-6 col-sm-12">
                           <h1>{business.title}</h1>
                           <div className="boldBorder"></div>
                           <div className="prop_type">
@@ -715,7 +723,15 @@ function PropertyBuySinglePage() {
                             </h6>
                           </div>
                         </div>
-                        <div className="col-lg-7 col-sm-12 d-flex justify-content-between align-items-center margin_class">
+                        <div className="col-lg-6 col-sm-12 d-flex justify-content-between align-items-center margin_class">
+                        <div className="business_rating">
+                            <ReactStars
+                              count={5}
+                              activeColor="#ffd700"
+                              value={userRating || averageRating}
+                              onChange={handleRatingChange}
+                            />
+                          </div>
                           <div className="propertyBuyListingActions">
                             <button>
                               <IoShareSocial /> Share{" "}
@@ -724,58 +740,56 @@ function PropertyBuySinglePage() {
                               {" "}
                               <IoMail /> Mail{" "}
                             </button>
-                            {/* <button>  <IoCall /> Call   </button> */}
-                            <button>
-                              {" "}
-                              <a
+                         
+                            <a
                                 href={`tel:${business.phone_number}`}
                                 className="call-btnn"
                                 style={{ textDecoration: "none" }}
                               >
+                            <button>
+                              {" "}
+                              
                                 {" "}
                                 <IoCall /> Call{" "}
+                                </button>
                               </a>{" "}
-                            </button>
+                            
                           </div>
 
-                          <div className="business_rating">
-                            <ReactStars
-                              count={5}
-                              activeColor="#ffd700"
-                              value={userRating || averageRating}
-                              onChange={handleRatingChange}
-                            />
-                          </div>
+                          
                         </div>
                       </div>
 
                       <div className="row propertyBuyListingRow_1 propertySinglePage">
                         <div className="col-lg-6 col-sm-12">
-                         {/* If multiple images, render them in a slider */}
-                         {imagesBusiness.length > 1 ? (
-  <Slider {...sliderSettings}>
-    {imagesBusiness.map((image, index) => (
-      <div key={index}>
-        <img
-          className="img-fluid"
-          style={{
-            cursor: "pointer",
-            width: "100%",
-            height: "300px",
-            objectFit: "contain",
-          }}
-          src={image.startsWith("http") ? image : `${BASE_URL}/${image}`}
-          alt={business.title || "Business Image"}
-        />
-      </div>
-    ))}
-  </Slider>
+                        
+                          {imagesBusiness.length > 1 ? (
+                            <Slider {...sliderSettings}>
+                              {imagesBusiness.map((image, index) => (
+                                <div key={index}>
+                                  <img
+                                    className="img-fluid"
+                                    style={{
+                                      cursor: "pointer",
+                                      width: "100%",
+                                      height: "300px",
+                                      objectFit: "contain",
+                                    }}
+                                    src={
+                                      image.startsWith("http")
+                                        ? image
+                                        : `${BASE_URL}/${image}`
+                                    }
+                                    alt={business.title || "Business Image"}
+                                  />
+                                </div>
+                              ))}
+                            </Slider>
                           ) : (
                             // Render single image if there's only one
                             <img
                               className="img-fluid"
                               style={{
-                               
                                 objectFit: "contain",
                               }}
                               src={
@@ -806,15 +820,15 @@ function PropertyBuySinglePage() {
                             </div>
                           </div>
 
-                          {/* Business Financials in table format */}
+                         
                           <div>
-                            {/* Business Financials Table */}
+                           
                             <div className="propertyInfoTableContainer">
                               <table className="propertyInfoTable">
                                 <thead className=" table_heading">
                                   <tr>
                                     <th colSpan="2">Proposal</th>
-                                    {/* Adjust colSpan to cover all columns */}
+                                 
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -898,7 +912,7 @@ function PropertyBuySinglePage() {
                     </>
                   </div>
 
-                  {/* Description Section */}
+               
                   <div className="container_b">
                     <div className="descriptionSection">
                       <h3>Description</h3>
@@ -919,9 +933,13 @@ function PropertyBuySinglePage() {
                     </div>
                   </div>
 
-                  {/* Form Section */}
-                  {/* Modal for Enquiry Form */}
-                  <Modal show={showModal} onHide={toggleModal} centered dialogClassName="custom-modal-width">
+                 
+                  <Modal
+                    show={showModal}
+                    onHide={toggleModal}
+                    centered
+                    dialogClassName="custom-modal-width"
+                  >
                     <Modal.Header closeButton>
                       <Modal.Title>Send Us A Message</Modal.Title>
                     </Modal.Header>
@@ -978,7 +996,7 @@ function PropertyBuySinglePage() {
                     </Modal.Body>
                   </Modal>
 
-                  {/* Google Map Section */}
+                
                   <div className="mapLocationDiv">
                     <iframe
                       style={{ width: "100%" }}
@@ -991,6 +1009,7 @@ function PropertyBuySinglePage() {
                   </div>
                 </div>
               )}
+
               <div className="col-3 property-listings-scroll ">
                 {type === "business" && (
                   <>

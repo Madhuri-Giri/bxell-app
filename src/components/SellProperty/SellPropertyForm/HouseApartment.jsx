@@ -17,7 +17,7 @@ const HouseApartment = ({ formData, setFormData, errors }) => {
   return (
     <>
       {/* Bedroom Selection */}
-      <div className="col-12">
+      <div className="col-lg-12">
         <Form.Group controlId="bedroom" className="businessListingFormsDiv">
           <Form.Label>BEDROOMS </Form.Label>
           <span className="vallidateRequiredStar">*</span>
@@ -193,7 +193,7 @@ const HouseApartment = ({ formData, setFormData, errors }) => {
           <Form.Label>Car Parking </Form.Label>
           <span className="vallidateRequiredStar">*</span>
           <div className="row">
-            <div className="mb-3 propertyTypeButtons col-sm-3">
+            <div className="mb-3 propertyTypeButtons">
               {["0", "1", "2", "3", "3+"].map((type) => (
                 <Button key={type} type="button"
                   className={`btn btn-outline-primary propertyTypeButton ${ formData.car_parking === type ? "active" : ""
