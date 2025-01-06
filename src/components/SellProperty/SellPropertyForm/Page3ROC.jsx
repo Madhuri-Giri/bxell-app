@@ -1,9 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellPropertyForm.css";
+import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../API/apiServices";
 
 const Page3ROC = ({ formData, setFormData, errors }) => {
+
+   const [countries, setCountries] = useState([]);
+          
+          const [states, setStates] = useState([]);
+          const [selectedCountryId, setSelectedCountryId] = useState("");
+        
+          const [cities, setCities] = useState([]); // For city options
+        const [selectedStateId, setSelectedStateId] = useState("");
+      
+        
+          useEffect(() => {
+            const getCountries = async () => {
+              try {
+                const data = await fetchCountryRes();
+                if (data && data.country) {
+                  setCountries(data.country); // Populate the countries dropdown
+                } else {
+                  console.error("Failed to fetch countries.");
+                }
+              } catch (error) {
+                console.error("Error fetching countries:", error);
+              }
+            };
+          
+            getCountries();
+          }, []);
+          
+        
+          useEffect(() => {
+            if (selectedCountryId) {
+              const getStates = async () => {
+                try {
+                  const stateData = await fetchStateApiRes(selectedCountryId);
+                  if (stateData) {
+                    setStates(stateData); // Populate the states dropdown
+                  } else {
+                    console.error("No states found.");
+                  }
+                } catch (error) {
+                  console.error("Error fetching states:", error);
+                }
+              };
+          
+              getStates();
+            } else {
+              setStates([]); // Clear states when no country is selected
+            }
+          }, [selectedCountryId]);
+          
+          useEffect(() => {
+            if (selectedStateId) {
+              const getCities = async () => {
+                const cityData = await fetchCityApiRes(selectedStateId);
+                setCities(cityData || []); // Update cities based on the selected state
+              };
+              getCities();
+            } else {
+              setCities([]); // Reset city options when no state is selected
+            }
+          }, [selectedStateId]); 
+
   // const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -62,7 +124,7 @@ const Page3ROC = ({ formData, setFormData, errors }) => {
         </Form.Group>
       </div>
 
-      <div className="col-12">
+      {/* <div className="col-12">
   <Form.Group className="businessListingFormsDiv" controlId="country">
     <Form.Label>COUNTRY</Form.Label>
     <span className="vallidateRequiredStar">*</span>
@@ -84,7 +146,89 @@ const Page3ROC = ({ formData, setFormData, errors }) => {
       <small className="text-danger">{errors.country}</small>
     )}
   </Form.Group>
-</div>
+</div> */}
+  <div className="col-lg-7 col-md-12 col-sm-12">
+       <Form.Group className="businessListingFormsDiv" controlId="country">
+         <Form.Label>COUNTRY</Form.Label>
+         <span className="vallidateRequiredStar">*</span>
+         <div className="country-box-container">
+           {countries.map((country) => (
+             <div
+               key={country.id}
+               className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
+               onClick={() => {
+                 setSelectedCountryId(country.id); // Update the selected country ID
+                 setFormData((prev) => ({
+                   ...prev,
+                   country: country.name, // Update the country in form data
+                   state: "", // Reset state selection
+                 }));
+               }}
+             >
+               {country.name}
+             </div>
+           ))}
+         </div>
+         {errors.country && <div className="error-message">{errors.country}</div>}
+       </Form.Group>
+     </div>
+     
+         
+     <div className="col-lg-7 col-md-12 col-sm-12">
+       <Form.Group className="businessListingFormsDiv" controlId="state">
+         <Form.Label>STATE</Form.Label>
+         <span className="vallidateRequiredStar">*</span>
+         <Form.Control
+           as="select"
+           value={formData.state}
+           onChange={(e) => {
+             const stateId = e.target.value;
+             setSelectedStateId(stateId); // Update selected state ID
+             setFormData((prev) => ({
+               ...prev,
+               state: stateId, // Update the state in form data
+               city: "", // Reset city field
+             }));
+           }}
+         >
+           <option value="">Select State</option>
+           {states.map((state) => (
+             <option key={state.id} value={state.id}>
+               {state.name}
+             </option>
+           ))}
+         </Form.Control>
+         {errors.state && <div className="error-message">{errors.state}</div>}
+       </Form.Group>
+     </div>
+     
+     
+         <div className="col-lg-7 col-md-12 col-sm-12">
+       <Form.Group className="businessListingFormsDiv" controlId="city">
+         <Form.Label>TOWN/CITY</Form.Label>
+         <span className="vallidateRequiredStar">*</span>
+         <Form.Control
+           as="select"
+           name="city"
+           value={formData.city}
+           onChange={(e) =>
+             setFormData((prev) => ({
+               ...prev,
+               city: e.target.value, // Update the city in formData
+             }))
+           }
+           isInvalid={!!errors.city}
+         >
+           <option value="">Select City</option>
+           {cities.map((city) => (
+             <option key={city.id} value={city.name}>
+               {city.name}
+             </option>
+           ))}
+         </Form.Control>
+         <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+       </Form.Group>
+     </div>
 
       {/* <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="state">
@@ -130,7 +274,7 @@ const Page3ROC = ({ formData, setFormData, errors }) => {
         </Form.Group>
       </div> */}
 
-         <div className="col-7">
+         {/* <div className="col-7">
                             <Form.Group className="businessListingFormsDiv" controlId="state">
                               <Form.Label>STATE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -160,7 +304,7 @@ const Page3ROC = ({ formData, setFormData, errors }) => {
                               />
                               <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
                             </Form.Group>
-                          </div>
+                          </div> */}
       
 
       <div className="col-7">

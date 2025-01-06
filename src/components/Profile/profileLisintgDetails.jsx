@@ -235,7 +235,7 @@ function ProfileListingDetails() {
           {activeTab === "listings" && (
             <>
               <div className="explorePropertyHed homeListingDetailBoost">
-                <h6> BUSINESS LISTINGS FOR YOU</h6>
+                <h6> BUSINESS LISTINGS BY YOU</h6>
               </div>
 
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
@@ -320,7 +320,7 @@ function ProfileListingDetails() {
   </div>
               {/* {/ Property Listings /} */} 
                  <div className="explorePropertyHed homeListingDetailBoost">
-                <h6> PROPERTY LISTINGS FOR YOU</h6>
+                <h6> PROPERTY LISTINGS BY YOU</h6>
               </div>
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
                 {propertySale.length > 0 ? (

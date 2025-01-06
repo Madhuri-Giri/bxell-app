@@ -25,6 +25,9 @@ export const PROPERTY_FAVORITE_DISPLAY_URL = `${BASE_URL}/property-favorite-deta
 export const BUSINESS_FAVORITE_DISPLAY_URL =  `${BASE_URL}/business-favorite-detail`;
 export const ENQUIRY_DETAIL_API_URL = `${BASE_URL}/enquiry-detail`;
 export const NEWS_API_URL = `${BASE_URL}/news-details`;
+export const COUNTRY_API_URL =  `${BASE_URL}/country`;
+export const STATE_DETAIL_API_URL =  `${BASE_URL}/state`;
+export const CITY_DETAIL_API_URL  =  `${BASE_URL}/city`;
 //------------------------------PROPERTY ENQUIRY API-------------------------------------
 export const submitpropertyEnquiryForm = async (formData) => {
   try {
@@ -535,5 +538,50 @@ export const fetchNewsRes = async () => {
   } catch (error) {
     console.error("Error fetching news details:", error);
     return null;
+  }
+};
+// ----------------------------------------Country API -----------------------------------------
+export const fetchCountryRes = async () => {
+  try {
+    const response = await axios.get(COUNTRY_API_URL);
+    return response.data; // Extract the data field
+  } catch (error) {
+    console.error("Error fetching news details:", error);
+    return null;
+  }
+};
+
+// -------------------------------------State Api---------------------------------
+export const fetchStateApiRes = async (countryId) => {
+  if (!countryId) {
+    throw new Error("Country ID is not available. Please log in.");
+  }
+  try {
+    console.log("Sending country_id:", countryId); // Debug log
+    const response = await axios.post(STATE_DETAIL_API_URL, {
+      country_id: countryId,
+    });
+    console.log("API Response:", response.data); // Debug log
+    return response.data.state; // Return the state list
+  } catch (error) {
+    console.error("Error fetching state details:", error.response?.data || error.message);
+    return []; // Return empty array in case of error
+  }
+};
+
+
+// -------------------------------------State Api---------------------------------
+export const fetchCityApiRes = async (stateId) => {
+  if (!stateId) {
+    throw new Error("state ID is not available. Please log in.");
+  }
+  try {
+    const response = await axios.post(CITY_DETAIL_API_URL, {
+      state_id: stateId,
+    });
+    return response.data.city; // Return enquiry details
+  } catch (error) {
+    console.error("Error fetching city details:", error);
+    return []; // Return empty array in case of error
   }
 };

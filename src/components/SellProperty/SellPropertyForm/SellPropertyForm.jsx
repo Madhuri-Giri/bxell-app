@@ -458,15 +458,15 @@ function SellPropertyForm() {
                     </div>
 
                     {/* Radio button for Basic Boost Listing */}
-                    <div className="radio-item">
+                    {/* <div className="radio-item">
                       <label className="price-option">
                         <input
                           type="radio"
                           name="listingType"
                           value="49"
                           className="radio-input"
-                          onChange={(e) => handleAmountChange(e)} // Handle amount change
-                          checked={formData.amount === 49} // Set checked based on formData.amount
+                          onChange={(e) => handleAmountChange(e)} 
+                          checked={formData.amount === 49} 
                         />
                         <div className="price-details">
                           <span className="price">₹49</span>
@@ -476,7 +476,7 @@ function SellPropertyForm() {
                           </div>
                         </div>
                       </label>
-                    </div>
+                    </div> */}
                   </div>
                       )}
                   </div>

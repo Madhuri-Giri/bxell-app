@@ -4,7 +4,7 @@ import { Button, Form } from "react-bootstrap";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellBusinessForm.css"; // Import the CSS file
 import { useNavigate } from "react-router-dom";
-import { submitSellBusinessForm } from "../../../API/apiServices";
+import { submitSellBusinessForm, fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../API/apiServices";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import React, { useState, useEffect} from "react";
@@ -22,6 +22,13 @@ function SellBusinessForm() {
   const user = useSelector((state) => state.auth.user);
   const [amountError, setAmountError] = useState(""); 
   const [formSubmitting, setFormSubmitting] = useState(false);
+  const [countries, setCountries] = useState([]);
+  
+  const [states, setStates] = useState([]);
+  const [selectedCountryId, setSelectedCountryId] = useState("");
+
+  const [cities, setCities] = useState([]); // For city options
+const [selectedStateId, setSelectedStateId] = useState("");
 
   const [formData, setFormData] = useState({
     user_id: user ,
@@ -47,6 +54,59 @@ function SellBusinessForm() {
     file_name: null,
   });
   console.log("User ID:", formData.user_id);
+
+ 
+
+  useEffect(() => {
+    const getCountries = async () => {
+      try {
+        const data = await fetchCountryRes();
+        if (data && data.country) {
+          setCountries(data.country); // Populate the countries dropdown
+        } else {
+          console.error("Failed to fetch countries.");
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+  
+    getCountries();
+  }, []);
+  
+
+  useEffect(() => {
+    if (selectedCountryId) {
+      const getStates = async () => {
+        try {
+          const stateData = await fetchStateApiRes(selectedCountryId);
+          if (stateData) {
+            setStates(stateData); // Populate the states dropdown
+          } else {
+            console.error("No states found.");
+          }
+        } catch (error) {
+          console.error("Error fetching states:", error);
+        }
+      };
+  
+      getStates();
+    } else {
+      setStates([]); // Clear states when no country is selected
+    }
+  }, [selectedCountryId]);
+  
+  useEffect(() => {
+    if (selectedStateId) {
+      const getCities = async () => {
+        const cityData = await fetchCityApiRes(selectedStateId);
+        setCities(cityData || []); // Update cities based on the selected state
+      };
+      getCities();
+    } else {
+      setCities([]); // Reset city options when no state is selected
+    }
+  }, [selectedStateId]); 
 
   // Updated handleChange function
   const handleChange = (e) => {
@@ -129,108 +189,108 @@ function SellBusinessForm() {
     }));
   };
 // ------------------------boost payment--------------------------------------
-const fetchPaymentBusinessDetails = async () => {
-  try {
-    if (!user || !formData.amount) {
-      throw new Error("Login ID");
-    }
+// const fetchPaymentBusinessDetails = async () => {
+//   try {
+//     if (!user || !formData.amount) {
+//       throw new Error("Login ID");
+//     }
 
-    const payload = {
-      amount: 49,
-      user_id: user,
-      form_boost: "Form Boost",
-      boost_name: "week",
-    };
+//     const payload = {
+//       amount: 49,
+//       user_id: user,
+//       form_boost: "Form Boost",
+//       boost_name: "week",
+//     };
 
-    const response = await axios.post(
-      "https://bxell.com/bxell/admin/api/create-business-boost-payment",
-      payload
-    );
+//     const response = await axios.post(
+//       "https://bxell.com/bxell/admin/api/create-business-boost-payment",
+//       payload
+//     );
 
-    if (response.data.result === true && response.data.status === 200) {
-      return response.data;
-    } else {
-      throw new Error(response.data.message || "Failed to fetch payment details.");
-    }
-  } catch (error) {
-    console.error("Error fetching payment details:", error.message);
-    alert("Failed to initiate payment. Please try again.");
-    return null;
-  }
-};
+//     if (response.data.result === true && response.data.status === 200) {
+//       return response.data;
+//     } else {
+//       throw new Error(response.data.message || "Failed to fetch payment details.");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching payment details:", error.message);
+//     alert("Failed to initiate payment. Please try again.");
+//     return null;
+//   }
+// };
 
-const handlePaymentForBusiness = async () => {
-  const paymentData = await fetchPaymentBusinessDetails();
+// const handlePaymentForBusiness = async () => {
+//   const paymentData = await fetchPaymentBusinessDetails();
 
-  if (!user) {
-    navigate("/login");
-    return;
-  }
+//   if (!user) {
+//     navigate("/login");
+//     return;
+//   }
 
-  if (paymentData) {
-    const { payment_details, user_details, razorpay_key } = paymentData;
-    const { razorpay_order_id, amount } = payment_details;
+//   if (paymentData) {
+//     const { payment_details, user_details, razorpay_key } = paymentData;
+//     const { razorpay_order_id, amount } = payment_details;
 
-    const options = {
-      key: razorpay_key,
-      amount: amount * 100,
-      currency: "INR",
-      order_id: razorpay_order_id,
-      name: "SRN Infotech",
-      description: "Boost Listing",
-      image: "https://your-logo-url.com/logo.png",
-      handler: async function (response) {
-        try {
-          await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
-        } catch (error) {
-          alert("Error updating payment status. Please contact support.");
-        }
-      },
-      prefill: {
-        name: user_details?.name || "User Name",
-        email: user_details?.email || "user@example.com",
-        contact: user_details?.phone_number || "9999999999",
-      },
-      theme: { color: "#3399cc" },
-    };
+//     const options = {
+//       key: razorpay_key,
+//       amount: amount * 100,
+//       currency: "INR",
+//       order_id: razorpay_order_id,
+//       name: "SRN Infotech",
+//       description: "Boost Listing",
+//       image: "https://your-logo-url.com/logo.png",
+//       handler: async function (response) {
+//         try {
+//           await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
+//         } catch (error) {
+//           alert("Error updating payment status. Please contact support.");
+//         }
+//       },
+//       prefill: {
+//         name: user_details?.name || "User Name",
+//         email: user_details?.email || "user@example.com",
+//         contact: user_details?.phone_number || "9999999999",
+//       },
+//       theme: { color: "#3399cc" },
+//     };
 
-    const rzp1 = new window.Razorpay(options);
-    rzp1.on("payment.failed", function (response) {
-      alert(`Payment failed: ${response.error.description}`);
-    });
-    rzp1.open();
-  }
-};
+//     const rzp1 = new window.Razorpay(options);
+//     rzp1.on("payment.failed", function (response) {
+//       alert(`Payment failed: ${response.error.description}`);
+//     });
+//     rzp1.open();
+//   }
+// };
 
-const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
+// const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
 
-  try {
-    const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
-    const payload = { payment_id: razorpay_payment_id, id };
+//   try {
+//     const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
+//     const payload = { payment_id: razorpay_payment_id, id };
   
-    console.log("Updating property payment status with payload:", payload);
+//     console.log("Updating property payment status with payload:", payload);
   
-    const response = await axios.post(url, payload);
+//     const response = await axios.post(url, payload);
   
-    console.log("API Response for payment status update:", response.data);
+//     console.log("API Response for payment status update:", response.data);
   
-    // Check success conditions based on the actual API response structure
-    if (response.data?.result === true && response.data?.status === 200) {
-      toast.success("Payment successful and verified!"); // Show success message
+//     // Check success conditions based on the actual API response structure
+//     if (response.data?.result === true && response.data?.status === 200) {
+//       toast.success("Payment successful and verified!"); // Show success message
   
-      // Navigate to the home page after a delay
-      setTimeout(() => {
-        navigate("/"); // Adjust the route based on your routing setup
-      }, 3000); // Navigate after 3 seconds
-    } else {
-      toast.error("Payment verification failed. Please contact support."); // Show error message
-      console.error("Payment verification failed response:", response.data);
-    }
-  } catch (error) {
-    console.error("Error updating payment status:", error.message);
-    toast.error("Failed to update payment status. Please try again."); // Show error message
-  }
-  };
+//       // Navigate to the home page after a delay
+//       setTimeout(() => {
+//         navigate("/"); // Adjust the route based on your routing setup
+//       }, 3000); // Navigate after 3 seconds
+//     } else {
+//       toast.error("Payment verification failed. Please contact support."); // Show error message
+//       console.error("Payment verification failed response:", response.data);
+//     }
+//   } catch (error) {
+//     console.error("Error updating payment status:", error.message);
+//     toast.error("Failed to update payment status. Please try again."); // Show error message
+//   }
+//   };
    
   // --------------  payment ------------
   const fetchPaymentDetails = async () => {
@@ -506,7 +566,7 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                     )}
                       {step === 1 && (
                         <>
-                          <div className="col-lg-7 col-md-12 col-sm-12">
+                          {/* <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="country">
                               <Form.Label>COUNTRY</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -526,39 +586,90 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                               </div>
                               {errors.country && <div className="error-message">{errors.country}</div>}
                             </Form.Group>
-                          </div>
-                          
-                          <div className="col-lg-7 col-md-12 col-sm-12">
-                      <Form.Group className="businessListingFormsDiv" controlId="state">
-                        <Form.Label>STATE</Form.Label>
-                        <span className="vallidateRequiredStar">*</span>
-                        <Form.Control
-                          type="text"
-                          name="state"
-                          placeholder="Enter State"
-                          value={formData.state}
-                          onChange={handleChange}
-                          isInvalid={!!errors.state}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
-                      </Form.Group>
-                    </div>
+                          </div> */}
+                         <div className="col-lg-7 col-md-12 col-sm-12">
+  <Form.Group className="businessListingFormsDiv" controlId="country">
+    <Form.Label>COUNTRY</Form.Label>
+    <span className="vallidateRequiredStar">*</span>
+    <div className="country-box-container">
+      {countries.map((country) => (
+        <div
+          key={country.id}
+          className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
+          onClick={() => {
+            setSelectedCountryId(country.id); // Update the selected country ID
+            setFormData((prev) => ({
+              ...prev,
+              country: country.name, // Update the country in form data
+              state: "", // Reset state selection
+            }));
+          }}
+        >
+          {country.name}
+        </div>
+      ))}
+    </div>
+    {errors.country && <div className="error-message">{errors.country}</div>}
+  </Form.Group>
+</div>
 
-                    <div className="col-lg-7 col-md-12 col-sm-12">
-                      <Form.Group className="businessListingFormsDiv" controlId="city">
-                        <Form.Label>TOWN/CITY</Form.Label>
-                        <span className="vallidateRequiredStar">*</span>
-                        <Form.Control
-                          type="text"
-                          name="city"
-                          placeholder="Enter City"
-                          value={formData.city}
-                          onChange={handleChange}
-                          isInvalid={!!errors.city}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
-                      </Form.Group>
-                    </div>
+    
+<div className="col-lg-7 col-md-12 col-sm-12">
+  <Form.Group className="businessListingFormsDiv" controlId="state">
+    <Form.Label>STATE</Form.Label>
+    <span className="vallidateRequiredStar">*</span>
+    <Form.Control
+      as="select"
+      value={formData.state}
+      onChange={(e) => {
+        const stateId = e.target.value;
+        setSelectedStateId(stateId); // Update selected state ID
+        setFormData((prev) => ({
+          ...prev,
+          state: stateId, // Update the state in form data
+          city: "", // Reset city field
+        }));
+      }}
+    >
+      <option value="">Select State</option>
+      {states.map((state) => (
+        <option key={state.id} value={state.id}>
+          {state.name}
+        </option>
+      ))}
+    </Form.Control>
+    {errors.state && <div className="error-message">{errors.state}</div>}
+  </Form.Group>
+</div>
+
+
+    <div className="col-lg-7 col-md-12 col-sm-12">
+  <Form.Group className="businessListingFormsDiv" controlId="city">
+    <Form.Label>TOWN/CITY</Form.Label>
+    <span className="vallidateRequiredStar">*</span>
+    <Form.Control
+      as="select"
+      name="city"
+      value={formData.city}
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          city: e.target.value, // Update the city in formData
+        }))
+      }
+      isInvalid={!!errors.city}
+    >
+      <option value="">Select City</option>
+      {cities.map((city) => (
+        <option key={city.id} value={city.name}>
+          {city.name}
+        </option>
+      ))}
+    </Form.Control>
+    <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+  </Form.Group>
+</div>
+
 
 
                           {/* <div className="col-7">
@@ -810,15 +921,15 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                     </div>
 
                     {/* Radio button for Basic Boost Listing */}
-                    <div className="radio-item">
+                    {/* <div className="radio-item">
                       <label className="price-option">
                         <input
                           type="radio"
                           name="listingType"
                           value="49"
                           className="radio-input"
-                          onChange={(e) => handleAmountChange(e)} // Handle amount change
-                          checked={formData.amount === 49} // Set checked based on formData.amount
+                          onChange={(e) => handleAmountChange(e)} 
+                          checked={formData.amount === 49}
                         />
                         <div className="price-details">
                           <span className="price">₹49</span>
@@ -828,7 +939,7 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                           </div>
                         </div>
                       </label>
-                    </div>
+                    </div> */}
                   </div>
                   </>
                    

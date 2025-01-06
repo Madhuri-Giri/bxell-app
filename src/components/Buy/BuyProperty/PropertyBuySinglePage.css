@@ -446,23 +446,21 @@ text-align: center;
 
 /* Modal styling */
 /* Custom modal width */
+
 .modal-dialog {
-  max-width: 60%; /* Increase the max width as required */
-  width: 80%; /* Adjust the width of the modal */
+  max-width: 60%; 
+  width: 80%;
 }
 
-/* Optional: Adjust modal content padding */
 .modal-content {
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Optional: For very large modals, you can apply a max-width */
 .modal-dialog.modal-lg {
-  max-width: 1200px; /* Adjust the max width */
+  max-width: 1200px; 
 }
-
 
 .modal-header {
   display: flex;
@@ -552,7 +550,63 @@ text-align: center;
   cursor: "pointer";
 }
 
+.recommendationsClsName_1 .buy_titles {
+  color: gray;
+  font-weight: 400;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
 
+.recommendationsClsName_1 .buy_titles span {
+  color: #21c521;
+  font-weight: 600;
+}
+
+.data-not-found {
+  text-align: center;
+  color: #888;
+  margin-top: 20px;
+}
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 100%; /* Adjust modal width for tablets and smaller devices */
+  }
+
+  .modal-body .form-page p {
+    font-size: 12px; /* Reduce paragraph font size */
+  }
+
+  .modal-body .form-page .ipt input,
+  .modal-body .form-page .ipt textarea {
+    font-size: 14px; /* Adjust input and textarea font size */
+    padding: 0;
+  }
+
+  .modal-body .form-page .btn-cont button {
+    font-size: 16px; /* Adjust button font size */
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-dialog {
+    max-width: 100%; /* Further reduce modal width for smaller phones */
+  }
+
+  .modal-body .form-page h5 {
+    font-size: 15px; /* Reduce heading size further */
+  }
+
+  .modal-body .form-page p {
+    font-size: 10px; /* Further reduce paragraph font size */
+    padding: 0;
+  }
+
+  .modal-body .form-page .btn-cont button {
+    font-size: 10px; /* Further reduce button font size */
+    padding: 0; 
+  }
+}
 @media(max-width:375px){
   .price_location{
     margin-top: 10px;
@@ -691,8 +745,6 @@ text-align: center;
   }
 }
 
-
-
 @media (min-width: 769px) and (max-width: 1200px){
 
 
@@ -756,8 +808,6 @@ text-align: center;
   }
 }
 
-
-
 @media(min-width: 1200px) and (max-width: 1440px){
   .propertyBuyListingActions button{
     padding: 4px 12px;
@@ -772,14 +822,4 @@ text-align: center;
   }
 }
 
-.recommendationsClsName_1 .buy_titles {
-  color: gray;
-  font-weight: 400;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
 
-.recommendationsClsName_1 .buy_titles span {
-  color: #21c521;
-  font-weight: 600;
-}

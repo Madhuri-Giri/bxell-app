@@ -146,174 +146,187 @@ function RecomendedList() {
     
 
       <section className="homeRecomendedListSEC">
-        <div className="container">
-          <div className="explorePropertyHed homeRecomendedList">
+      <div className="container">
+      <div className="explorePropertyHed homeRecomendedList">
             <h6>RECOMMENDED LISTINGS FOR YOU</h6>
           </div>
-
-          <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
-            {filteredHomeBusiness.slice(0, 4).map((list, index) => (
-              <div className="col-lg-3 col-md-6 recommendationsClsNameCOL" key={index}>
-                <div className="recommendationsClsNameBox">
-                  <div className="promotedTextWrapper">
-                    <img
-                      className="img-fluid"
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        handlebusinessNavigate("business", list.id)
-                      }
-                      src={(() => {
-                        try {
-                          const fileName = list.file_name;
-
-                          // Parse the file_name if it's a JSON string
-                          const files =
-                            typeof fileName === "string" &&
-                            fileName.startsWith("[")
-                              ? JSON.parse(fileName)
-                              : fileName;
-
-                          if (typeof files === "string") {
-                            // Single image case
-                            return files.startsWith("http")
-                              ? files
-                              : `${BASE_URL}/${files}`;
-                          } else if (Array.isArray(files) && files.length > 0) {
-                            // Multiple images case
-                            return files[0].startsWith("http")
-                              ? files[0]
-                              : `${BASE_URL}/${files[0]}`;
-                          } else {
-                            // Default image as fallback
-                            return "default-image.jpg";
-                          }
-                        } catch (error) {
-                          console.error(
-                            "Error parsing or handling file_name:",
-                            error
-                          );
-                          return "default-image.jpg"; // Fallback in case of error
-                        }
-                      })()}
-                      alt={list.title || "business Image"}
-                    />
-             {list.subscription && list.subscription.length > 0 && list.subscription[0].status === 'Valid' && (
-                      <div className="promotedText">
-                        {list.subscription[0].type}
-                      </div>
-                    )}
-                    {/* <h5 className="promotedText">{list.promoting}</h5> */}
-                  </div>
-                  <h5>{list.title}</h5>
-                  <div className="home_price">
-                    <h6>
-                      Asking Price: ₹ <span>{list.asking_price}</span>
-                    </h6>
-                    <span className="home_con">{list.listing_type}</span>
-                  </div>
-
-                  <h6>Reported Sale (yearly): {list.sale}
-                    <br />₹ <span className="green-text">
-                      {" "}
-                      {list.reported_turnover_from} -{" "}
-                      {list.reported_turnover_to}{" "}
-                    </span>
-                  </h6>
-                  <div className="location-call">
-                    <h6>
-                      <IoLocation /> {list.city}
-                    </h6>
-                  
-                    <a href={`tel:${list.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
-            {filteredHomeProperty.slice(0, 4).map((property, index) => (
-              <div className="col-lg-3 col-md-6 recommendationsClsNameCOL" key={index}>
-                <div className="recommendationsClsNameBox">
-                  <div className="promotedTextWrapper">
-                    <img
-                      className="img-fluid"
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        handlepropertyNavigate("property", property.id)
-                      }
-                      src={(() => {
-                        try {
-                          const fileName = property.file_name;
-
-                          // Parse the file_name if it's a JSON string
-                          const files =
-                            typeof fileName === "string" &&
-                            fileName.startsWith("[")
-                              ? JSON.parse(fileName)
-                              : fileName;
-
-                          if (typeof files === "string") {
-                            // Single image case
-                            return files.startsWith("http")
-                              ? files
-                              : `${BASE_URL}/${files}`;
-                          } else if (Array.isArray(files) && files.length > 0) {
-                            // Multiple images case
-                            return files[0].startsWith("http")
-                              ? files[0]
-                              : `${BASE_URL}/${files[0]}`;
-                          } else {
-                            // Default image as fallback
-                            return "default-image.jpg";
-                          }
-                        } catch (error) {
-                          console.error(
-                            "Error parsing or handling file_name:",
-                            error
-                          );
-                          return "default-image.jpg"; // Fallback in case of error
-                        }
-                      })()}
-                      alt={property.title || "business Image"}
-                    />
-                  </div>
-                  <h5>{property.property_title}</h5>
-                  <div className="home_price">
-                    <h6>
-                      Price: ₹ <span>{property.asking_price}</span>
-                    </h6>
-                    <span className="home_con">{property.listing_type}</span>
-                  </div>
-                  <div>
-                      <h6>Property Type : <strong>{property.property_type}</strong></h6>
-                  </div>
-                  {property.subscription && property.subscription.length > 0 && property.subscription[0].status === 'Valid' &&(
-                      <div className="promotedText">
-                          {property.subscription[0].type}
-                      </div>
-                  )}
-                  <div>
-                      {/* <h6>Property Type : <strong>{property.property_type}</strong></h6> */}
-                  </div>
-                  <div className="location-call">
-                    <h6>
-                      <IoLocation /> {property.city}
-                    </h6>
-                  
-                    <a href={`tel:${property.phone_number}`} className="call-btn" style={{ textDecoration: "none" }}>Call <FaPhoneAlt /></a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="exploreMoreListingBtnDiv">
-            <NavLink to="buy" className="exploreMoreListingBtn">
-              Explore More Listing
-            </NavLink>
-          </div>
+        {filteredHomeBusiness.length === 0 && filteredHomeProperty.length === 0 ? (
+          <div className="data-not-found">
+          <h4>Data Not Found</h4>
+          <p>No results match your filters. Please try adjusting the filters.</p>
         </div>
+        ) : (
+          <>
+         
+            {filteredHomeBusiness.length > 0 && (
+              <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
+                {filteredHomeBusiness.slice(0, 4).map((list, index) => (
+                  <div
+                    className="col-lg-3 col-md-6 recommendationsClsNameCOL"
+                    key={index}
+                  >
+                    <div className="recommendationsClsNameBox">
+                      <div className="promotedTextWrapper">
+                        <img
+                          className="img-fluid"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handlebusinessNavigate("business", list.id)}
+                          src={(() => {
+                            try {
+                              const fileName = list.file_name;
+                              const files =
+                                typeof fileName === "string" &&
+                                fileName.startsWith("[")
+                                  ? JSON.parse(fileName)
+                                  : fileName;
+
+                              if (typeof files === "string") {
+                                return files.startsWith("http")
+                                  ? files
+                                  : `${BASE_URL}/${files}`;
+                              } else if (Array.isArray(files) && files.length > 0) {
+                                return files[0].startsWith("http")
+                                  ? files[0]
+                                  : `${BASE_URL}/${files[0]}`;
+                              } else {
+                                return "default-image.jpg";
+                              }
+                            } catch (error) {
+                              console.error(
+                                "Error parsing or handling file_name:",
+                                error
+                              );
+                              return "default-image.jpg";
+                            }
+                          })()}
+                          alt={list.title || "business Image"}
+                        />
+                        {list.subscription &&
+                          list.subscription.length > 0 &&
+                          list.subscription[0].status === "Valid" && (
+                            <div className="promotedText">
+                              {list.subscription[0].type}
+                            </div>
+                          )}
+                      </div>
+                      <h5>{list.title}</h5>
+                      <div className="home_price">
+                        <h6>
+                          Asking Price: ₹ <span>{list.asking_price}</span>
+                        </h6>
+                        <span className="home_con">{list.listing_type}</span>
+                      </div>
+                      <h6>
+                        Reported Sale (yearly): {list.sale}
+                        <br />₹{" "}
+                        <span className="green-text">
+                          {list.reported_turnover_from} - {list.reported_turnover_to}
+                        </span>
+                      </h6>
+                      <div className="location-call">
+                        <h6>
+                          <IoLocation /> {list.city}
+                        </h6>
+                        <a
+                          href={`tel:${list.phone_number}`}
+                          className="call-btn"
+                          style={{ textDecoration: "none" }}
+                        >
+                          Call <FaPhoneAlt />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) }
+
+           
+            {filteredHomeProperty.length > 0 && (
+              <div className="row recommendationsClsNameRow_1 recommendationsClsNameExploreRow">
+                {filteredHomeProperty.slice(0, 4).map((property, index) => (
+                  <div
+                    className="col-lg-3 col-md-6 recommendationsClsNameCOL"
+                    key={index}
+                  >
+                    <div className="recommendationsClsNameBox">
+                      <div className="promotedTextWrapper">
+                        <img
+                          className="img-fluid"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            handlepropertyNavigate("property", property.id)
+                          }
+                          src={(() => {
+                            try {
+                              const fileName = property.file_name;
+                              const files =
+                                typeof fileName === "string" &&
+                                fileName.startsWith("[")
+                                  ? JSON.parse(fileName)
+                                  : fileName;
+
+                              if (typeof files === "string") {
+                                return files.startsWith("http")
+                                  ? files
+                                  : `${BASE_URL}/${files}`;
+                              } else if (Array.isArray(files) && files.length > 0) {
+                                return files[0].startsWith("http")
+                                  ? files[0]
+                                  : `${BASE_URL}/${files[0]}`;
+                              } else {
+                                return "default-image.jpg";
+                              }
+                            } catch (error) {
+                              console.error(
+                                "Error parsing or handling file_name:",
+                                error
+                              );
+                              return "default-image.jpg";
+                            }
+                          })()}
+                          alt={property.title || "business Image"}
+                        />
+                      </div>
+                      <h5>{property.property_title}</h5>
+                      <div className="home_price">
+                        <h6>
+                          Price: ₹ <span>{property.asking_price}</span>
+                        </h6>
+                        <span className="home_con">{property.listing_type}</span>
+                      </div>
+                      <div>
+                        <h6>
+                          Property Type : <strong>{property.property_type}</strong>
+                        </h6>
+                      </div>
+                      {property.subscription &&
+                        property.subscription.length > 0 &&
+                        property.subscription[0].status === "Valid" && (
+                          <div className="promotedText">
+                            {property.subscription[0].type}
+                          </div>
+                        )}
+                      <div className="location-call">
+                        <h6>
+                          <IoLocation /> {property.city}
+                        </h6>
+                        <a
+                          href={`tel:${property.phone_number}`}
+                          className="call-btn"
+                          style={{ textDecoration: "none" }}
+                        >
+                          Call <FaPhoneAlt />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) }
+          </>
+        )}
+      </div>
       </section>
       <div className="home_img">
         <img src={home_bxell} />

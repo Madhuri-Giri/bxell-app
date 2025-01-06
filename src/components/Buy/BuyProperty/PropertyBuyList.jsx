@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { IoLocation } from "react-icons/io5";
 import { FaHeart, FaPhoneAlt, FaRegHeart } from "react-icons/fa"; // Added icons
 import { useNavigate, useLocation } from "react-router-dom";
-import { fetchPropertyRes, fetchBusinessRes, fetchViewPropertyRes, fetchViewBusinessRes, fetchFilterRes, fetchBusinessFav, fetchPropertyFav } from "../../../API/apiServices";
+import { fetchPropertyRes, fetchBusinessRes, fetchViewPropertyRes, fetchViewBusinessRes, fetchFilterRes, fetchBusinessFav, fetchPropertyFav, fetchPropertyFavoriteRes, fetchBusinessFavoriteRes } from "../../../API/apiServices";
 
 function PropertyBuyList() {
   const navigate = useNavigate();
@@ -237,6 +237,29 @@ function PropertyBuyList() {
       [name]: value,
     }));
   };
+
+  
+  const clearFilters = () => {
+    setSelectedFilters({
+      property_type: "",
+      project_status: "",
+      business_type: "",
+      current_status: "",
+      country: "",
+      state: "",
+      city: "",
+      ebitda_margin: "",
+      asking_price: "",
+      listing_type: "",
+      property_type: "",
+      project_status: "",
+      furnishing: "",
+      car_parking: "",
+    });
+  
+    setCity(""); // Reset city if it’s managed separately
+    // Add other states to reset if applicable
+  };
   // --------------------------------------------------------------------------------------------------
 
   const handlepropertyNavigate = (type, id) => {
@@ -335,27 +358,53 @@ function PropertyBuyList() {
   };
 
   useEffect(() => {
-    // Load wishlist state from localStorage on component mount
-    const savedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    setWishlist(savedWishlist);
-  }, []); // Empty dependency array to run only on mount
+    const fetchFavorites = async () => {
+      if (!user_id) {
+        console.error("User ID is not available.");
+        return;
+      }
+  
+      try {
+        const favoritesData = activeTab === "business"
+          ? await fetchBusinessFavoriteRes(user_id)
+          : await fetchPropertyFavoriteRes(user_id);
+  
+        const favorites = {};
+        favoritesData.forEach((item) => {
+          favorites[item.property_id || item.business_id] = item.status === "Active"; // Fill heart if "Active"
+        });
+  
+        setWishlist(favorites);
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+      }
+    };
+  
+    fetchFavorites();
+  }, [activeTab, user_id]);
 
-  const handleWishlistClick = (index, id) => {
-    // Toggle the favorite state
-    const newWishlist = [...wishlist];
-    newWishlist[index] = !newWishlist[index];
-
-    // Save the updated wishlist to localStorage
-    localStorage.setItem("wishlist", JSON.stringify(newWishlist));
-    setWishlist(newWishlist);
-
-    // Handle the API call to update the favorite status
-    if (activeTab === "business") {
-      handleBusinessFavorite(id);
-    } else if (activeTab === "property") {
-      handlePropertyFavorite(id);
+  const handleWishlistClick = async (id) => {
+    try {
+      let result;
+      if (activeTab === "business") {
+        result = await fetchBusinessFav(id, user_id); // Toggle favorite for business
+      } else if (activeTab === "property") {
+        result = await fetchPropertyFav(id, user_id); // Toggle favorite for property
+      }
+  
+      if (result.success) {
+        setWishlist((prevWishlist) => ({
+          ...prevWishlist,
+          [id]: !prevWishlist[id], // Toggle the heart state for the given id
+        }));
+      } else {
+        console.error("Error toggling favorite:", result.message);
+      }
+    } catch (error) {
+      console.error("Error handling favorite toggle:", error.message);
     }
   };
+  
 
   return (
     <>
@@ -371,8 +420,8 @@ function PropertyBuyList() {
                     }`}
                     onClick={() => setActiveTab("business")}
                   >
-                    {" "}
-                    Business{" "}
+                  
+                    Business
                   </button>
                   <button
                     className={`tab-button ${
@@ -380,8 +429,8 @@ function PropertyBuyList() {
                     }`}
                     onClick={() => setActiveTab("property")}
                   >
-                    {" "}
-                    Property{" "}
+                   
+                    Property
                   </button>
                 </div>
                 <h6>Filter Options</h6>
@@ -571,6 +620,12 @@ function PropertyBuyList() {
                         </p>
                       </div>
                     </div>
+                    <div className="clear-filters">
+                <button className="btn clear-button" onClick={clearFilters}>
+                  Clear Filters
+                </button>
+              </div>
+
                     {/* </div> */}
                   </>
                 )}
@@ -775,8 +830,15 @@ function PropertyBuyList() {
                       </div>
                     </div>
                     {/* </div> */}
+                    <div className="clear-filters">
+  <button className="btn clear-button" onClick={clearFilters}>
+    Clear Filters
+  </button>
+</div>
+
                   </>
                 )}
+
               </div>
             </div>
 
@@ -815,22 +877,23 @@ function PropertyBuyList() {
                             className="propertyBuyListingBox"
                             style={{ position: "relative" }}
                           >
-                            <div
-                              className="wishlist-heart"
-                              style={{
-                                position: "absolute",
-                                top: "10px",
-                                right: "10px",
-                                zIndex: 10,
-                              }}
-                              onClick={() => handleWishlistClick(index, lists.id)}
-                            >
-                              {wishlist[index] ? (
-                                <FaHeart className="wishlist-icon" />
-                              ) : (
-                                <FaRegHeart className="wishlist-icon" />
-                              )}
-                            </div>
+                        <div
+  className="wishlist-heart"
+  style={{
+    position: "absolute",
+    // top: "10px",
+    right: "10px",
+    zIndex: 10,
+  }}
+  onClick={() => handleWishlistClick(lists.id)} // Pass the correct id (business_id or property_id)
+>
+  {wishlist[lists.id] ? (
+    <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
+  ) : (
+    <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
+  )}
+</div>
+
 
                             <img
                               className="img-fluid"
@@ -873,7 +936,7 @@ function PropertyBuyList() {
                               <div className="title-location">
                                 <h5>{lists.title}</h5>
                                 <span className="interested">
-                                  {lists.interested} Interested
+                                  {lists.view} Interested
                                 </span>
                               </div>
                               <div className="home_price">
@@ -991,22 +1054,23 @@ function PropertyBuyList() {
                         className="propertyBuyListingBox"
                         style={{ position: "relative" }}
                       >
-                        <div
-                          className="wishlist-heart"
-                          style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            zIndex: 10,
-                          }}
-                          onClick={() => handleWishlistClick(index, listsProperty.id)}
-                        >
-                          {wishlist[index] ? (
-                            <FaHeart className="wishlist-icon" />
-                          ) : (
-                            <FaRegHeart className="wishlist-icon" />
-                          )}
-                        </div>
+                      <div
+  className="wishlist-heart"
+  style={{
+    position: "absolute",
+    // top: "10px",
+    right: "10px",
+    zIndex: 10,
+  }}
+  onClick={() => handleWishlistClick(listsProperty.id)} // Pass the correct id (business_id or property_id)
+>
+  {wishlist[listsProperty.id] ? (
+    <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
+  ) : (
+    <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
+  )}
+</div>
+
 
                         <img
                           className="img-fluid"
@@ -1030,7 +1094,7 @@ function PropertyBuyList() {
                         <div className="title-location">
                           <h5>{listsProperty.property_title}</h5>
                           <span className="interested">
-                            {listsProperty.interested} Interested
+                            {listsProperty.view} Interested
                           </span>
                         </div>
                         <div className="home_price">

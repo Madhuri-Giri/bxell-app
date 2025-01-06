@@ -538,7 +538,7 @@ function PropertyBuySinglePage() {
                         <Modal.Title>Send Us A Message</Modal.Title>
                       </Modal.Header>
                       <Modal.Body className="form-page">
-                        <h5>Send Us A Message</h5>
+                        {/* <h5>Send Us A Message</h5> */}
                         <p>
                           Please contact us for any assistance by filling up the
                           form below. We will get back to you within 24 hours.
@@ -944,7 +944,7 @@ function PropertyBuySinglePage() {
                       <Modal.Title>Send Us A Message</Modal.Title>
                     </Modal.Header>
                     <Modal.Body className="form-page">
-                      <h5>Send Us A Message</h5>
+                      {/* <h5>Send Us A Message</h5> */}
                       <p>
                         Please contact us for any assistance by filling up the
                         form below. We will get back to you within 24 hours.
