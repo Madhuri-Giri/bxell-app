@@ -300,14 +300,15 @@ try {
        <Header/>
        <section className="homeListingDetailSECBoost">
       <div className="container">
-        <div className="explorePropertyHed homeListingDetailBoost">
-          <h6>LISTINGS FOR YOU</h6>
-        </div>
+       
         {/* Loading State */}
         {loading && <p>Loading...</p>}
         {/* Error State */}
         {error && <p>{error}</p>}
         {/* Business Listings */}
+        <div className="explorePropertyHed homeListingDetailBoost">
+            <h6>BUSINESS LISTINGS FOR YOU</h6>
+        </div>
         <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
           {businessSale && businessSale.length > 0 ? (
             businessSale.map((business, index) => (
@@ -377,6 +378,9 @@ try {
           )}
         </div>
         {/* Property Listings */}
+        <div className="explorePropertyHed homeListingDetailBoost">
+          <h6>PROPERTY LISTINGS FOR YOU</h6>
+        </div>
         <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
           {propertySale && propertySale.length > 0 ? (
             propertySale.map((property, index) => (

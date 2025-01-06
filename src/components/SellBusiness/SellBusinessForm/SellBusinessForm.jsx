@@ -616,17 +616,18 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                               <Form.Label>TURNOVER RANGE (Yearly)</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
                               <div className="d-flex gap-3">
-                                <Form.Control type="number" name="reported_turnover_from" value={formData.reported_turnover_from} onChange={handlepriceChange}  placeholder="Eg: 1,00,000"  isInvalid={!!errors.reported_turnover_from}  className="no-spinner"  />
+                                <div className="turnover_range">
+                                  <Form.Control type="number" name="reported_turnover_from" value={formData.reported_turnover_from} onChange={handlepriceChange}  placeholder="Eg: 1,00,000"  isInvalid={!!errors.reported_turnover_from}  className="no-spinner"  />
+                                  <Form.Control.Feedback type="invalid"> {errors.reported_turnover_from} </Form.Control.Feedback>
+                                </div>
                                 <span>TO</span>
+                                <div className="flex-column">
                                 <Form.Control  type="number"  name="reported_turnover_to"  value={formData.reported_turnover_to}  onChange={handlepriceChange}  placeholder="Eg: 1,50,000"  isInvalid={!!errors.reported_turnover_to} className="no-spinner"  />
+                                <Form.Control.Feedback type="invalid"> {errors.reported_turnover_to} </Form.Control.Feedback>
+                                </div>
                               </div>
                               <div>
-                                {errors.reported_turnover_from && (
-                                  <Form.Control.Feedback type="invalid"> {errors.reported_turnover_from} </Form.Control.Feedback>
-                                )}
-                                {errors.reported_turnover_to && (
-                                  <Form.Control.Feedback type="invalid"> {errors.reported_turnover_to} </Form.Control.Feedback>
-                                )}
+                                
                               </div>
                             </Form.Group>
                           </div>
