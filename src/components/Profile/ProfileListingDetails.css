@@ -188,21 +188,41 @@
     background-color: #006666;
 }
 
-.btn_boost{
-    background-color: #008080;
-    color: white;
-    text-align: center;
-    border: none;
-}
+/* Container to align buttons */
+.btn_boost_container {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
 
-.boost_button button{
-    font-weight: 500;
-    font-size: 16px;
+  }
+  
+  /* Pay Now button */
+  .pay_now_btn {
     background-color: #008080;
     color: white;
-    text-align: center;
     border: none;
-}
+    padding: 3px 10px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .sold_status {
+    display: flex;
+    gap: 10px; 
+  }
+  
+ 
+  .btn_boost {
+    background-color: #008080;
+    color: white;
+    border: none;
+    padding: 3px 20px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
 
 .status-controls {
     display: flex;

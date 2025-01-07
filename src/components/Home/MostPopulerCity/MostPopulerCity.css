@@ -8,9 +8,9 @@
     margin-bottom: 30px;
     border-radius: 10px;
     overflow: hidden;
-    display: block; /* Ensure the Link takes up the full space */
-    text-decoration: none; /* Remove underline from the link */
-    transition: transform 1s ease; /* Slower and smoother zoom transition */
+    display: block;
+    text-decoration: none; 
+    transition: transform 1s ease;
 }
 
 .homeMostPopularcitySecMainCard .overlay {
@@ -54,7 +54,7 @@
     margin-top: 20px;
 }
 .exploreMoreListingBtn{
-    background-color: #008080 ; /* Customize the button color */
+    background-color: #008080 ;
     padding: 10px 30px;
     text-decoration: none;
     color: white;

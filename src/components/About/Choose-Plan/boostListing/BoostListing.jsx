@@ -17,6 +17,7 @@ const BoostListing = () => {
   const [businessIds, setBusinessIds] = useState([]); // To store all business IDs
   const [propertyIds, setPropertyIds] = useState([]); 
   const user = useSelector((state) => state.auth.user);
+  
 
   const fetchListDetail = async (userId) => {
     setLoading(true);
@@ -316,18 +317,12 @@ try {
                 <div className="listingDetailBoxBoost">
                   <div className="promotedTextWrapperBoost">
                     {business.file_name ? (
-                       <img
-                       className="img-fluid"
-                       onClick={() => handlebusinessNavigate("business", business.id)}
-                       src={(() => {
+                       <img  className="img-fluid"  onClick={() => handlebusinessNavigate("business", business.id)}  src={(() => {
                          try {
                            const fileName = business.file_name;
                      
                            // Parse the file_name if it's a JSON string
-                           const files =
-                             typeof fileName === "string" && fileName.startsWith("[")
-                               ? JSON.parse(fileName)
-                               : fileName;
+                           const files = typeof fileName === "string" && fileName.startsWith("[") ? JSON.parse(fileName)  : fileName;
                      
                            if (typeof files === "string") {
                              // Single image case
@@ -352,19 +347,13 @@ try {
                   </div>
                   <h5>{business.title}</h5>
                   <div className="home_priceBoost">
-                    <h6>
-                      Asking Price: <span>₹{business.asking_price}</span>
-                    </h6>
+                    <h6> Asking Price: <span>₹{business.asking_price}</span> </h6>
                     <span className="home_conBoost">{business.listing_type}</span>
                   </div>
-                  <h6>Reported Sale (yearly) : <br></br> 
-                      ₹ <span>{business.reported_turnover_from} - </span>
-                      <span>{business.reported_turnover_to}</span>
-                  </h6>
+                  <h6>Reported Sale (yearly) : <br></br>  ₹ <span>{business.reported_turnover_from} - </span>
+                      <span>{business.reported_turnover_to}</span> </h6>
                   <div className="home_callBoost">
-                    <h6>
-                      <IoLocation /> {business.city}
-                    </h6>
+                    <h6> <IoLocation /> {business.city} </h6>
                     <h6>Call</h6>
                   </div>
                   <div className="btn_boost" style={{ cursor: "pointer" }} onClick={() => handlePaymentForBusiness(business.id)}> 
@@ -388,17 +377,12 @@ try {
                 <div className="listingDetailBoxBoost">
                   <div className="promotedTextWrapperBoost">
                     {property.file_name ? (
-                      <img
-                        className="img-fluid"
-                        src={(() => {
+                      <img className="img-fluid"  src={(() => {
                           try {
                             const fileName = property.file_name;
                         
                             // Parse the file_name if it's a JSON string
-                            const files =
-                              typeof fileName === "string" && fileName.startsWith("[")
-                                ? JSON.parse(fileName)
-                                : fileName;
+                            const files =  typeof fileName === "string" && fileName.startsWith("[") ? JSON.parse(fileName) : fileName;
                         
                             if (typeof files === "string") {
                               // Single image case
@@ -423,21 +407,18 @@ try {
                   </div>
                   <h5>{property.property_title}</h5>
                   <div className="home_priceBoost">
-                    <h6>
-                      Price: <span>₹{property.asking_price}</span>
-                    </h6>
+                    <h6> Price: <span>₹{property.asking_price}</span> </h6>
                     <span className="home_conBoost">{property.listing_type}</span>
                   </div>
                   <div>
                     <h6>Property Type : <strong>{property.property_type}</strong></h6>
                   </div>
                   <div className="home_callBoost">
-                    <h6>
-                      <IoLocation /> {property.city}
-                    </h6>
+                    <h6> <IoLocation /> {property.city} </h6>
                     <h6>Call</h6>
                   </div>
-                  <div className="btn_boost" style={{cursor:"pointer"}} onClick={() => handlePaymentForProperty(property.id)}>  <button className="btn_boost">Pay now</button> </div>
+                  <div className="btn_boost" style={{cursor:"pointer"}} onClick={() => handlePaymentForProperty(property.id)}>  <button className="btn_boost">Pay now</button>
+                   </div>
                  
                 </div>
              

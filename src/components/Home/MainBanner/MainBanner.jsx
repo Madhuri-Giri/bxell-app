@@ -2,21 +2,16 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import "./MainBanner.css";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Button, Form, FormControl, Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
-import { MdAddBusiness } from "react-icons/md";
-import { LuTableProperties } from "react-icons/lu";
-import { FaSearch } from "react-icons/fa";
+import {useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import RazorpayLogo from "../../../assets/Images/razorpay-logo.png";
 import instant_img from "../../../assets/Images/instant.png";
 import whatsapp from "../../../assets/Images/whatsapp-24.png";
 import instagram from "../../../assets/Images/instagram-24.png";
 import phone from "../../../assets/Images/phone-24.png";
-import { fetchFilterRes } from "../../../API/apiServices";
 import News from "./news/News";
 
 function MainBanner() {
-  
   const options = [
     { text: "SELL YOUR", keyword: "BUSINESS", colorClass: "business-color" },
     { text: "SELL YOUR", keyword: "PROPERTY", colorClass: "property-color" },
@@ -64,81 +59,73 @@ function MainBanner() {
   return (
     <>
       <News />
-    <section className="homeBanner">
-      {/* Vertical Icons Section */}
-      <div className="vertical-icons">
-        <div style={{ cursor: "pointer" }} className="vertical-box">
-          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="clickable-link" >
-            <img src={instagram} alt="Instagram" />
-          </a>
-        </div>
-        <div className="vertical-box">
-          <a href="https://wa.me/<your_number>" target="_blank" rel="noopener noreferrer" className="clickable-link" >
-            <img src={whatsapp} alt="WhatsApp" />
-          </a>
-        </div>
-        <div className="vertical-box">
-          <a  href="tel:+123456789" target="_blank" rel="noopener noreferrer" className="clickable-link" >
-            <img src={phone} alt="Phone" />
-          </a>
-        </div>
-      </div>
+      <section className="homeBanner">
+        {/* Vertical Icons Section */}
+        <div className="vertical-icons">
+          <div style={{ cursor: "pointer" }} className="vertical-box">
+            <a  href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="clickable-link" >
+              <img src={instagram} alt="Instagram" />
+               </a>
+          </div>
 
-      <div className="overlay"></div>
-      <div className="container text-container">
-        <div className="col-12 text-center">
-          {/* Typing Text */}
-          <h1 className="banner-title">
-            <span>
-              {displayText.split(" ").map((word, index) =>
-                index === displayText.split(" ").length - 1 ? (
-                  <span key={index} className={currentColorClass}>
-                    {word}
-                  </span>
-                ) : (
-                  <span key={index}>{word} </span>
-                )
-              )}
-            </span>
-            <span className="blinking-cursor">|</span>
-          </h1>
+          <div className="vertical-box">
+            <a href="https://wa.me/<your_number>" target="_blank"  rel="noopener noreferrer" className="clickable-link" >
+             <img src={whatsapp} alt="WhatsApp" />
+              </a>
+          </div>
 
-          {/* Sell and Buy Buttons */}
-          <div className="homeBannerSellBuyBtn row">
-            {/* SELL Section */}
-            <div className="buttonWithText homeSell col-md-5">
-              <div className="text-with-image">
-                <img  src={RazorpayLogo} alt="Razorpay" className="razorpay-img" />
-                <p className="button-text">  List your Business or Property for sale </p>
+          <div className="vertical-box">
+            <a href="tel:+123456789"  target="_blank" rel="noopener noreferrer" className="clickable-link" >
+              <img src={phone} alt="Phone" />
+            </a>
+          </div>
+        </div>
+
+        <div className="overlay"></div>
+        <div className="container text-container">
+          <div className="col-12 text-center">
+            {/* Typing Text */}
+            <h1 className="banner-title">
+              <span>
+                {displayText.split(" ").map((word, index) =>
+                  index === displayText.split(" ").length - 1 ? (
+                    <span key={index} className={currentColorClass}> {word} </span>
+                  ) : (
+                    <span key={index}>{word} </span>
+                  )
+                )}
+              </span>
+              <span className="blinking-cursor">|</span>
+            </h1>
+
+            {/* Sell and Buy Buttons */}
+            <div className="homeBannerSellBuyBtn row">
+              {/* SELL Section */}
+              <div className="buttonWithText homeSell col-md-5">
+                <div className="text-with-image">
+                  <img src={RazorpayLogo} alt="Razorpay" className="razorpay-img" />
+                  <p className="button-text"> List your Business or Property for sale </p>
+                </div>
+                <Button variant="" className="headerSigninbtn" onClick={handleSell} >  SELL </Button>
+                {/* Add instant image below SELL button */}
+                <span className="instant-img-wrapper">
+                  <img src={instant_img} alt="Instant Listing" className="instant-imgg" /> </span>
               </div>
-              <Button
-                variant=""
-                className="headerSigninbtn"
-                onClick={handleSell} >  SELL </Button>
-              {/* Add instant image below SELL button */}
-              <span className="instant-img-wrapper">
-                  <img  src={instant_img}  alt="Instant Listing" className="instant-imgg" />
-                </span>
-            </div>
 
-            {/* BUY Section */}
-            <div className="buttonWithText homeBuy col-md-5 mb-5">
-              <p className="button-text"> Discover Business and Property to buy </p>
-              <Button  variant="" className="headerSigninbtn" onClick={handleBuy} > BUY </Button>
-              {/* Add text below BUY button */}
-              <div className="buy-info-text">
-                <p className="button-text">
-                  <span>Free</span> to Explore
-                </p>
+              {/* BUY Section */}
+              <div className="buttonWithText homeBuy col-md-5 mb-5">
+                <p className="button-text"> Discover Business and Property to buy  </p>
+                <Button variant="" className="headerSigninbtn"  onClick={handleBuy} > BUY </Button>
+                {/* Add text below BUY button */}
+                <div className="buy-info-text">
+                  <p className="button-text"> <span>Free</span> to Explore </p>
+                </div>
               </div>
             </div>
           </div>
-
         </div>
-      </div>
-    </section>
+      </section>
     </>
-    
   );
 }
 

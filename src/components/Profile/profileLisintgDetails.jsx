@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./ProfileListingDetails.css";
-import { fetchListingDetail } from "../../API/apiServices"; // Import the API function
 import { IoLocation } from "react-icons/io5";
-import { fetchUpdateBusinessStock, fetchUpdatePropertyStock } from "../../API/apiServices";
 import { useSelector } from "react-redux";
-import { fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes, fetchBusinessFav, fetchPropertyFav } from "../../API/apiServices"; 
+import { fetchListingDetail, fetchUpdateBusinessStock, fetchUpdatePropertyStock, fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes, fetchBusinessFav, fetchPropertyFav } from "../../API/apiServices"; 
 import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 function ProfileListingDetails() {
+   const navigate = useNavigate();
   // const [listingDetails, setListingDetails] = useState(null); 
   const [listingDetails, setListingDetails] = useState({ business_sale: [], property_sale: [] }); 
   const businessSale = listingDetails.business_sale || [];
@@ -21,6 +23,266 @@ function ProfileListingDetails() {
   const [loading, setLoading] = useState(true);
   const user = useSelector((state) => state.auth.user);
 
+  const [amount, setAmount] = useState(null); // State to store selected amount
+  const [amountError, setAmountError] = useState(""); // Error state for invalid selection
+ 
+  const [boostName, setBoostName] = useState(""); // State to store selected boost name (week/month)
+
+  const handleAmountChange = (e) => {
+    const selectedAmount = parseInt(e.target.value);
+    setAmount(selectedAmount);
+
+    // Set the corresponding boost name
+    if (selectedAmount === 49) {
+      setBoostName("week");
+    } else if (selectedAmount === 149) {
+      setBoostName("month");
+    }
+
+    setAmountError(""); // Reset any previous errors
+  };
+
+  const fetchPaymentBusinessDetails = async (businessId, selectedAmount, boostName) => {
+    try {
+      if (!user || !businessId) {
+        throw new Error("Login ID or Property ID is missing.");
+      }
+
+      const payload = {
+        amount: selectedAmount, // Dynamic amount based on radio selection
+        user_id: user,
+        business_id: businessId,
+        boost_name: boostName, // Dynamic boost name (week or month)
+      };
+
+      console.log("Sending payload for business payment:", payload);
+
+      const response = await axios.post(
+        "https://bxell.com/bxell/admin/api/create-business-boost-payment",
+        payload
+      );
+
+      if (response.data.result === true && response.data.status === 200) {
+        console.log("Payment API Response:", response.data);
+        return response.data; // Returning the complete response
+      } else {
+        throw new Error(response.data.message || "Failed to fetch payment details.");
+      }
+    } catch (error) {
+      console.error("Error fetching payment details:", error.message);
+      alert("Failed to initiate payment. Please try again.");
+      return null;
+    }
+  };
+
+  const handlePaymentForBusiness = async (businessId) => {
+    if (!amount) {
+      setAmountError("Please select a payment option.");
+      return;
+    }
+
+    const paymentData = await fetchPaymentBusinessDetails(businessId, amount, boostName);
+
+    console.log("Fetched Payment Data:", paymentData);
+
+    if (!user) {
+      // If the user is not logged in, redirect to the login page
+      navigate("/login");
+      return;
+    }
+
+    if (paymentData) {
+      const { payment_details, user_details, razorpay_key } = paymentData;
+      const { razorpay_order_id, amount } = payment_details;
+
+      if (!razorpay_order_id || !razorpay_key || !amount) {
+        alert("Incomplete payment details. Please try again.");
+        return;
+      }
+
+      const options = {
+        key: razorpay_key,
+        amount: amount * 100, // Convert to paise
+        currency: "INR",
+        order_id: razorpay_order_id,
+        name: "SRN Infotech",
+        description: "Business Listing Payment",
+        image: "https://your-logo-url.com/logo.png",
+        handler: async function (response) {
+          console.log("Payment successful response:", response);
+          try {
+            await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
+          } catch (error) {
+            console.error("Error during payment processing:", error.message);
+            alert("Error updating payment status. Please contact support.");
+          }
+        },
+        prefill: {
+          name: user_details?.name || "User Name",
+          email: user_details?.email || "user@example.com",
+          contact: user_details?.phone_number || "9999999999",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp1 = new window.Razorpay(options);
+
+      rzp1.on("payment.failed", function (response) {
+        alert(`Payment failed: ${response.error.description}`);
+      });
+
+      rzp1.open();
+    }
+  };
+
+  const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
+    try {
+      const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
+      const payload = { payment_id: razorpay_payment_id, id };
+
+      console.log("Updating business payment status with payload:", payload);
+
+      const response = await axios.post(url, payload);
+
+      console.log("API Response for payment status update:", response.data);
+
+      if (response.data?.result === true && response.data?.status === 200) {
+        toast.success("Payment successful and verified!");
+        setTimeout(() => {
+          navigate("/"); // Redirect after 3 seconds
+        }, 3000);
+      } else {
+        toast.error("Payment verification failed. Please contact support.");
+        console.error("Payment verification failed response:", response.data);
+      }
+    } catch (error) {
+      console.error("Error updating payment status:", error.message);
+      toast.error("Failed to update payment status. Please try again.");
+    }
+  };
+// --------------------------------property payment-----------------------------
+const fetchPaymentPropertDetails = async (propertyId, selectedAmount, boostName) => {
+  try {
+    if (!user || !propertyId) {
+      throw new Error("Login ID or Property ID is missing.");
+    }
+
+    const payload = {
+      amount: selectedAmount, // Dynamic amount based on radio selection
+      user_id: user,
+      property_id: propertyId,
+      boost_name: boostName, // Dynamic boost name (week or month)
+    };
+
+    console.log("Sending payload for business payment:", payload);
+
+    const response = await axios.post(
+      "https://bxell.com/bxell/admin/api/create-property-boost-payment",
+      payload
+    );
+
+    if (response.data.result === true && response.data.status === 200) {
+      console.log("Payment API Response:", response.data);
+      return response.data; // Returning the complete response
+    } else {
+      throw new Error(response.data.message || "Failed to fetch payment details.");
+    }
+  } catch (error) {
+    console.error("Error fetching payment details:", error.message);
+    alert("Failed to initiate payment. Please try again.");
+    return null;
+  }
+};
+
+const handlePaymentForProperty = async (propertyId) => {
+  if (!amount) {
+    setAmountError("Please select a payment option.");
+    return;
+  }
+
+  const paymentData = await fetchPaymentPropertDetails(propertyId, amount, boostName);
+
+  console.log("Fetched Payment Data:", paymentData);
+
+  if (!user) {
+    // If the user is not logged in, redirect to the login page
+    navigate("/login");
+    return;
+  }
+
+  if (paymentData) {
+    const { payment_details, user_details, razorpay_key } = paymentData;
+    const { razorpay_order_id, amount } = payment_details;
+
+    if (!razorpay_order_id || !razorpay_key || !amount) {
+      alert("Incomplete payment details. Please try again.");
+      return;
+    }
+
+    const options = {
+      key: razorpay_key,
+      amount: amount * 100, // Convert to paise
+      currency: "INR",
+      order_id: razorpay_order_id,
+      name: "SRN Infotech",
+      description: "Business Listing Payment",
+      image: "https://your-logo-url.com/logo.png",
+      handler: async function (response) {
+        console.log("Payment successful response:", response);
+        try {
+          await updatePropertyHandlePayment(response.razorpay_payment_id, payment_details.id);
+        } catch (error) {
+          console.error("Error during payment processing:", error.message);
+          alert("Error updating payment status. Please contact support.");
+        }
+      },
+      prefill: {
+        name: user_details?.name || "User Name",
+        email: user_details?.email || "user@example.com",
+        contact: user_details?.phone_number || "9999999999",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp1 = new window.Razorpay(options);
+
+    rzp1.on("payment.failed", function (response) {
+      alert(`Payment failed: ${response.error.description}`);
+    });
+
+    rzp1.open();
+  }
+};
+
+const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
+  try {
+    const url = "https://bxell.com/bxell/admin/api/update-property-boost-payment";
+    const payload = { payment_id: razorpay_payment_id, id };
+
+    console.log("Updating business payment status with payload:", payload);
+
+    const response = await axios.post(url, payload);
+
+    console.log("API Response for payment status update:", response.data);
+
+    if (response.data?.result === true && response.data?.status === 200) {
+      toast.success("Payment successful and verified!");
+      setTimeout(() => {
+        navigate("/"); // Redirect after 3 seconds
+      }, 3000);
+    } else {
+      toast.error("Payment verification failed. Please contact support.");
+      console.error("Payment verification failed response:", response.data);
+    }
+  } catch (error) {
+    console.error("Error updating payment status:", error.message);
+    toast.error("Failed to update payment status. Please try again.");
+  }
+};
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   
@@ -79,8 +341,18 @@ function ProfileListingDetails() {
       setCurrentBusinessPage((prevPage) => prevPage + 1);
     }
   };
-  
 
+    const handlepropertyNavigate = (type, id) => {
+   
+      navigate("/single-page", { state: { type, id } });
+    };
+  
+    const handlebusinessNavigate = (type, id) => {
+     
+      navigate("/single-page", { state: { type, id } });
+    };
+  
+  // ---------------Enquiry form api-------------------------
   useEffect(() => {
     const fetchData = async () => {
       if (!user) {
@@ -90,7 +362,7 @@ function ProfileListingDetails() {
       }
       try {
         setLoading(true);
-        const details = await fetchEnquiryDetailRes(user); // Assuming user.id exists
+        const details = await fetchEnquiryDetailRes(user); 
         setEnquiryDetails(details);
       } catch (err) {
         setError("Failed to fetch enquiry details.");
@@ -103,6 +375,7 @@ function ProfileListingDetails() {
     fetchData();
   }, [user]);
 
+// --------------------Favourite API ------------------------------------
   useEffect(() => {
     const fetchData = async () => {
       if (!user) {
@@ -127,6 +400,7 @@ function ProfileListingDetails() {
     fetchData();
   }, []);
 
+  // -------------------------Listing Detail---------------------
   useEffect(() => {
     const fetchData = async (userId) => {
       try {
@@ -212,8 +486,6 @@ function ProfileListingDetails() {
     return <p>Loading listings...</p>;
   }
 
- 
-
   return (
     <>
       <section className="homeListingDetailSECBoost">
@@ -270,7 +542,7 @@ function ProfileListingDetails() {
                           <h6>Reported Sale (yearly): <br></br> <span> {business.reported_turnover_from} - {business.reported_turnover_to}  </span> </h6>
                         </div>
                         <div className="home_callBoost">
-                          <h6>  <IoLocation /> {business.city}  </h6>
+                          <h6>  <IoLocation /> {business.city} </h6>
                           <h6>Call</h6>
                         </div>
                         <div className="status-controls">
@@ -279,9 +551,65 @@ function ProfileListingDetails() {
                           <label className="custom-checkbox">
                             <input  type="checkbox"  checked={soldStatus[business.id]?.off || false} onChange={() => handleCheckboxChange(   business.id,  "off", "business"  )  } disabled={soldStatus[business.id]?.on}  />   OFF </label>
                         </div>
-                        <div className="btn_boost">
+                        <div className="btn_boost_container">
+                        <div className="sold_status">
                           {soldStatus[business.id]?.on && ( <button className="btn_boost">Sold</button> )}
                           {soldStatus[business.id]?.off && ( <button className="btn_boost">Unsold</button>  )}
+                        </div>
+                        {/* <button className="pay_now_btn"  onClick={() => handlePaymentForBusiness(business.id)}>Pay Now</button> */}
+                        <div>
+      {/* Price Radio Buttons */}
+      <div className="price_radio_box">
+        {amountError && <p style={{ color: "red", margin: "0px", padding: "0px" }}>{amountError}</p>}
+
+        {/* Radio button for Basic Listing */}
+        <div className="radio-item_box">
+          <label className="price-option">
+            <input
+              type="radio"
+              name="listingType"
+              value="149"
+              className="radio-input"
+              onChange={(e) => handleAmountChange(e)} // Handle amount change
+              checked={amount === 149}
+            />
+            <div className="price-details">
+              <span className="price">₹149</span>
+              <div className="content">
+              {/* <h3>Basic Boost Listing (for 1 month)</h3> */}
+              
+              </div>
+            </div>
+          </label>
+        </div>
+
+        {/* Radio button for Basic Boost Listing */}
+        <div className="radio-item_box">
+          <label className="price-option">
+            <input
+              type="radio"
+              name="listingType"
+              value="49"
+              className="radio-input"
+              onChange={(e) => handleAmountChange(e)} 
+              checked={amount === 49}
+            />
+            <div className="price-details">
+              <span className="price">₹49</span>
+              <div className="content">
+                {/* <h3>Basic Boost Listing (for 1 week)</h3> */}
+              
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      {/* Payment Button */}
+      <button className="pay_now_btn" onClick={() => handlePaymentForBusiness(business.id)}>
+        Pay Now
+      </button>
+    </div>
                         </div>
                       </div>
                     </div>
@@ -291,34 +619,16 @@ function ProfileListingDetails() {
                 )}
               </div>
               <div className="pagination-controls">
-    <button
-      onClick={() => handlePagelisChange(currentPage - 1)}
-      className="page-button"
-      disabled={currentPage === 1}
-    >
-      Previous
-    </button>
+                <button onClick={() => handlePagelisChange(currentPage - 1)} className="page-button" disabled={currentPage === 1} > Previous </button>
 
-    {/* Generate page numbers dynamically */}
-    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-      <button
-        key={page}
-        onClick={() => handlePagelisChange(page)}
-        className={`page-button ${page === currentPage ? "active" : ""}`}
-      >
-        {page}
-      </button>
-    ))}
+                {/* Generate page numbers dynamically */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button  key={page} onClick={() => handlePagelisChange(page)} className={`page-button ${page === currentPage ? "active" : ""}`} > {page} </button>
+                ))}
 
-    <button
-      onClick={() => handlePagelisChange(currentPage + 1)}
-      className="page-button"
-      disabled={currentPage === totalPages}
-    >
-      Next
-    </button>
-  </div>
-              {/* {/ Property Listings /} */} 
+                <button onClick={() => handlePagelisChange(currentPage + 1)} className="page-button" disabled={currentPage === totalPages} > Next </button>
+              </div>
+                          {/* {/ Property Listings /} */} 
                  <div className="explorePropertyHed homeListingDetailBoost">
                 <h6> PROPERTY LISTINGS BY YOU</h6>
               </div>
@@ -329,7 +639,8 @@ function ProfileListingDetails() {
                       <div className="listingDetailBoxBoost">
                         <div className="promotedTextWrapperBoost">
                           {property.file_name ? (
-                            <img  className="img-fluid"  src={(() => {
+                            <img  className="img-fluid" style={{ cursor: "pointer" }} onClick={() =>  handlepropertyNavigate("property", property.id) }
+                             src={(() => {
                                 try {
                                   // Try parsing file_name as JSON
                                   const files = JSON.parse(property.file_name);
@@ -359,9 +670,66 @@ function ProfileListingDetails() {
                           <label className="custom-checkbox">
                             <input type="checkbox"   checked={soldStatus[property.id]?.off || false} onChange={() =>  handleCheckboxChange(  property.id,  "off",  "property"   )   } disabled={soldStatus[property.id]?.on}  />  OFF </label> <br />
                         </div>
-                        <div className="btn_boost"> {soldStatus[property.id]?.on && (  <button className="btn_boost">Sold</button>  )}
-                          {soldStatus[property.id]?.off && ( <button className="btn_boost">Unsold</button> )}
+                        <div className="btn_boost_container">
+                        <div className="sold_status">
+                          {soldStatus[property.id]?.on && <button className="btn_boost">Sold</button>}
+                          {soldStatus[property.id]?.off && <button className="btn_boost">Unsold</button>}
                         </div>
+                        {/* <button className="pay_now_btn">Pay Now</button> */}
+                        <div>
+      {/* Price Radio Buttons */}
+      <div className="price_radio_box">
+        {amountError && <p style={{ color: "red", margin: "0px", padding: "0px" }}>{amountError}</p>}
+
+        {/* Radio button for Basic Listing */}
+        <div className="radio-item_box">
+          <label className="price-option">
+            <input
+              type="radio"
+              name="listingType"
+              value="149"
+              className="radio-input"
+              onChange={(e) => handleAmountChange(e)} // Handle amount change
+              checked={amount === 149}
+            />
+            <div className="price-details">
+              <span className="price">₹149</span>
+              <div className="content">
+              {/* <h3>Basic Boost Listing (for 1 month)</h3> */}
+              
+              </div>
+            </div>
+          </label>
+        </div>
+
+        {/* Radio button for Basic Boost Listing */}
+        <div className="radio-item_box">
+          <label className="price-option">
+            <input
+              type="radio"
+              name="listingType"
+              value="49"
+              className="radio-input"
+              onChange={(e) => handleAmountChange(e)} 
+              checked={amount === 49}
+            />
+            <div className="price-details">
+              <span className="price">₹49</span>
+              <div className="content">
+                {/* <h3>Basic Boost Listing (for 1 week)</h3> */}
+              
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      {/* Payment Button */}
+      <button className="pay_now_btn" onClick={() => handlePaymentForProperty(property.id)}>
+        Pay Now
+      </button>
+    </div>
+                      </div>
                       </div>
                     </div>
                   ))
@@ -370,33 +738,13 @@ function ProfileListingDetails() {
                 )}
               </div>
               <div className="pagination-controls">
-    <button
-      onClick={() => handlePagelisChange(currentPage - 1)}
-      className="page-button"
-      disabled={currentPage === 1}
-    >
-      Previous
-    </button>
-
-    {/* Generate page numbers dynamically */}
-    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-      <button
-        key={page}
-        onClick={() => handlePagelisChange(page)}
-        className={`page-button ${page === currentPage ? "active" : ""}`}
-      >
-        {page}
-      </button>
-    ))}
-
-    <button
-      onClick={() => handlePagelisChange(currentPage + 1)}
-      className="page-button"
-      disabled={currentPage === totalPages}
-    >
-      Next
-    </button>
-  </div>
+                <button onClick={() => handlePagelisChange(currentPage - 1)} className="page-button" disabled={currentPage === 1} > Previous </button>
+                {/* Generate page numbers dynamically */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button key={page}  onClick={() => handlePagelisChange(page)} className={`page-button ${page === currentPage ? "active" : ""}`}  >  {page} </button>
+                ))}
+                <button onClick={() => handlePagelisChange(currentPage + 1)} className="page-button"  disabled={currentPage === totalPages} > Next </button>
+              </div>
             </>
           )}
         </div>
@@ -437,32 +785,16 @@ function ProfileListingDetails() {
                   ))}
                 </div>
               )}
-               {/* Property Pagination */}
+              
                {/* Property Pagination */}
           <div className="pagination-controls">
-            <button
-              onClick={() => handlePreviousPage("property")}
-              className="page-button"
-              disabled={currentPropertyPage === 1}
-            >
-              Previous
-            </button>
+            <button  onClick={() => handlePreviousPage("property")} className="page-button" disabled={currentPropertyPage === 1} >
+              Previous </button>
             {Array.from({ length: totalPropertyPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`page-button ${page === currentPropertyPage ? "active" : ""}`}
-              >
-                {page}
-              </button>
+              <button  key={page}  onClick={() => handlePageChange(page)}  className={`page-button ${page === currentPropertyPage ? "active" : ""}`}  >
+                {page}  </button>
             ))}
-            <button
-              onClick={() => handleNextPage("property", totalPropertyPages)}
-              className="page-button"
-              disabled={currentPropertyPage === totalPropertyPages}
-            >
-              Next
-            </button>
+            <button onClick={() => handleNextPage("property", totalPropertyPages)} className="page-button"  disabled={currentPropertyPage === totalPropertyPages} > Next </button>
           </div>
 
 
@@ -478,19 +810,19 @@ function ProfileListingDetails() {
                           <div  className="wishlist-heart"  style={{   position: "absolute",  top: "10px",  right: "10px",  zIndex: 10,  }}  >
                              <FaHeart className="wishlist-icon" />
                           </div>
-                          <img  className="img-fluid"  src={  business.business_sale?.file_name ||   "default-image.jpg"   }   alt={business.business_sale?.title} />
+                          <img  className="img-fluid"  src={  business.business_sale?.file_name ||   "default-image.jpg"} alt={business.business_sale?.title} />
                           <div className="title-location">
-                            <h5>{business.business_sale?.title}</h5>{" "}  <span className="interested">Interested</span>
+                            <h5>{business.business_sale?.title}</h5>  <span className="interested">Interested</span>
                           </div>
                           <div className="home_price">
-                            <h6>  Asking Price: ₹{" "}  <span>{business.business_sale.asking_price}</span> </h6>
+                            <h6>  Asking Price: ₹ <span>{business.business_sale.asking_price}</span> </h6>
                           </div>
                           <div className="home_priceBoost">
-                            <h6>Reported Sale (yearly): <br></br>  <span>  {business.business_sale.reported_turnover_from} -   {business.business_sale.reported_turnover_to}  </span> </h6>
+                            <h6>Reported Sale (yearly): <br></br>  <span>  {business.business_sale.reported_turnover_from} - {business.business_sale.reported_turnover_to}  </span> </h6>
                           </div>
                           <div className="location-call">
                             <h6> <IoLocation /> {business.business_sale.city} </h6>
-                               <a href={`tel:${business.business_sale.phone_number}`}  className="call-btn"  style={{ textDecoration: "none" }} > Call <FaPhoneAlt /> </a>
+                               <a href={`tel:${business.business_sale.phone_number}`} className="call-btn" style={{ textDecoration: "none" }} > Call <FaPhoneAlt /> </a>
                           </div>
                         </div>
                       </div>
@@ -502,27 +834,13 @@ function ProfileListingDetails() {
               )}
                {/* Business Pagination */}
           <div className="pagination-controls">
-            <button
-              onClick={() => handlePreviousPage("business")}
-              className="page-button"
-              disabled={currentBusinessPage === 1}
-            >
-              Previous
-            </button>
+            <button onClick={() => handlePreviousPage("business")}  className="page-button"  disabled={currentBusinessPage === 1} >
+              Previous </button>
             {Array.from({ length: totalBusinessPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`page-button ${page === currentBusinessPage ? "active" : ""}`}
-              >
-                {page}
-              </button>
+              <button  key={page} onClick={() => handlePageChange(page)} className={`page-button ${page === currentBusinessPage ? "active" : ""}`} >
+                {page} </button>
             ))}
-            <button
-              onClick={() => handleNextPage("business", totalBusinessPages)}
-              className="page-button"
-              disabled={currentBusinessPage === totalBusinessPages}
-            >
+            <button  onClick={() => handleNextPage("business", totalBusinessPages)} className="page-button"  disabled={currentBusinessPage === totalBusinessPages} >
               Next
             </button>
           </div>
@@ -532,7 +850,7 @@ function ProfileListingDetails() {
         </div>
       </section>
 
-      <section className="">
+      <section>
         <div className="container">
           {activeTab === "enquiry" && (
             <>

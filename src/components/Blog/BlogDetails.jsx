@@ -1,9 +1,7 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './BlogMainContent.css'; // Reuse the same CSS styles as the main blog page
+import './BlogMainContent.css'; 
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import blogImage_1 from '../../assets/Images/property-1.avif';
 import blogImage_2 from '../../assets/Images/property-2.jpg';
@@ -141,11 +139,7 @@ const BlogDetails = () => {
                         <div className="col-8">
                             <div className="blog-card">
                                 <div className="blog-image">
-                                    <img
-                                        src={blog.image}
-                                        alt={blog.title}
-                                        className="img-fluid"
-                                    />
+                                    <img  src={blog.image} alt={blog.title} className="img-fluid"  />
                                 </div>
                                 <div className="blog-content">
                                     <h2 className="blog-header">{blog.title}</h2>
@@ -154,15 +148,8 @@ const BlogDetails = () => {
                                         <span className="blog-time">Time: {blog.time}</span>
                                         <span className="blog-comments">Comments: {blog.comments}</span>
                                     </div>
-                                    <p className="blog-text">
-                                        {blog.text}
-                                    </p>
-                                    <button
-                                        className="read-more"
-                                        onClick={() => navigate(-1)}
-                                    >
-                                        Back to Blogs <MdKeyboardDoubleArrowRight />
-                                    </button>
+                                    <p className="blog-text"> {blog.text} </p>
+                                    <button className="read-more" onClick={() => navigate(-1)} > Back to Blogs <MdKeyboardDoubleArrowRight /> </button>
                                 </div>
                             </div>
                         </div>
@@ -171,18 +158,9 @@ const BlogDetails = () => {
                                 <h3>Filter by Category</h3>
                                 <ul className="category-list">
                                     {categories.map((category) => (
-                                        <li
-                                            key={category}
-                                            className={`category-item ${selectedCategory === category ? 'active' : ''
-                                                }`}
+                                        <li key={category} className={`category-item ${selectedCategory === category ? 'active' : '' }`}
                                             onClick={() => handleCategoryChange(category)}
-                                            style={{
-                                                cursor: 'pointer',
-                                                color: selectedCategory === category ? '#007bff' : '#333',
-                                                fontWeight: selectedCategory === category ? 'bold' : 'normal',
-                                            }}
-                                        >
-                                            {category}
+                                            style={{ cursor: 'pointer',  color: selectedCategory === category ? '#007bff' : '#333',  fontWeight: selectedCategory === category ? 'bold' : 'normal',  }} >  {category}
                                         </li>
                                     ))}
                                 </ul>

@@ -189,7 +189,6 @@
 
 .promotedTextWrapper h5 {
     font-size: 12px;
-   
 }
 
 .home_call {
@@ -200,7 +199,6 @@
 .home_price {
     display: flex;
     justify-content: space-between;
-
 }
 
 .home_con {
@@ -230,8 +228,6 @@
     justify-content: space-between;
     align-items: center;
 }
-
-
 
 @media(max-width:375px){
     .homeRecomendedList h6{

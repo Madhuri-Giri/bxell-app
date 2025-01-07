@@ -16,7 +16,6 @@
     background: url('../../assets/Images/footer-bg.png') no-repeat;
     background-size: cover;
     z-index: -1; /* Ensure it stays behind */
-
 }
 
 .footer ul {

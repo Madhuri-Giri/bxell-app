@@ -49,8 +49,8 @@
     color: gray;
     text-align: center !important;
     font-size: 16px;
-    margin: 0; 
-    padding: 0; 
+    margin: 0;
+    padding: 0;
 }
 
 .homeBanner .blinking-cursor {
@@ -60,7 +60,6 @@
 }
 
 .homeBannerSellBuyBtn {
-   
     margin-bottom: -25px;
     display: flex;
     justify-content: center;
@@ -130,13 +129,11 @@
 }
 
 .search-input {
-   
     padding: 8px;
     border-radius: 5px;
     border: 2px solid #0b57574b;
     font-size: 16px;
 }
-
 
 .search-input {
     border-top-right-radius: 0;
@@ -160,7 +157,6 @@
     width: 100%;
     text-align: start;
     border: 2px solid #0b57574b;
-
 }
 
 .country-dropdown .dropdown-menu.show {
@@ -183,7 +179,6 @@
 
 .listingLogo img {
     height: 25px;
-   
 }
 
 .listingLogoCOL {
@@ -195,7 +190,7 @@
     color: #21c521;
     font-style: italic;
     position: relative;
-    left: 85px;  
+    left: 85px;
 }
 
 .listingLogoCOLP2 {
@@ -213,18 +208,18 @@
 }
 
 .instant-imgg {
- width: 130px;
- float: left;
- margin-top: 5px;
- margin-left: 30px;
+    width: 130px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 30px;
 }
 
 .instant-img-wrapper {
-    margin-top: 8px; 
+    margin-top: 8px;
 }
 
-.buy-info-text span{
-    color: #008080; 
+.buy-info-text span {
+    color: #008080;
 }
 
 .explore-text {
@@ -234,21 +229,22 @@
 }
 
 .explore-text span {
-    color: #27ae60; 
+    color: #27ae60;
     font-weight: bold;
 }
+
 .text-with-image {
     display: flex;
-    align-items: center; 
-    gap: 40px; 
+    align-items: center;
+    gap: 40px;
     margin-bottom: 0 !important;
-  padding-top: 0 !important;
-  margin-left: 35px;
+    padding-top: 0 !important;
+    margin-left: 35px;
 }
 
 .razorpay-img {
     width: 80px;
-    height: auto; 
+    height: auto;
 }
 
 .homeBanner .vertical-icons {
@@ -262,14 +258,14 @@
     padding: 10px;
     z-index: 3;
     background-color: rgb(120 118 118 / 15%);
-    
     border-radius: 8px;
 }
+
 .clickable-link {
     cursor: pointer;
-    text-decoration: none; 
-  }
-  
+    text-decoration: none;
+}
+
 
 .homeBanner .vertical-icons a img {
     width: 24px;
@@ -277,7 +273,7 @@
     transition: transform 0.3s ease;
 }
 
-.vertical-box{
+.vertical-box {
     background-color: #f5ecec;
     z-index: 3333333;
 }
@@ -295,7 +291,7 @@
 
 @media (max-width: 1200px) {
     .listingLogoCOL {
-        left: 66px;  
+        left: 66px;
     }
 
     .homeBanner .button-text {
@@ -306,15 +302,16 @@
 @media (max-width: 1024px) {
     .listingLogoCOL {
         left: 46px;
-        margin-left: 12px; 
-        padding-left: 12px; 
+        margin-left: 12px;
+        padding-left: 12px;
     }
 
     .homeBannerSellBuyBtn button {
         font-size: 24px;
     }
+
     .razorpay-img {
-        width: 60px; 
+        width: 60px;
     }
 
     .instant-img {
@@ -326,13 +323,16 @@
     .homeBanner .button-text {
         font-size: 10px;
     }
+
     .text-with-image {
-      margin-left: 15px;
+        margin-left: 15px;
     }
+
     .instant-img-wrapper {
-        margin-top: 2px; 
+        margin-top: 2px;
     }
-    .homeBanner .banner-title{
+
+    .homeBanner .banner-title {
         font-size: 2rem;
     }
 
@@ -341,34 +341,52 @@
 @media (max-width: 992px) {
     .listingLogoCOL {
         left: 46px;
-        margin-left: 4px; 
-        padding-left: 4px; 
+        margin-left: 4px;
+        padding-left: 4px;
     }
 }
 
-@media (max-width: 480px) {
-    .razorpay-img {
-        width: 50px; 
-    }
 
-    .instant-imgg{
-        width: 100px;
-        margin-left: 20px;
-    }
+@media (max-width: 768px) {
 
     .homeBanner .vertical-icons {
         display: none;
     }
+
+    .listingLogoCOL {
+        left: -15px;
+        top: -6px;
+        margin-left: 30px;
+        padding-left: 30px;
+    }
+
+    .homeBannerSellBuyBtn button {
+        font-size: 24px;
+    }
+
+    .razorpay-img {
+        width: 50px;
+    }
+
+    .instant-img {
+        height: 20px;
+        max-width: 100%;
+        margin-right: 310px;
+    }
+
     .homeBanner .button-text {
         font-size: 10px;
     }
+
     .text-with-image {
-      margin-left: 15px;
+        margin-left: 15px;
     }
+
     .instant-img-wrapper {
-        margin-top: 2px; 
+        margin-top: 2px;
     }
-    .homeBanner .banner-title{
+
+    .homeBanner .banner-title {
         font-size: 2rem;
     }
 }
@@ -381,14 +399,12 @@
     .homeBanner .vertical-icons {
         display: none;
     }
-    
-
 
     .listingLogoCOL {
         left: -15px;
         top: -20px;
-        margin-left: 3px; 
-        padding-left: 3px; 
+        margin-left: 3px;
+        padding-left: 3px;
     }
 
     .listingLogoCOL p {
@@ -406,45 +422,40 @@
     .country-dropdown .dropdown-toggle {
         font-size: 11px;
     }
+
     .search-input {
         font-size: 11px;
     }
 }
-@media (max-width: 768px) {
- 
-    .homeBanner .vertical-icons {
-        display: none;
-    }
-        .listingLogoCOL {
-            left: -15px;
-            top: -6px;
-            margin-left: 30px; 
-            padding-left: 30px; 
-        }
-    
-    .homeBannerSellBuyBtn button {
-        font-size: 24px;
-    }
+
+
+@media (max-width: 480px) {
     .razorpay-img {
-        width: 50px; 
+        width: 50px;
     }
 
-    .instant-img {
-        height: 20px;
-        max-width: 100%;
-        margin-right: 310px;
+    .instant-imgg {
+        width: 100px;
+        margin-left: 20px;
+    }
+
+    .homeBanner .vertical-icons {
+        display: none;
     }
 
     .homeBanner .button-text {
         font-size: 10px;
     }
+
     .text-with-image {
-      margin-left: 15px;
+        margin-left: 15px;
     }
+
     .instant-img-wrapper {
-        margin-top: 2px; 
+        margin-top: 2px;
     }
-    .homeBanner .banner-title{
+
+    .homeBanner .banner-title {
         font-size: 2rem;
     }
 }

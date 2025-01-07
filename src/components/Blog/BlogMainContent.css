@@ -1,8 +1,7 @@
 /* BlogMainContent.css */
-.blogMainContentSec{
+.blogMainContentSec {
     padding: 40px 10px;
 }
-
 
 .blogMainContentSec {
     padding: 40px 10px;
@@ -58,7 +57,8 @@
     border-radius: 4px;
     cursor: pointer;
 }
-.blogMainContentSec .read-more svg{
+
+.blogMainContentSec .read-more svg {
     font-size: 22px;
 }
 
@@ -73,10 +73,10 @@
     margin-bottom: 15px;
     font-size: 23px;
     color: #333;
-    border-bottom: 1px solid gray; /* Existing bottom border */
+    border-bottom: 1px solid gray;
     text-align: center;
     padding-bottom: 10px;
-    position: relative; /* Required for the pseudo-element positioning */
+    position: relative;
 }
 
 .blogMainContentSec .category-filter h3::before {
@@ -90,7 +90,6 @@
     background-color: #008080;
     border-radius: 1px;
 }
-
 
 .blogMainContentSec .category-list {
     list-style: none;

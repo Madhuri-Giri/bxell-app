@@ -89,7 +89,7 @@ const HouseApartment = ({ formData, setFormData, errors }) => {
           <span className="vallidateRequiredStar">*</span>
           <div className="row">
             <div className="mb-3 propertyTypeButtons">
-              {["New Launch", "Ready to move", "Under Construction"].map(
+              {["New Launch", "Ready To Move", "Under Construction"].map(
                 (type) => ( <Button  key={type} type="button"
                     className={`btn btn-outline-primary propertyTypeButton ${  formData.project_status === type ? "active" : "" }`}
                     onClick={() => handleSelectionChange("project_status", type) } > {type}</Button> ) )}

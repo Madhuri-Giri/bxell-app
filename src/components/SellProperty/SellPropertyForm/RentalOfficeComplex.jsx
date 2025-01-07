@@ -26,7 +26,7 @@ const RentalOfficeComplex = ({ formData, setFormData, errors }) => {
           <span className="vallidateRequiredStar">*</span>
           <div className="row">
             <div className="mb-3 propertyTypeButtons col-12">
-              {["New Launch", "Ready to move", "Under Construction"].map((type) => (
+              {["New Launch", "Ready To Move", "Under Construction"].map((type) => (
                 <Button
                   key={type}
                   type="button"

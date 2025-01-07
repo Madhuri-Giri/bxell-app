@@ -34,7 +34,7 @@ function PropertyBuyList() {
     city: "",
     listing_type: "",
     ebitda_margin: "",
-    asking_price:"",
+    asking_price: "",
     // for property
     property_type: "",
     project_status: "",
@@ -116,16 +116,18 @@ function PropertyBuyList() {
           business.current_status === selectedFilters.current_status;
         const matchesState =
           !selectedFilters.state || business.state === selectedFilters.state;
-          
-          const matchesMargin =
+
+        const matchesMargin =
           !selectedFilters.ebitda_margin ||
           business.ebitda_margin === selectedFilters.ebitda_margin;
 
-          const matchesCountry =
+        const matchesCountry =
           !selectedFilters.country ||
           business.country === selectedFilters.country;
 
-          const matchesPrice = !selectedFilters.asking_price || business.asking_price === selectedFilters.asking_price;
+        const matchesPrice =
+          !selectedFilters.asking_price ||
+          business.asking_price === selectedFilters.asking_price;
 
         // Adjust the matchesCity condition: give priority to selectedFilters.city over city
         const matchesCity =
@@ -144,7 +146,6 @@ function PropertyBuyList() {
           !searchQuery ||
           business.title.toLowerCase().includes(searchQuery.toLowerCase());
 
-
         return (
           matchesBusinessType &&
           matchesCurrentStatus &&
@@ -154,7 +155,7 @@ function PropertyBuyList() {
           matchesListingType &&
           matchesTitle &&
           matchesPrice &&
-          matchesCountry 
+          matchesCountry
         );
       });
 
@@ -177,16 +178,18 @@ function PropertyBuyList() {
         const matchesState =
           !selectedFilters.state || property.state === selectedFilters.state;
 
-          const matchesPrice =
-          !selectedFilters.asking_price || property.asking_price === selectedFilters.asking_price;
+        const matchesPrice =
+          !selectedFilters.asking_price ||
+          property.asking_price === selectedFilters.asking_price;
 
-          const matchesCountry =
-          !selectedFilters.country || property.country === selectedFilters.country;
-    
+        const matchesCountry =
+          !selectedFilters.country ||
+          property.country === selectedFilters.country;
+
         const matchesFurnishing =
           !selectedFilters.furnishing ||
           property.furnishing === selectedFilters.furnishing;
-    
+
         const matchesCarParking =
           !selectedFilters.car_parking ||
           property.car_parking === selectedFilters.car_parking;
@@ -218,7 +221,7 @@ function PropertyBuyList() {
           matchesCountry &&
           matchesFurnishing &&
           matchesCarParking &&
-          matchesTitle && 
+          matchesTitle &&
           matchesPrice
         );
       });
@@ -238,7 +241,6 @@ function PropertyBuyList() {
     }));
   };
 
-  
   const clearFilters = () => {
     setSelectedFilters({
       property_type: "",
@@ -256,7 +258,7 @@ function PropertyBuyList() {
       furnishing: "",
       car_parking: "",
     });
-  
+
     setCity(""); // Reset city if it’s managed separately
     // Add other states to reset if applicable
   };
@@ -363,23 +365,25 @@ function PropertyBuyList() {
         console.error("User ID is not available.");
         return;
       }
-  
+
       try {
-        const favoritesData = activeTab === "business"
-          ? await fetchBusinessFavoriteRes(user_id)
-          : await fetchPropertyFavoriteRes(user_id);
-  
+        const favoritesData =
+          activeTab === "business"
+            ? await fetchBusinessFavoriteRes(user_id)
+            : await fetchPropertyFavoriteRes(user_id);
+
         const favorites = {};
         favoritesData.forEach((item) => {
-          favorites[item.property_id || item.business_id] = item.status === "Active"; // Fill heart if "Active"
+          favorites[item.property_id || item.business_id] =
+            item.status === "Active"; // Fill heart if "Active"
         });
-  
+
         setWishlist(favorites);
       } catch (error) {
         console.error("Error fetching favorites:", error);
       }
     };
-  
+
     fetchFavorites();
   }, [activeTab, user_id]);
 
@@ -391,7 +395,7 @@ function PropertyBuyList() {
       } else if (activeTab === "property") {
         result = await fetchPropertyFav(id, user_id); // Toggle favorite for property
       }
-  
+
       if (result.success) {
         setWishlist((prevWishlist) => ({
           ...prevWishlist,
@@ -404,7 +408,6 @@ function PropertyBuyList() {
       console.error("Error handling favorite toggle:", error.message);
     }
   };
-  
 
   return (
     <>
@@ -420,7 +423,6 @@ function PropertyBuyList() {
                     }`}
                     onClick={() => setActiveTab("business")}
                   >
-                  
                     Business
                   </button>
                   <button
@@ -429,7 +431,6 @@ function PropertyBuyList() {
                     }`}
                     onClick={() => setActiveTab("property")}
                   >
-                   
                     Property
                   </button>
                 </div>
@@ -621,10 +622,13 @@ function PropertyBuyList() {
                       </div>
                     </div>
                     <div className="clear-filters">
-                <button className="btn clear-button" onClick={clearFilters}>
-                  Clear Filters
-                </button>
-              </div>
+                      <button
+                        className="btn clear-button"
+                        onClick={clearFilters}
+                      >
+                        Clear Filters
+                      </button>
+                    </div>
 
                     {/* </div> */}
                   </>
@@ -635,37 +639,21 @@ function PropertyBuyList() {
                   <>
                     <div className="filter-group">
                       <label>Property Type</label>
-                      <select
-                        name="property_type"
-                        value={selectedFilters.property_type}
-                        onChange={(e) => handleFilterChange(e, "property")}
-                        className="form-select"
-                      >
+                      <select  name="property_type" value={selectedFilters.property_type} onChange={(e) => handleFilterChange(e, "property")} className="form-select" >
                         <option value="">Select Type</option>
                         {propertyFilter.property_type?.map((type) => (
-                          <option key={type} value={type}>
-                            {" "}
-                            {type}{" "}
-                          </option>
-                        ))}{" "}
+                          <option key={type} value={type}> {type} </option>
+                        ))}
                       </select>
                     </div>
 
                     <div className="filter-group">
                       <label>Status</label>
-                      <select
-                        name="project_status"
-                        value={selectedFilters.project_status}
-                        onChange={(e) => handleFilterChange(e, "property")}
-                        className="form-select"
-                      >
+                      <select name="project_status" value={selectedFilters.project_status} onChange={(e) => handleFilterChange(e, "property")} className="form-select" >
                         <option value="">Select Status</option>
                         {propertyFilter.project_status?.map((status) => (
-                          <option key={status} value={status}>
-                            {" "}
-                            {status}{" "}
-                          </option>
-                        ))}{" "}
+                          <option key={status} value={status}>   {status} </option>
+                        ))}
                       </select>
                     </div>
                     <div className="filter-group">
@@ -721,37 +709,37 @@ function PropertyBuyList() {
                       </select>
                     </div>
                     <div className="filter-group">
-                  <label>Furnishing</label>
-                  <select
-                    name="furnishing"
-                    value={selectedFilters.furnishing}
-                    onChange={(e) => handleFilterChange(e, "property")}
-                    className="form-select"
-                  >
-                    <option value="">Select Furnishing</option>
-                    {propertyFilter.furnishing?.map((furnishing) => (
-                      <option key={furnishing} value={furnishing}>
-                        {furnishing}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="filter-group">
-                  <label>Car Parking</label>
-                  <select
-                    name="car_parking"
-                    value={selectedFilters.car_parking}
-                    onChange={(e) => handleFilterChange(e, "property")}
-                    className="form-select"
-                  >
-                    <option value="">Select Car Parking</option>
-                    {propertyFilter.car_parking?.map((car_parking) => (
-                      <option key={car_parking} value={car_parking}>
-                        {car_parking}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                      <label>Furnishing</label>
+                      <select
+                        name="furnishing"
+                        value={selectedFilters.furnishing}
+                        onChange={(e) => handleFilterChange(e, "property")}
+                        className="form-select"
+                      >
+                        <option value="">Select Furnishing</option>
+                        {propertyFilter.furnishing?.map((furnishing) => (
+                          <option key={furnishing} value={furnishing}>
+                            {furnishing}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="filter-group">
+                      <label>Car Parking</label>
+                      <select
+                        name="car_parking"
+                        value={selectedFilters.car_parking}
+                        onChange={(e) => handleFilterChange(e, "property")}
+                        className="form-select"
+                      >
+                        <option value="">Select Car Parking</option>
+                        {propertyFilter.car_parking?.map((car_parking) => (
+                          <option key={car_parking} value={car_parking}>
+                            {car_parking}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <div className="filter-group">
                       <label>Price</label>
                       <select
@@ -831,102 +819,74 @@ function PropertyBuyList() {
                     </div>
                     {/* </div> */}
                     <div className="clear-filters">
-  <button className="btn clear-button" onClick={clearFilters}>
-    Clear Filters
-  </button>
-</div>
-
+                      <button
+                        className="btn clear-button"
+                        onClick={clearFilters}
+                      >
+                        Clear Filters
+                      </button>
+                    </div>
                   </>
                 )}
-
               </div>
             </div>
 
             <div className="col-lg-9 col-sm-8 filter_search">
-            {activeTab === "business" && (
+              {activeTab === "business" && (
                 <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow recommendationsClsName_1">
                   {/* Search Bar Section */}
                   <div className="search-bar-section">
-                    <input
-                      type="text"
-                      className="form-control search-input"
-                      placeholder="Search by title..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <button className="btn search-button" onClick={handleSearch}>
-                      Search
-                    </button>
+                    <input  type="text" className="form-control search-input"   placeholder="Search by title..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}  />
+                    <button className="btn search-button" onClick={handleSearch}  >   Search  </button>
                   </div>
 
                   <div className="explorePropertyHed">
-                    <h5>
-                      <strong>EXPLORE NOW</strong>
-                    </h5>
+                    <h5> <strong>EXPLORE NOW</strong>  </h5>
                   </div>
 
                   {paginatedBusiness.length > 0 ? (
                     paginatedBusiness.map((lists, index) => (
-                      <div
-                        className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL"
-                        key={index}
-                      >
+                      <div  className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL" key={index} >
                         <div className="recommendationsClsNameBox">
                           {/* Wishlist Heart */}
-                          <div
-                            className="propertyBuyListingBox"
-                            style={{ position: "relative" }}
-                          >
-                        <div
-  className="wishlist-heart"
-  style={{
-    position: "absolute",
-    // top: "10px",
-    right: "10px",
-    zIndex: 10,
-  }}
-  onClick={() => handleWishlistClick(lists.id)} // Pass the correct id (business_id or property_id)
->
-  {wishlist[lists.id] ? (
-    <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
-  ) : (
-    <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
-  )}
-</div>
+                          <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
+                            <div
+                              className="wishlist-heart"
+                              style={{ position: "absolute",
+                                // top: "10px",
+                                right: "10px", zIndex: 10,
+                              }}
+                              onClick={() => handleWishlistClick(lists.id)} // Pass the correct id (business_id or property_id)
+                            >
+                              {wishlist[lists.id] ? (
+                                <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
+                              ) : (
+                                <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
+                              )}
+                            </div>
 
-
-                            <img
-                              className="img-fluid"
-                              onClick={() => handlebusinessNavigate("business", lists.id)}
+                            <img className="img-fluid" onClick={() =>  handlebusinessNavigate("business", lists.id) }
                               src={(() => {
                                 try {
                                   const fileName = lists.file_name;
 
                                   // Parse the file_name if it's a JSON string
-                                  const files =
-                                    typeof fileName === "string" && fileName.startsWith("[")
-                                      ? JSON.parse(fileName)
-                                      : fileName;
+                                  const files = typeof fileName === "string" &&  fileName.startsWith("[") ? JSON.parse(fileName)  : fileName;
 
                                   if (typeof files === "string") {
                                     // Single image case
-                                    return files.startsWith("http")
-                                      ? files
-                                      : `${BASE_URL}/${files}`;
-                                  } else if (Array.isArray(files) && files.length > 0) {
+                                    return files.startsWith("http") ? files  : `${BASE_URL}/${files}`;
+                                  } else if (
+                                    Array.isArray(files) &&  files.length > 0
+                                  ) {
                                     // Multiple images case
-                                    return files[0].startsWith("http")
-                                      ? files[0]
-                                      : `${BASE_URL}/${files[0]}`;
+                                    return files[0].startsWith("http") ? files[0]   : `${BASE_URL}/${files[0]}`;
                                   } else {
                                     // Default image as fallback
                                     return "default-image.jpg";
                                   }
                                 } catch (error) {
-                                  console.error(
-                                    "Error parsing or handling file_name:",
-                                    error
-                                  );
+                                  console.error( "Error parsing or handling file_name:", error );
                                   return "default-image.jpg";
                                 }
                               })()}
@@ -935,39 +895,18 @@ function PropertyBuyList() {
                             <div className="listing-details">
                               <div className="title-location">
                                 <h5>{lists.title}</h5>
-                                <span className="interested">
-                                  {lists.view} Interested
-                                </span>
+                                <span className="interested">  {lists.view} Interested  </span>
                               </div>
                               <div className="home_price">
-                                <span className="buy_titles">
-                                  Asking Price: ₹ <span>{lists.asking_price}</span>
-                                </span>
-                                <span className="home_con">{lists.listing_type}</span>
+                                <span className="buy_titles"> Asking Price: ₹ <span>{lists.asking_price}</span> </span> <span className="home_con">  {lists.listing_type} </span>
                               </div>
-                              <span className="buy_titles">
-                                Reported Sale (yearly):
-                                <br /> ₹
-                                <span className="green-text">
-                                  {lists.reported_turnover_from} - {lists.reported_turnover_to}
-                                </span>
-                              </span>
+                              <span className="buy_titles">  Reported Sale (yearly):  <br /> ₹ <span className="green-text"> {lists.reported_turnover_from} - {lists.reported_turnover_to} </span> </span>
 
                               <div className="location-call">
-                                <h6>
-                                  <IoLocation /> {lists.city}
-                                </h6>
-                                <a
-                                  href={`tel:${lists.phone_number}`}
-                                  className="call-btn"
-                                  style={{ textDecoration: "none" }}
-                                >
-                                  Call <FaPhoneAlt />
-                                </a>
+                                <h6> <IoLocation /> {lists.city} </h6>
+                                <a  href={`tel:${lists.phone_number}`}  className="call-btn"  style={{ textDecoration: "none" }} >  Call <FaPhoneAlt />  </a>
                               </div>
-                              {lists.subscription &&
-                                lists.subscription.length > 0 &&
-                                lists.subscription[0].status === "Valid" && (
+                              {lists.subscription && lists.subscription.length > 0 && lists.subscription[0].status === "Valid" && (
                                   <div className="promotedText">
                                     {lists.subscription[0].type}
                                   </div>
@@ -980,200 +919,122 @@ function PropertyBuyList() {
                   ) : (
                     <div className="data-not-found">
                       <h4>Data Not Found</h4>
-                      <p>No results match your filters. Please try adjusting the filters.</p>
+                      <p>
+                        No results match your filters. Please try adjusting the
+                        filters.
+                      </p>
                     </div>
                   )}
 
                   {/* Pagination Controls */}
                   {paginatedBusiness.length > 0 && (
                     <div className="pagination-controls">
-                      <button
-                        onClick={handlePreviousPage}
-                        className="page-button"
-                        disabled={currentPage === 1}
-                      >
-                        Previous
-                      </button>
-                      {Array.from({ length: totalBusinessPages }, (_, i) => i + 1).map(
-                        (page) => (
-                          <button
-                            key={page}
-                            onClick={() => handlePageChange(page)}
-                            className={`page-button ${
-                              page === currentPage ? "active" : ""
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        )
-                      )}
-                      <button
-                        onClick={() => handleNextPage(totalBusinessPages)}
-                        className="page-button"
-                        disabled={currentPage === totalBusinessPages}
-                      >
-                        Next
-                      </button>
+                      <button  onClick={handlePreviousPage} className="page-button" disabled={currentPage === 1}  >   Previous  </button>
+                      {Array.from(
+                        { length: totalBusinessPages },
+                        (_, i) => i + 1
+                      ).map((page) => (
+                        <button  key={page} onClick={() => handlePageChange(page)} className={`page-button ${ page === currentPage ? "active" : ""  }`}  >  {page}  </button>
+                      ))}
+                      <button onClick={() => handleNextPage(totalBusinessPages)}  className="page-button" disabled={currentPage === totalBusinessPages}  > Next </button>
                     </div>
                   )}
                 </div>
-            )}
+              )}
 
+              {activeTab === "property" && (
+                <div className="row propertyBuyListingRow_1">
+                  {/* Search Bar Section */}
+                  <div className="search-bar-section">
+                    <input  type="text" className="form-control search-input" placeholder="Search by title..."  value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                    <button className="btn search-button"  onClick={handleSearch}> Search  </button>
+                  </div>
 
-            {activeTab === "property" && (
-            <div className="row propertyBuyListingRow_1">
-              {/* Search Bar Section */}
-              <div className="search-bar-section">
-                <input
-                  type="text"
-                  className="form-control search-input"
-                  placeholder="Search by title..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button className="btn search-button" onClick={handleSearch}>
-                  Search
-                </button>
-              </div>
+                  <div className="explorePropertyHed">
+                    <h5> <strong>EXPLORE NOW</strong> </h5>
+                  </div>
 
-              <div className="explorePropertyHed">
-                <h5>
-                  <strong>EXPLORE NOW</strong>
-                </h5>
-              </div>
-
-              {paginatedProperty.length > 0 ? (
-                paginatedProperty.map((listsProperty, index) => (
-                  <div
-                    className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL"
-                    key={index}
-                  >
-                    <div className="recommendationsClsNameBox recommendationsClsName_1">
-                      {/* Wishlist Heart */}
-                      <div
-                        className="propertyBuyListingBox"
-                        style={{ position: "relative" }}
-                      >
-                      <div
-  className="wishlist-heart"
-  style={{
-    position: "absolute",
-    // top: "10px",
-    right: "10px",
-    zIndex: 10,
-  }}
-  onClick={() => handleWishlistClick(listsProperty.id)} // Pass the correct id (business_id or property_id)
->
-  {wishlist[listsProperty.id] ? (
-    <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
-  ) : (
-    <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
-  )}
-</div>
-
-
-                        <img
-                          className="img-fluid"
-                          onClick={() =>
-                            handlepropertyNavigate("property", listsProperty.id)
-                          }
-                          src={(() => {
-                            try {
-                              const fileNames = JSON.parse(listsProperty.file_name);
-                              return Array.isArray(fileNames) && fileNames.length > 0
-                                ? fileNames[0]
-                                : "default-image.jpg";
-                            } catch (error) {
-                              console.error("Error parsing file_name:", error);
-                              return listsProperty.file_name || "default-image.jpg";
-                            }
-                          })()}
-                          alt={listsProperty.property_title}
-                        />
-
-                        <div className="title-location">
-                          <h5>{listsProperty.property_title}</h5>
-                          <span className="interested">
-                            {listsProperty.view} Interested
-                          </span>
-                        </div>
-                        <div className="home_price">
-                          <span className="buy_titles">
-                            Price: ₹ <span>{listsProperty.asking_price}</span>
-                          </span>
-                          <span className="home_con">{listsProperty.listing_type}</span>
-                        </div>
-                        <div>
-                          <span className="buy_titles">
-                            Property Type:{" "}
-                            <strong>{listsProperty.property_type}</strong>
-                          </span>
-                        </div>
-                        {listsProperty.subscription &&
-                          listsProperty.subscription.length > 0 &&
-                          listsProperty.subscription[0].status === "Valid" && (
-                            <div className="promotedText">
-                              {listsProperty.subscription[0].type}
+                  {paginatedProperty.length > 0 ? (
+                    paginatedProperty.map((listsProperty, index) => (
+                      <div  className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL"  key={index} >
+                        <div className="recommendationsClsNameBox recommendationsClsName_1">
+                          {/* Wishlist Heart */}
+                          <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
+                            <div
+                              className="wishlist-heart"
+                              style={{  position: "absolute",
+                                // top: "10px",
+                                right: "10px", zIndex: 10, }}
+                              onClick={() => handleWishlistClick(listsProperty.id) } >
+                              {wishlist[listsProperty.id] ? (
+                                <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
+                              ) : (
+                                <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
+                              )}
                             </div>
-                          )}
-                        <div className="location-call">
-                          <h6>
-                            <IoLocation /> {listsProperty.city}
-                          </h6>
-                          <a
-                            href={`tel:${listsProperty.phone_number}`}
-                            className="call-btn"
-                            style={{ textDecoration: "none" }}
-                          >
-                            Call <FaPhoneAlt />
-                          </a>
+
+                            <img className="img-fluid" onClick={() => handlepropertyNavigate( "property", listsProperty.id ) }
+                              src={(() => {
+                                try {
+                                  const fileNames = JSON.parse( listsProperty.file_name );
+                                  return Array.isArray(fileNames) && fileNames.length > 0  ? fileNames[0] : "default-image.jpg";
+                                } catch (error) {
+                                  console.error( "Error parsing file_name:", error );
+                                  return ( listsProperty.file_name ||  "default-image.jpg" );
+                                }
+                              })()}
+                              alt={listsProperty.property_title}
+                            />
+
+                            <div className="title-location">
+                              <h5>{listsProperty.property_title}</h5> <span className="interested"> {listsProperty.view} Interested </span>
+                            </div>
+                            <div className="home_price">
+                              <span className="buy_titles"> Price: ₹ <span>{listsProperty.asking_price}</span> </span>
+                              <span className="home_con"> {listsProperty.listing_type}  </span>
+                            </div>
+                            <div>
+                              <span className="buy_titles"> Property Type:  <strong>{listsProperty.property_type}</strong> </span>
+                            </div>
+                            {listsProperty.subscription &&
+                              listsProperty.subscription.length > 0 &&
+                              listsProperty.subscription[0].status ===
+                                "Valid" && (
+                                <div className="promotedText">
+                                  {listsProperty.subscription[0].type}
+                                </div>
+                              )}
+                            <div className="location-call">
+                              <h6> <IoLocation /> {listsProperty.city} </h6>
+                              <a href={`tel:${listsProperty.phone_number}`} className="call-btn" style={{ textDecoration: "none" }} > Call <FaPhoneAlt /> </a>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="data-not-found">
+                      <h4>Data Not Found</h4>
+                      <p>
+                        No results match your filters. Please try adjusting the
+                        filters.
+                      </p>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <div className="data-not-found">
-                  <h4>Data Not Found</h4>
-                  <p>No results match your filters. Please try adjusting the filters.</p>
-                </div>
-              )}
-
-              {/* Pagination Controls */}
-              {paginatedProperty.length > 0 && (
-                <div className="pagination-controls">
-                  <button
-                    onClick={handlePreviousPage}
-                    className="page-button"
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  {Array.from({ length: totalPropertyPages }, (_, i) => i + 1).map(
-                    (page) => (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`page-button ${
-                          page === currentPage ? "active" : ""
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    )
                   )}
-                  <button
-                    onClick={() => handleNextPage(totalPropertyPages)}
-                    className="page-button"
-                    disabled={currentPage === totalPropertyPages}
-                  >
-                    Next
-                  </button>
+
+                  {/* Pagination Controls */}
+                  {paginatedProperty.length > 0 && (
+                    <div className="pagination-controls">
+                      <button onClick={handlePreviousPage} className="page-button"  disabled={currentPage === 1}  > Previous </button>
+                      {Array.from(
+                        { length: totalPropertyPages },  (_, i) => i + 1 ).map((page) => (
+                        <button key={page}  onClick={() => handlePageChange(page)} className={`page-button ${ page === currentPage ? "active" : "" }`}  >  {page} </button>
+                      ))}
+                      <button onClick={() => handleNextPage(totalPropertyPages)} className="page-button" disabled={currentPage === totalPropertyPages} >  Next  </button>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-            )}
-
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@
 }
 
 .testimonial {
-    margin: 0 20px; /* Adds more space between slides */
+    margin: 0 20px; 
     transition: transform 0.3s ease-in-out;
 }
 
@@ -67,11 +67,11 @@
 }
 
 .utf_testimonial_author {
-    display: none; /* Hide author info by default */
+    display: none; 
 }
 
 .testimonial.active .utf_testimonial_author {
-    display: block; /* Show author info for active slide */
+    display: block; 
 }
 
 .utf_testimonial_author {
@@ -130,19 +130,17 @@
     display: none;
 }
 
-
-/* Responsive Adjustments */
 @media (max-width: 992px) {
     .homeWhatSayCustomerSecHed p {
         padding: 0px 50px;
     }
 
     .testimonial {
-        margin: 0 10px; /* Adjust spacing for smaller screens */
+        margin: 0 10px; 
     }
 
     .testimonialBox {
-        max-width: 100%; /* Make slides fill container width */
+        max-width: 100%; 
     }
 }
 
@@ -152,7 +150,7 @@
     }
 
     .testimonial {
-        margin: 0 5px; /* Reduced margin between slides */
+        margin: 0 5px;
     }
 }
 
@@ -166,6 +164,6 @@
     }
 
     .testimonial {
-        margin: 0 2px; /* Further reduce margin for very small screens */
+        margin: 0 2px; 
     }
 }

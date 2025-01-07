@@ -32,6 +32,7 @@ function WhatSayCustomer() {
           slidesToScroll: 1,
         },
       },
+
       {
         breakpoint: 1024,
         settings: {
@@ -40,6 +41,7 @@ function WhatSayCustomer() {
           slidesToScroll: 1,
         },
       },
+
       {
         breakpoint: 768,
         settings: {
@@ -48,6 +50,7 @@ function WhatSayCustomer() {
           slidesToScroll: 1,
         },
       },
+      
     ],
   };
 
@@ -118,25 +121,13 @@ function WhatSayCustomer() {
           </div>
           <Slider {...settings}>
             {testimonials.map((testimonial, index) => (
-              <div
-                className={`testimonial ${
-                  index === activeSlide ? "active" : ""
-                }`}
-                key={index}
-              >
-                <div
-                  className={`testimonialBox ${
-                    index === activeSlide ? "active" : ""
-                  }`}
-                >
+              <div className={`testimonial ${ index === activeSlide ? "active" : "" }`}  key={index} >
+                <div className={`testimonialBox ${ index === activeSlide ? "active" : "" }`} >
                   <p>{testimonial.text}</p>
                 </div>
                 {index === activeSlide && (
                   <div className="utf_testimonial_author">
-                    <img
-                      src={testimonial.profile}
-                      alt={`${testimonial.name}'s profile`}
-                    />
+                    <img src={testimonial.profile}  alt={`${testimonial.name}'s profile`} />
                     <h4>{testimonial.name}</h4>
                     <p>{testimonial.title}</p>
                   </div>

@@ -75,7 +75,6 @@
     width: 100%;
 }
 
-
 .propertyBuyListingSec .tab-buttons {
     display: flex;
     gap: 10px;
@@ -103,7 +102,7 @@
     color: red;
     cursor: pointer;
     z-index: 10;
-  top: 0;
+    top: 0;
     float: right;
 }
 
@@ -141,8 +140,6 @@
     margin-top: -3px;
 }
 
-.filter_listing_type {}
-
 .filter_listing_type h6 {
     color: #008080;
     font-weight: 600;
@@ -151,7 +148,6 @@
 .filter_listing_type {
     margin: 20px 0;
 }
-
 
 .filter_box {
     display: flex;
@@ -197,8 +193,8 @@
     letter-spacing: 1.2px;
 }
 
-.search-button:hover{
-    color:white;
+.search-button:hover {
+    color: white;
     background-color: #008080;
 }
 
@@ -214,10 +210,11 @@
     width: 100%;
 }
 
-.clear-button:hover{
-    color:white;
+.clear-button:hover {
+    color: white;
     background-color: #008080;
 }
+
 /* General pagination button styles */
 .page-button {
     padding: 8px 12px;
@@ -229,48 +226,27 @@
     transition: background-color 0.3s ease;
     background-color: #fff;
     color: #008080;
-  }
-  
-  .page-button:hover {
+}
+
+.page-button:hover {
     background-color: #75acac;
-  }
-  
-  /* Active button styles */
-  .page-button.active {
+}
+
+/* Active button styles */
+.page-button.active {
     background-color: #008080;
     color: #fff;
     border-color: #008080;
     font-weight: bold;
-  }
-  
-
-  @media (max-width: 768px) {
-   
-.filter_res{
-    width: 100%;
 }
 
-.filter_search{
-    width: 100%;
-}
+@media (max-width: 1440px) {
 
-.search-bar-section{
-    padding: 10px;
-
-}
-
-.filter_box{
-    font-size: 12px;
-}
-
-  }
-  @media (max-width: 1440px) {
-   
-    .filter_box{
+    .filter_box {
         display: inline;
     }
 
-    .filter-button{
+    .filter-button {
         font-size: 14px;
         padding: 0px 6px;
         text-align: center;
@@ -278,3 +254,25 @@
     }
 
 }
+
+@media (max-width: 768px) {
+
+    .filter_res {
+        width: 100%;
+    }
+
+    .filter_search {
+        width: 100%;
+    }
+
+    .search-bar-section {
+        padding: 10px;
+
+    }
+
+    .filter_box {
+        font-size: 12px;
+    }
+
+}
+

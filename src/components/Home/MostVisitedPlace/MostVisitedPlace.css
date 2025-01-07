@@ -243,7 +243,7 @@
 .chooseCityWrapper {
   display: flex;
   gap: 20px; /* Space between cities */
-  animation: scroll 15s linear infinite; /* Circular slide animation */
+  animation: scroll 40s linear infinite; /* Circular slide animation */
   width: max-content;
 }
 

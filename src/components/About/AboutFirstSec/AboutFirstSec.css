@@ -10,7 +10,7 @@
 
 .aboutFirstSecColImg img {
     border-radius: 5px;
-    width: 100%; /* Ensure image fits its container */
+    width: 100%; 
     height: auto;
 }
 

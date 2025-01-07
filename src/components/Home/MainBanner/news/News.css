@@ -1,62 +1,61 @@
 .news_box {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    background-color: #fff;
-   margin: 0;
-   padding: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.news_label {
+  color: red;
+  font-weight: bolder;
+  background-color: #d0ecee;
+  border: 1px solid #ddd;
+  padding: 2px 8px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  text-transform: uppercase;
+  z-index: 2;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+.news_ticker {
+  display: flex;
+  gap: 10px;
+  gap: 20px; /* Space between cities */
+  animation: scroll 30s linear infinite;
+  white-space: nowrap;
+}
+
+.news_ticker span {
+  display: inline-block;
+  padding-top: 16px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  color: #666;
+  position: relative;
+  margin-left: 20px;
+}
+
+.news_ticker span::before {
+  content: "•";
+  color: red;
+  position: absolute;
+  left: -15px;
+  font-size: 14px;
+  top: 0;
+  padding-top: 16px;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
   }
-  
-  .news_label {
-    color: red; 
-    font-weight: bolder;
-    background-color: #d0ecee;
-    border: 1px solid #ddd;
-    padding: 2px 8px;
-    border-top-right-radius: 20px; 
-    border-bottom-right-radius: 20px; 
-    text-transform: uppercase;
-    z-index: 2;
-    font-size: 14px;
-    letter-spacing: 1px;
-    font-style: italic;
+  100% {
+    transform: translateX(-50%);
   }
-  
-  .news_ticker {
-    display: flex;
-    gap: 10px; 
-    animation: scrollLeft 100s linear infinite;
-    white-space: nowrap; 
-  }
-  
-  .news_ticker span {
-    display: inline-block;
-    padding-top: 16px;
-    font-size: 14px;
-    letter-spacing: 1px;
-    font-weight: bold;
-    color: #666;
-    position: relative; 
-    margin-left: 20px; 
-  }
-  
-  .news_ticker span::before {
-    content: "•"; 
-    color: red; 
-    position: absolute;
-    left: -15px; 
-    font-size: 14px; 
-    top: 0; 
-    padding-top: 16px;
-  }
-  
-  
-  @keyframes scrollLeft {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-  
+}
