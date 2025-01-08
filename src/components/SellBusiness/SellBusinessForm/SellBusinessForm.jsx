@@ -55,8 +55,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
   });
   console.log("User ID:", formData.user_id);
 
- 
-
   useEffect(() => {
     const getCountries = async () => {
       try {

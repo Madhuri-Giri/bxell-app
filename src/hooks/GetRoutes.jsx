@@ -24,6 +24,8 @@ import Sell from "../pages/Sell";
 import SellBusiness from "../pages/SellBusiness";
 import SellProperty from "../pages/SellProperty";
 
+import EditBusinessForm from "../components/editBusinessForm/EditBusinessForm";
+
 export const routeArray = [
   {
     path: "/",
@@ -55,27 +57,27 @@ export const routeArray = [
   },
   {
     path: "/test",
-    element: <HouseApartment/>
+    element: <HouseApartment />,
   },
   {
     path: "/test1",
-    element: <RentalOfficeComplex/>
+    element: <RentalOfficeComplex />,
   },
   {
     path: "/test2",
-    element: <Page3Common/>
+    element: <Page3Common />,
   },
   {
     path: "/test3",
-    element: <Page3ROC/>
+    element: <Page3ROC />,
   },
   {
     path: "/test4",
-    element: <Land/>
+    element: <Land />,
   },
   {
     path: "/test5",
-    element: <Page3Land/>
+    element: <Page3Land />,
   },
   {
     path: "/single-page",
@@ -89,10 +91,10 @@ export const routeArray = [
   //   path: "/blog",
   //   element: <Blog />,
   // },
-{
-path: "/blog",
-element: <Blog/>
-},
+  {
+    path: "/blog",
+    element: <Blog />,
+  },
   {
     path: "/blog-details/:id",
     element: <BlogDetails />,
@@ -113,10 +115,9 @@ element: <Blog/>
     element: <BlogMainContent />,
   },
   {
-    path:"/single-blog" ,
+    path: "/single-blog",
     element: <SingleBlog />,
   },
-  
 
   {
     path: "/login",
@@ -129,7 +130,12 @@ element: <Blog/>
   },
   {
     path: "/news",
-    element: <News/>
+    element: <News />,
+  },
+
+  {
+    path: "/edit-business",
+    element: <EditBusinessForm />,
   },
 
   // {

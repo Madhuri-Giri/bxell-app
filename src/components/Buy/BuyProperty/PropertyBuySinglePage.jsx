@@ -851,7 +851,8 @@ function PropertyBuySinglePage() {
                                     <td>
                                     
                                       YEAR OF ESTABLISHMENT: <br />
-                                      <span className="green-text"> {business.year_of_establishment} </span>
+                                      <span className="green-text"> {business.year_of_establishment}
+                                      </span>
                                     </td>
                                     <td>
                                       DOCUMENTS UPLOADED: <br />
@@ -904,6 +905,8 @@ function PropertyBuySinglePage() {
                       </button>
                     </div>
                   </div>
+
+                 
                   <Modal
                     show={showModal}
                     onHide={toggleModal}
@@ -965,6 +968,8 @@ function PropertyBuySinglePage() {
                       </form>
                     </Modal.Body>
                   </Modal>
+
+                
                   <div className="mapLocationDiv">
                     <iframe
                       style={{ width: "100%" }}

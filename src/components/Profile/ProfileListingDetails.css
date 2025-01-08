@@ -187,7 +187,9 @@
     font-size: 12px;
     text-transform: uppercase;
     text-align: center;
+    border-radius: 5px;
 }
+
 .exploreMoreListingBtnBoost {
     padding: 10px 20px;
     font-size: 14px;
@@ -196,6 +198,7 @@
     border-radius: 20px;
     text-decoration: none;
 }
+
 .exploreMoreListingBtnDivBoost {
     display: flex;
     justify-content: center;

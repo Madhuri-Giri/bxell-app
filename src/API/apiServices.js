@@ -4,6 +4,8 @@ import axios from "axios";
 export const BASE_URL = "https://bxell.com/bxell/admin/api";
 export const SELL_BUSINESS_FORM_URL = `${BASE_URL}/add-business-sale`;
 export const SELL_PROPERTY_FORM_URL = `${BASE_URL}/add-property-sale`;
+export const SELL_PROPERTY_EDIT_FORM_URL = `${BASE_URL}/edit-property-sale-detail`;
+export const SELL_BUSINESS_EDIT_FORM_URL = `${BASE_URL}/edit-business-sale-detail`;
 export const HOME_BLOG_URL = `${BASE_URL}/blog-detail`;
 export const HOME_PROPERTY_DETAILS_URL = `${BASE_URL}/property-details`;
 export const HOME_BUSINESS_DETAILS_URL = `${BASE_URL}/business-details`;
@@ -28,6 +30,7 @@ export const NEWS_API_URL = `${BASE_URL}/news-details`;
 export const COUNTRY_API_URL =  `${BASE_URL}/country`;
 export const STATE_DETAIL_API_URL =  `${BASE_URL}/state`;
 export const CITY_DETAIL_API_URL  =  `${BASE_URL}/city`;
+
 //------------------------------PROPERTY ENQUIRY API-------------------------------------
 export const submitpropertyEnquiryForm = async (formData) => {
   try {
@@ -79,7 +82,6 @@ export const userProfile = async (id) => {
     throw error;
   }
 };
-
 
 // ---------------------UPDATE PROFILE API----------------------------------------
 export const updateProfile = async (formData, id) => {
@@ -583,5 +585,26 @@ export const fetchCityApiRes = async (stateId) => {
   } catch (error) {
     console.error("Error fetching city details:", error);
     return []; // Return empty array in case of error
+  }
+};
+
+// -----------------------------------------EDIT BUSINESS FORM API-----------------------------
+
+export const fetchEditBusinessForm = async (formData) => { 
+  try {
+    const response = await fetch(SELL_BUSINESS_EDIT_FORM_URL, {
+      method: "POST",
+      body: formData, // Use FormData directly
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return data; // Return success response
+    } else {
+      throw new Error(data.message || "Failed to update business form");
+    }
+  } catch (error) {
+    console.error("Error updating business form:", error.message);
+    throw error;
   }
 };

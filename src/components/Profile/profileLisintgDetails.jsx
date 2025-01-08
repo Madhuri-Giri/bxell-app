@@ -26,7 +26,8 @@ function ProfileListingDetails() {
   const [amount, setAmount] = useState(null); // State to store selected amount
   const [amountError, setAmountError] = useState(""); // Error state for invalid selection
   const [boostName, setBoostName] = useState(""); // State to store selected boost name (week/month)
-
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   const handleAmountChange = (e) => {
     const selectedAmount = parseInt(e.target.value);
     setAmount(selectedAmount);
@@ -349,9 +350,9 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
   
     const handlebusinessNavigate = (type, id) => {
      
-      navigate("/single-page", { state: { type, id } });
+      navigate("/edit-business", { state: { type, id } });
     };
-  
+ 
   // ---------------Enquiry form api-------------------------
   useEffect(() => {
     const fetchData = async () => {
@@ -581,7 +582,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                                 <div className="price_radio_box">
                                   <div className="radio_item_box">
                                     <label className="price_option_box">
-                                    <input type="radio" name="listingType" value="149" className="radio_input_box" onChange={handleAmountChange} checked={amount === 149} />
+                                    <input type="radio" name="listingType" value="149" className="radio_input_box" onClick={handleAmountChange} checked={amount === 149} />
                                       <div className="price_details_box">
                                         <span className="price_box">₹149</span>
                                         <div className="content_box">
@@ -593,7 +594,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
 
                                   <div className="radio_item_box">
                                     <label className="price_option_box">
-                                      <input type="radio" name="listingType" value="49" className="radio_input_box" onChange={handleAmountChange} checked={amount === 49} />
+                                      <input type="radio" name="listingType" value="49" className="radio_input_box" onClick={handleAmountChange} checked={amount === 49} />
                                       <div className="price_details_box">
                                         <span className="price_box">₹49</span>
                                         <div className="content_box">
