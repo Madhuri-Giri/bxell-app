@@ -17,6 +17,7 @@
     width: 100%;
     border-radius: 2px;
 }
+
 .listingDetailSecBoost {
     padding: 50px 0px;
 }
@@ -27,18 +28,22 @@
     position: relative;
     border: 1px solid #06020221;
 }
+
 .listingDetailBoxBoost h5 {
     font-size: 15px;
 }
+
 .listingDetailBoxBoost img {
     margin-bottom: 10px;
     border-radius: 2px;
     height: 240px;
     width: 100%;
 }
+
 .listingDetailRow_2Boost a {
     text-decoration: none;
 }
+
 .listingDetailRow_1Boost h6 {
     color: gray;
     font-weight: 400;
@@ -48,30 +53,36 @@
 .listingDetailRow_1Boost svg {
     color: #008080;
 }
+
 .listingDetailRow_1Boost h6 span {
     color: #21c521;
     font-weight: 600;
 }
+
 .listingDetailRow_2Boost h6 {
     color: gray;
     font-weight: 400;
     margin-bottom: 15px;
 }
+
 .listingDetailFilterBoxBoost {
     box-shadow: 2px 3px 3px 4px rgba(128, 128, 128, 0.189);
     padding: 15px;
     border-radius: 6px;
 }
+
 .listingDetailFilterBoxBoost label {
     color: #008080;
     font-weight: 600;
     margin-left: 5px;
     margin-top: 10px;
 }
+
 .listingDetailFilterBoxBoost select {
     padding: 6px 7px;
     font-size: 13px;
 }
+
 .listingDetailExploreRowBoost img {
     height: 200px;
     width: 100%;
@@ -133,6 +144,7 @@
     border: none;
     cursor: pointer;
 }
+
 .listingDetailSecBoost .call-btn svg {
     font-size: 10px;
     margin-top: -3px;
@@ -153,17 +165,21 @@
     font-weight: bold;
     z-index: 10;
 }
+
 .promotedTextWrapperBoost h5 {
     font-size: 12px;
 }
+
 .home_callBoost {
     display: flex;
     justify-content: space-between;
 }
+
 .home_priceBoost {
     display: flex;
     justify-content: space-between;
 }
+
 .home_conBoost {
     background-color: hwb(0 0% 0%);
     color: #fff;
@@ -229,7 +245,46 @@
     align-items: center;
     gap: 1rem;
   }
+  .price_radio_section {
+    margin-top: 0.1rem; 
+  }
   
+  /* Individual Radio Item */
+  .radio_item_box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Price Option Box */
+  .price_option_box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  
+  /* Price Box */
+  .price_box {
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+  }
+  
+  /* Content Box for Description */
+  .content_box h3 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #008080;
+  }
+  
+  .radio_input_box {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+                          
   .enquiry-section {
     padding: 20px;
     background-color: #f9f9f9;
@@ -348,6 +403,44 @@
     color: #fff;
     border-color: #008080;
     font-weight: bold;
+  }
+
+  .boost{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(223, 211, 211, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal_content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    position: relative;
+  }
+  
+  .close_modal_btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
   }
   
 @media(max-width:768px){

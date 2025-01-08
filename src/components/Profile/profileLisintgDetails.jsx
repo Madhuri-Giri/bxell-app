@@ -22,10 +22,9 @@ function ProfileListingDetails() {
   const [enquiryDetails, setEnquiryDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useSelector((state) => state.auth.user);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [amount, setAmount] = useState(null); // State to store selected amount
   const [amountError, setAmountError] = useState(""); // Error state for invalid selection
- 
   const [boostName, setBoostName] = useState(""); // State to store selected boost name (week/month)
 
   const handleAmountChange = (e) => {
@@ -283,6 +282,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
     toast.error("Failed to update payment status. Please try again.");
   }
 };
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   
@@ -485,7 +485,15 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
   if (!listingDetails) {
     return <p>Loading listings...</p>;
   }
+  
+  const handleBoostClick = () => {
+    setIsModalOpen(true);
+  };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  
   return (
     <>
       <section className="homeListingDetailSECBoost">
@@ -557,59 +565,49 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                           {soldStatus[business.id]?.off && ( <button className="btn_boost">Unsold</button>  )}
                         </div>
                         {/* <button className="pay_now_btn"  onClick={() => handlePaymentForBusiness(business.id)}>Pay Now</button> */}
+                         {/* Payment Button */}
+                         <button className="pay_now_btn" onClick={handleBoostClick}> Boost </button>
+                      </div>
                         <div>
-      {/* Price Radio Buttons */}
-      <div className="price_radio_box">
-        {amountError && <p style={{ color: "red", margin: "0px", padding: "0px" }}>{amountError}</p>}
+                          {/* Price Radio Buttons */}
+                          {isModalOpen && (
+                          <div className="modal_overlay">
+                            <div className="modal_content">
+                              <button className="close_modal_btn" onClick={handleCloseModal}> &times; </button>
 
-        {/* Radio button for Basic Listing */}
-        <div className="radio-item_box">
-          <label className="price-option">
-            <input
-              type="radio"
-              name="listingType"
-              value="149"
-              className="radio-input"
-              onChange={(e) => handleAmountChange(e)} // Handle amount change
-              checked={amount === 149}
-            />
-            <div className="price-details">
-              <span className="price">₹149</span>
-              <div className="content">
-              {/* <h3>Basic Boost Listing (for 1 month)</h3> */}
-              
-              </div>
-            </div>
-          </label>
-        </div>
+                              <div className="price_radio_section">
+                                {amountError && ( <p style={{ color: "red", margin: "0px", padding: "0px" }}> {amountError} </p> )}
 
-        {/* Radio button for Basic Boost Listing */}
-        <div className="radio-item_box">
-          <label className="price-option">
-            <input
-              type="radio"
-              name="listingType"
-              value="49"
-              className="radio-input"
-              onChange={(e) => handleAmountChange(e)} 
-              checked={amount === 49}
-            />
-            <div className="price-details">
-              <span className="price">₹49</span>
-              <div className="content">
-                {/* <h3>Basic Boost Listing (for 1 week)</h3> */}
-              
-              </div>
-            </div>
-          </label>
-        </div>
-      </div>
+                                <div className="price_radio_box">
+                                  <div className="radio_item_box">
+                                    <label className="price_option_box">
+                                    <input type="radio" name="listingType" value="149" className="radio_input_box" onChange={handleAmountChange} checked={amount === 149} />
+                                      <div className="price_details_box">
+                                        <span className="price_box">₹149</span>
+                                        <div className="content_box">
+                                          <h3>Basic Boost Listing (for 1 month)</h3>
+                                        </div>
+                                      </div>
+                                    </label>
+                                  </div>
 
-      {/* Payment Button */}
-      <button className="pay_now_btn" onClick={() => handlePaymentForBusiness(business.id)}>
-        Pay Now
-      </button>
-    </div>
+                                  <div className="radio_item_box">
+                                    <label className="price_option_box">
+                                      <input type="radio" name="listingType" value="49" className="radio_input_box" onChange={handleAmountChange} checked={amount === 49} />
+                                      <div className="price_details_box">
+                                        <span className="price_box">₹49</span>
+                                        <div className="content_box">
+                                          <h3>Basic Boost Listing (for 1 week)</h3>
+                                        </div>
+                                      </div>
+                                    </label>
+                                  </div>
+                                </div>
+                                <button className="pay_now_btn" onClick={() => handlePaymentForBusiness(business.id)} > Pay Now </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         </div>
                       </div>
                     </div>
@@ -671,65 +669,56 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             <input type="checkbox"   checked={soldStatus[property.id]?.off || false} onChange={() =>  handleCheckboxChange(  property.id,  "off",  "property"   )   } disabled={soldStatus[property.id]?.on}  />  OFF </label> <br />
                         </div>
                         <div className="btn_boost_container">
-                        <div className="sold_status">
-                          {soldStatus[property.id]?.on && <button className="btn_boost">Sold</button>}
-                          {soldStatus[property.id]?.off && <button className="btn_boost">Unsold</button>}
-                        </div>
-                        {/* <button className="pay_now_btn">Pay Now</button> */}
-                        <div>
-      {/* Price Radio Buttons */}
-      <div className="price_radio_box">
-        {amountError && <p style={{ color: "red", margin: "0px", padding: "0px" }}>{amountError}</p>}
-
-        {/* Radio button for Basic Listing */}
-        <div className="radio-item_box">
-          <label className="price-option">
-            <input
-              type="radio"
-              name="listingType"
-              value="149"
-              className="radio-input"
-              onChange={(e) => handleAmountChange(e)} // Handle amount change
-              checked={amount === 149}
-            />
-            <div className="price-details">
-              <span className="price">₹149</span>
-              <div className="content">
-              {/* <h3>Basic Boost Listing (for 1 month)</h3> */}
-              
-              </div>
-            </div>
-          </label>
-        </div>
-
-        {/* Radio button for Basic Boost Listing */}
-        <div className="radio-item_box">
-          <label className="price-option">
-            <input
-              type="radio"
-              name="listingType"
-              value="49"
-              className="radio-input"
-              onChange={(e) => handleAmountChange(e)} 
-              checked={amount === 49}
-            />
-            <div className="price-details">
-              <span className="price">₹49</span>
-              <div className="content">
-                {/* <h3>Basic Boost Listing (for 1 week)</h3> */}
-              
-              </div>
-            </div>
-          </label>
-        </div>
-      </div>
-
-      {/* Payment Button */}
-      <button className="pay_now_btn" onClick={() => handlePaymentForProperty(property.id)}>
-        Pay Now
-      </button>
-    </div>
+                      <div className="sold_status">
+                        {soldStatus[property.id]?.on && <button className="btn_boost">Sold</button>}
+                        {soldStatus[property.id]?.off && <button className="btn_boost">Unsold</button>}
                       </div>
+                      <div>
+                          {/* Boost Button */}
+                          <button className="pay_now_btn" onClick={handleBoostClick}> Boost </button>
+                          </div>
+                          {/* Modal */}
+                          {isModalOpen && (
+                            <div className="modal_overlay">
+                              <div className="modal_content">
+                                <button className="close_modal_btn" onClick={handleCloseModal}> &times; </button>
+
+                                <div className="price_radio_section">
+                                  {amountError && ( <p style={{ color: "red", margin: "0px", padding: "0px" }}> {amountError} </p> )}
+
+                                  <div className="price_radio_box">
+                                    <div className="radio_item_box">
+                                      <label className="price_option_box">
+                                        <input type="radio"  name="listingType" value="149"  className="radio_input_box"   onChange={handleAmountChange}  checked={amount === 149}  />
+                                        <div className="price_details_box">
+                                          <span className="price_box">₹149</span>
+                                          <div className="content_box">
+                                            <h3>Basic Boost Listing (for 1 month)</h3>
+                                          </div>
+                                        </div>
+                                      </label>
+                                    </div>
+
+                                    <div className="radio_item_box">
+                                      <label className="price_option_box">
+                                        <input type="radio"  name="listingType" value="49" className="radio_input_box" onChange={handleAmountChange} checked={amount === 49} />
+                                        <div className="price_details_box">
+                                          <span className="price_box">₹49</span>
+                                          <div className="content_box">
+                                            <h3>Basic Boost Listing (for 1 week)</h3>
+                                          </div>
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+
+                                  <button className="pay_now_btn" onClick={() => handlePaymentForProperty(property.id) } > Pay Now  </button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
                       </div>
                     </div>
                   ))

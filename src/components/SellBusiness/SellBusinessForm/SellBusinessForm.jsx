@@ -45,7 +45,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
     reported_turnover_to: "",
     you_are: "",
     business_link: "",
-    amount: "",
+    amount: 299,
     asking_price: "",
     phone_number: "",
     no_of_employees: "",

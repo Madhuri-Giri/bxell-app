@@ -7,7 +7,7 @@ import { IoLocation } from "react-icons/io5";
 import home_bxell from "../../../assets/Images/home_bxell.png";
 import { Form, FormControl, Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
 import "./RecomendedList.css";
-
+import { NavLink } from "react-router-dom";
 function RecomendedList() {
   const navigate = useNavigate();
   const [homeBusiness, setHomeBusiness] = useState([]);
@@ -247,6 +247,11 @@ const handleSelectCountry = (country) => {
           </>
         )}
       </div>
+      <div className="exploreMoreListingBtnDiv">
+            <NavLink to="buy" className="exploreMoreListingBtn">
+              Explore More Listing
+            </NavLink>
+          </div>
       </section>
       <div className="home_img">
         <img src={home_bxell} />

@@ -43,7 +43,7 @@ function SellPropertyForm() {
     sq_ft: "",
     asking_price: "",
     phone_number: "",
-    amount: "",
+    amount: 199,
     bedroom: "",
     bathroom: "",
     balcony: "",

@@ -833,53 +833,25 @@ function PropertyBuySinglePage() {
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    {" "}
-                                    <td>
-                                      {" "}
-                                      REPORTED TURNOVER (YEARLY): <br /> ₹{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {business.reported_turnover_from} -{" "}
-                                        {business.reported_turnover_to}{" "}
-                                      </span>{" "}
-                                    </td>
-                                    <td>
-                                      {" "}
-                                      PROFITABILITY(EBITDA MARGIN) : <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {business.ebitda_margin}{" "}
-                                      </span>{" "}
-                                    </td>{" "}
+                                  
+                                    <td>  REPORTED TURNOVER (YEARLY): <br /> ₹ <span className="green-text"> {business.reported_turnover_from} -
+                                        {business.reported_turnover_to} </span> </td>
+                                    <td> PROFITABILITY(EBITDA MARGIN) : <br /> <span className="green-text"> {business.ebitda_margin} </span> </td>
                                   </tr>
                                   <tr>
-                                    {" "}
-                                    <td>
-                                      {" "}
-                                      BUSINESS STATUS: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {business.current_status}{" "}
-                                      </span>{" "}
-                                    </td>
-                                    <td>
-                                      {" "}
-                                      NUMBER OF EMPLOYEES: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {business.no_of_employees}{" "}
-                                      </span>{" "}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    {" "}
-                                    <td>
-                                      {" "}
-                                      YEAR OF ESTABLISHMENT: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {business.year_of_establishment}{" "}
+                                   
+                                    <td> BUSINESS STATUS: <br />
+                                      <span className="green-text"> {business.current_status}
                                       </span>
+                                    </td>
+                                    <td>  NUMBER OF EMPLOYEES: <br /> <span className="green-text"> {business.no_of_employees} </span> </td>
+                                  </tr>
+                                  <tr>
+                                    
+                                    <td>
+                                    
+                                      YEAR OF ESTABLISHMENT: <br />
+                                      <span className="green-text"> {business.year_of_establishment} </span>
                                     </td>
                                     <td>
                                       DOCUMENTS UPLOADED: <br />
@@ -932,8 +904,6 @@ function PropertyBuySinglePage() {
                       </button>
                     </div>
                   </div>
-
-                 
                   <Modal
                     show={showModal}
                     onHide={toggleModal}
@@ -995,8 +965,6 @@ function PropertyBuySinglePage() {
                       </form>
                     </Modal.Body>
                   </Modal>
-
-                
                   <div className="mapLocationDiv">
                     <iframe
                       style={{ width: "100%" }}
