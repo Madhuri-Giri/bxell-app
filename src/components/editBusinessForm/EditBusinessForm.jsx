@@ -23,6 +23,11 @@ const EditBusinessForm = () => {
   const location = useLocation()
   const { type, id } = location.state;
   console.log("Type:", type, "ID:", id);
+  const businessData = location.state?.businessData;
+
+  if (!businessData) {
+    return <p>No data available. Please go back and try again.</p>;
+  }
 
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState({});
@@ -38,7 +43,7 @@ const EditBusinessForm = () => {
 
   const [cities, setCities] = useState([]); // For city options
   const [selectedStateId, setSelectedStateId] = useState("");
-  const business_id = id;
+  // const business_id = id;
   const [formData, setFormData] = useState({
     user_id: user,
     business_type: "",
@@ -63,6 +68,60 @@ const EditBusinessForm = () => {
     file_name: null,
   });
   console.log("User ID:", formData.user_id);
+  
+  const [imagePreview, setImagePreview] = useState([]);
+
+  useEffect(() => {
+    const parsedImages = businessData.file_name && businessData.file_name.startsWith("[")
+    ? JSON.parse(businessData.file_name)
+    : [businessData.file_name]; // Wrap in an array if it's not in JSON format already
+
+  setImagePreview(parsedImages);
+
+    if (businessData) {
+      console.log(businessData); // Check the data structure here
+      setFormData({
+        business_type: businessData.business_type || "",
+        listing_type: businessData.listing_type || "",
+        title: businessData.title || "",
+        country: businessData.country || "",
+        state: businessData.state || "",
+        city: businessData.city || "",
+        description: businessData.description || "",
+        percentage_of_stake: businessData.percentage_of_stake || "",
+        reported_turnover_from: businessData.reported_turnover_from || "",
+        reported_turnover_to: businessData.reported_turnover_to || "",
+        ebitda_margin: businessData.ebitda_margin || "",
+        asking_price: businessData.asking_price || "",
+        you_are: businessData.you_are || "",
+        year_of_establishment: businessData.year_of_establishment || "",
+        no_of_employees: businessData.no_of_employees || "",
+        file_name: businessData.file_name || "",
+        business_link: businessData.business_link || "",
+        phone_number: businessData.phone_number || "",
+        current_status: businessData.current_status || "",
+      });
+    }
+  }, [businessData]);
+
+  
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlepriceChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value.replace(/\D/g, ""), // Allow only numeric values
+    }));
+  };
 
   useEffect(() => {
     const getCountries = async () => {
@@ -115,16 +174,7 @@ const EditBusinessForm = () => {
   }, [selectedStateId]);
 
   // Updated handleChange function
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlepriceChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
+ 
   const handleNext = () => {
     // Check if all required fields are filled
     const errors = {};
@@ -160,134 +210,7 @@ const EditBusinessForm = () => {
   };
 
   // --------------  payment ------------
-  const fetchPaymentDetails = async () => {
-    try {
-      if (!user || !formData.amount) {
-        throw new Error("Login ID, amount or Business ID is missing.");
-      }
-
-      const payload = {
-        amount: formData.amount,
-        user_id: user,
-      };
-
-      const response = await axios.post(
-        "https://bxell.com/bxell/admin/api/create-business-payment",
-        payload
-      );
-
-      if (response.data.result === true && response.data.status === 200) {
-        setPaymentDetails(response.data.payment_details);
-        return response.data;
-      } else {
-        throw new Error(
-          response.data.message || "Failed to fetch payment details"
-        );
-      }
-    } catch (error) {
-      console.error("Error fetching payment details:", error.message);
-      toast.error(
-        error.message || "Failed to initiate payment. Please try again."
-      );
-      return null;
-    }
-  };
-
-  const handlePayment = async (e) => {
-    e.preventDefault();
-
-    // Reset the error message
-    setAmountError("");
-
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    if (!formData.amount) {
-      setAmountError("Please select an amount to proceed.");
-      return; // Stop further execution
-    }
-
-    if (formSubmitting) return; // Prevent multiple submissions
-    setFormSubmitting(true);
-
-    try {
-      const paymentData = await fetchPaymentDetails();
-      if (!paymentData) {
-        setFormSubmitting(false);
-        return;
-      }
-
-      const { razorpay_order_id, razorpay_key, payment_details } = paymentData;
-
-      const options = {
-        key: razorpay_key,
-        amount: payment_details.amount * 100,
-        currency: "INR",
-        order_id: razorpay_order_id,
-        name: "SRN Infotech",
-        description: "Business Purchase",
-        image: "https://your-logo-url.com/logo.png",
-        handler: async function (response) {
-          toast.success("Payment successful!");
-          try {
-            const formSubmissionData = await handleSubmit(
-              e,
-              payment_details.id
-            );
-            if (formSubmissionData) {
-              const isPaymentUpdated = await updateHandlePayment(
-                response.razorpay_payment_id,
-                payment_details.id
-              );
-
-              if (isPaymentUpdated) {
-                toast.success("Payment update successful!");
-              }
-            }
-          } catch (error) {
-            console.error(
-              "Error during form submission or payment update:",
-              error.message
-            );
-            toast.error(
-              "Form submission failed or payment verification failed. Please try again."
-            );
-          } finally {
-            setFormSubmitting(false);
-          }
-        },
-
-        prefill: {
-          name: paymentData.user_details.name || "User Name",
-          email: paymentData.user_details.email || "user@example.com",
-          contact: paymentData.user_details.phone_number || "9999999999",
-        },
-        notes: {
-          address: "Some Address",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-
-      const rzp1 = new window.Razorpay(options);
-
-      rzp1.on("payment.failed", function (response) {
-        setFormSubmitting(false);
-        toast.error(`Payment failed: ${response.error.description}`);
-      });
-
-      rzp1.open();
-    } catch (error) {
-      console.error("Error during payment setup:", error.message);
-      toast.error("An error occurred during payment setup. Please try again.");
-      setFormSubmitting(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const UpdateForm = async (e) => {
     e.preventDefault();
 
     // Prepare FormData object
@@ -296,54 +219,21 @@ const EditBusinessForm = () => {
       formDataObject.append(key, formData[key]);
     });
 
-    // Append business_id to FormData
-    formDataObject.append("business_id", business_id);
+    // Append business_id to FormData (use the `businessData.id` or `businessData.business_id`)
+    formDataObject.append("business_id", businessData.id);  // Ensure this is correct field name, `id` or `business_id`
 
     try {
-      // Pass formDataObject with business_id to API
+      // Make the API call using the fetchEditBusinessForm function
       const response = await fetchEditBusinessForm(formDataObject);
-      alert("Business form updated successfully!");
+
+      // Handle response from the API
+      if (response) {
+        toast.success("Business form updated successfully!");  // Show success toast
+        navigate("/");  // Navigate to the home page
+      }
     } catch (error) {
       setErrors(error.message);
-    }
-  };
-
-  const updateHandlePayment = async (razorpay_payment_id, Id) => {
-    try {
-      if (!razorpay_payment_id || !Id) {
-        throw new Error("Missing payment details");
-      }
-
-      const payload = {
-        payment_id: razorpay_payment_id,
-        id: Id,
-      };
-
-      const response = await fetch(
-        "https://bxell.com/bxell/admin/api/update-business-payment",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || "Failed to update payment details"
-        );
-      }
-
-      const data = await response.json();
-      console.log("Payment status updated:", data);
-      return true;
-    } catch (error) {
-      console.error("Error updating payment:", error.message);
-      toast.error(
-        error.message || "An error occurred during payment verification."
-      );
-      return false;
+      toast.error("Error updating the business form!");  // Show error toast
     }
   };
 
@@ -371,81 +261,40 @@ const EditBusinessForm = () => {
                       {step === 0 && (
                         <>
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="businessType"
-                            >
+                            <Form.Group className="businessListingFormsDiv" controlId="businessType" >
                               <Form.Label>BUSINESS TYPE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Select
-                                name="business_type"
-                                value={formData.business_type}
-                                onChange={handleChange}
-                                isInvalid={!!errors.business_type}
-                              >
+                            <Form.Select name="business_type" value={formData.business_type} onChange={handleChange} isInvalid={!!errors.business_type} >
                                 <option value="">Select Business Type</option>
-                                <option value="Manufacturing">
-                                  Manufacturing
-                                </option>
+                                <option value="Manufacturing"> Manufacturing </option>
                                 <option value="Retail">Retail</option>
                                 <option value="Wholesaler">Wholesaler</option>
                                 <option value="Agriculture">Agriculture</option>
                                 <option value="Hospitality">Hospitality</option>
-                                <option value="Transportation">
-                                  Transportation
-                                </option>
-                                <option value="Logistics & Supply Chain">
-                                  Logistics & Supply Chain
-                                </option>
+                                <option value="Transportation"> Transportation </option>
+                                <option value="Logistics & Supply Chain"> Logistics & Supply Chain </option>
                                 <option value="Real Estate">Real Estate</option>
-                                <option value="IT & Software">
-                                  IT & Software
-                                </option>
-                                <option value="Telecommunication">
-                                  Telecommunication
-                                </option>
+                                <option value="IT & Software"> IT & Software </option>
+                                <option value="Telecommunication"> Telecommunication </option>
                                 <option value="E-commerce">E-commerce</option>
                                 <option value="Education">Education</option>
-                                <option value="Food & Beverage">
-                                  Food & Beverage
-                                </option>
-                                <option value="Sports & Recreation">
-                                  Sports & Recreation
-                                </option>
-                                <option value="Entertainment">
-                                  Entertainment
-                                </option>
+                                <option value="Food & Beverage"> Food & Beverage </option>
+                                <option value="Sports & Recreation"> Sports & Recreation </option>
+                                <option value="Entertainment"> Entertainment </option>
                                 <option value="Finance">Finance</option>
-                                <option value="Media & Advertising">
-                                  Media & Advertising
-                                </option>
+                                <option value="Media & Advertising">  Media & Advertising  </option>
                               </Form.Select>
-                              <Form.Control.Feedback type="invalid">
-                                {" "}
-                                {errors.business_type}{" "}
-                              </Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid"> {errors.business_type} </Form.Control.Feedback>
                             </Form.Group>
                           </div>
 
                           <div className="col-lg-12 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="listingType"
-                            >
+                            <Form.Group className="businessListingFormsDiv" controlId="listingType" >
                               <Form.Label>LISTING TYPE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
                               <div className="listing-type-container">
-                                {[
-                                  "Selling",
-                                  "Franchising",
-                                  "Seeking Investment",
-                                ].map((type) => (
-                                  <div
-                                    key={type}
-                                    className={`listing-type-box ${
-                                      formData.listing_type === type
-                                        ? "selected"
-                                        : ""
+                                {["Selling", "Franchising", "Seeking Investment",  ].map((type) => (
+                                  <div key={type} className={`listing-type-box ${  formData.listing_type === type ? "selected"  : ""
                                     }`}
                                     onClick={() =>
                                       setFormData((prev) => ({
@@ -454,34 +303,21 @@ const EditBusinessForm = () => {
                                       }))
                                     }
                                   >
-                                    {" "}
                                     {type}
                                   </div>
                                 ))}
                               </div>
                               {errors.listing_type && (
-                                <div className="error-message">
-                                  {errors.listing_type}
-                                </div>
+                                <div className="error-message">  {errors.listing_type} </div>
                               )}
                             </Form.Group>
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="title"
-                            >
+                            <Form.Group className="businessListingFormsDiv" controlId="title" >
                               <Form.Label>TITLE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Control
-                                type="text"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleChange}
-                                placeholder="Enter Business Title (Eg: Best Restaurant for sale)"
-                                isInvalid={!!errors.title}
-                              />
+                              <Form.Control type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Enter Business Title (Eg: Best Restaurant for sale)"  isInvalid={!!errors.title} />
                               <Form.Control.Feedback type="invalid">
                                 {errors.title}
                               </Form.Control.Feedback>
@@ -491,111 +327,88 @@ const EditBusinessForm = () => {
                       )}
                       {step === 1 && (
                         <>
-                          <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="country"
-                            >
-                              <Form.Label>COUNTRY</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <div className="country-box-container">
-                                {countries.map((country) => (
-                                  <div
-                                    key={country.id}
-                                    className={`country-box ${
-                                      selectedCountryId === country.id
-                                        ? "selected"
-                                        : ""
-                                    }`}
-                                    onClick={() => {
-                                      setSelectedCountryId(country.id); // Update the selected country ID
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        country: country.name, // Update the country in form data
-                                        state: "", // Reset state selection
-                                      }));
-                                    }}
-                                  >
-                                    {country.name}
-                                  </div>
-                                ))}
-                              </div>
-                              {errors.country && (
-                                <div className="error-message">
-                                  {errors.country}
-                                </div>
-                              )}
-                            </Form.Group>
-                          </div>
+                      <div className="col-lg-7 col-md-12 col-sm-12">
+       <Form.Group className="businessListingFormsDiv" controlId="country">
+         <Form.Label>COUNTRY</Form.Label>
+         <span className="vallidateRequiredStar">*</span>
+         <div className="country-box-container">
+           {countries.map((country) => (
+             <div
+               key={country.id}
+               className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
+               onClick={() => {
+                 setSelectedCountryId(country.id); // Update the selected country ID
+                 setFormData((prev) => ({
+                   ...prev,
+                   country: country.name, // Update the country in form data
+                   state: "", // Reset state selection
+                 }));
+               }}
+             >
+               {country.name}
+             </div>
+           ))}
+         </div>
+         {errors.country && <div className="error-message">{errors.country}</div>}
+       </Form.Group>
+     </div>
 
-                          <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="state"
-                            >
-                              <Form.Label>STATE</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <Form.Control
-                                as="select"
-                                value={formData.state}
-                                onChange={(e) => {
-                                  const stateId = e.target.value;
-                                  setSelectedStateId(stateId); // Update selected state ID
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    state: stateId,
-                                    city: "",
-                                  }));
-                                }}
-                              >
-                                <option value="">Select State</option>
-                                {states.map((state) => (
-                                  <option key={state.id} value={state.id}>
-                                    {" "}
-                                    {state.name}{" "}
-                                  </option>
-                                ))}
-                              </Form.Control>
-                              {errors.state && (
-                                <div className="error-message">
-                                  {errors.state}
-                                </div>
-                              )}
-                            </Form.Group>
-                          </div>
+<div className="col-lg-7 col-md-12 col-sm-12">
+  <Form.Group className="businessListingFormsDiv" controlId="state">
+    <Form.Label>STATE</Form.Label>
+    <span className="vallidateRequiredStar">*</span>
+    <Form.Control
+      as="select"
+      value={formData.state}
+      onChange={(e) => {
+        const stateId = e.target.value;
+        setSelectedStateId(stateId); // Update selected state ID
+        setFormData((prev) => ({
+          ...prev,
+          state: stateId, // Update the state in form data
+          city: "", // Reset city field
+        }));
+      }}
+    >
+      <option value="">Select State</option>
+      {states.map((state) => (
+        <option key={state.id} value={state.id}>
+          {state.name}
+        </option>
+      ))}
+    </Form.Control>
+    {errors.state && <div className="error-message">{errors.state}</div>}
+  </Form.Group>
+</div>
 
-                          <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="city"
-                            >
-                              <Form.Label>TOWN/CITY</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <Form.Control
-                                as="select"
-                                name="city"
-                                value={formData.city}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    city: e.target.value,
-                                  }))
-                                }
-                                isInvalid={!!errors.city}
-                              >
-                                <option value="">Select City</option>
-                                {cities.map((city) => (
-                                  <option key={city.id} value={city.name}>
-                                    {" "}
-                                    {city.name}{" "}
-                                  </option>
-                                ))}
-                              </Form.Control>
-                              <Form.Control.Feedback type="invalid">
-                                {errors.city}
-                              </Form.Control.Feedback>
-                            </Form.Group>
-                          </div>
+
+    <div className="col-lg-7 col-md-12 col-sm-12">
+  <Form.Group className="businessListingFormsDiv" controlId="city">
+    <Form.Label>TOWN/CITY</Form.Label>
+    <span className="vallidateRequiredStar">*</span>
+    <Form.Control
+      as="select"
+      name="city"
+      value={formData.city}
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          city: e.target.value, // Update the city in formData
+        }))
+      }
+      isInvalid={!!errors.city}
+    >
+      <option value="">Select City</option>
+      {cities.map((city) => (
+        <option key={city.id} value={city.name}>
+          {city.name}
+        </option>
+      ))}
+    </Form.Control>
+    <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+  </Form.Group>
+</div>
+
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group
@@ -663,7 +476,7 @@ const EditBusinessForm = () => {
                                     className="no-spinner"
                                   />
                                   <Form.Control.Feedback type="invalid">
-                                    {" "}
+                                
                                     {errors.reported_turnover_from}{" "}
                                   </Form.Control.Feedback>
                                 </div>
@@ -679,8 +492,8 @@ const EditBusinessForm = () => {
                                     className="no-spinner"
                                   />
                                   <Form.Control.Feedback type="invalid">
-                                    {" "}
-                                    {errors.reported_turnover_to}{" "}
+                                   
+                                    {errors.reported_turnover_to}
                                   </Form.Control.Feedback>
                                 </div>
                               </div>
@@ -689,20 +502,9 @@ const EditBusinessForm = () => {
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="ebitdaMargin"
-                            >
-                              <Form.Label>
-                                {" "}
-                                EBITDA MARGIN (PROFIT PERCENTAGE){" "}
-                              </Form.Label>
-                              <Form.Select
-                                name="ebitda_margin"
-                                value={formData.ebitda_margin}
-                                onChange={handleChange}
-                                aria-label="Select EBITDA Margin"
-                              >
+                            <Form.Group  className="businessListingFormsDiv" controlId="ebitdaMargin" >
+                              <Form.Label> EBITDA MARGIN (PROFIT PERCENTAGE)  </Form.Label>
+                              <Form.Select name="ebitda_margin" value={formData.ebitda_margin} onChange={handleChange} aria-label="Select EBITDA Margin" >
                                 <option value="">Select EBITDA Margin</option>
                                 <option value="1% - 5%">1% - 5%</option>
                                 <option value="5% - 10%">5% - 10%</option>
@@ -721,25 +523,11 @@ const EditBusinessForm = () => {
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="asking_price"
-                            >
+                            <Form.Group className="businessListingFormsDiv" controlId="asking_price"  >
                               <Form.Label>PRICE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Control
-                                type="number"
-                                name="asking_price"
-                                value={formData.asking_price}
-                                onChange={handlepriceChange}
-                                placeholder="Enter Asking Price"
-                                isInvalid={!!errors.asking_price}
-                                className="no-spinner"
-                              />
-                              <Form.Control.Feedback type="invalid">
-                                {" "}
-                                {errors.asking_price}{" "}
-                              </Form.Control.Feedback>
+                              <Form.Control type="number" name="asking_price" value={formData.asking_price}  onChange={handlepriceChange} placeholder="Enter Asking Price" isInvalid={!!errors.asking_price} className="no-spinner" />
+                              <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback>
                             </Form.Group>
                           </div>
 
@@ -783,56 +571,29 @@ const EditBusinessForm = () => {
                                         you_are: role.value,
                                       }))
                                     }
-                                  >
-                                    {" "}
-                                    {role.label}
+                                  >{role.label}
                                   </div>
                                 ))}
                               </div>
-                              {errors.you_are && (
-                                <div className="invalid-feedback d-block">
-                                  {" "}
-                                  {errors.you_are}{" "}
-                                </div>
-                              )}
+                              {errors.you_are && ( <div className="invalid-feedback d-block"> {errors.you_are} </div> )}
                             </Form.Group>
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="yearEstablished"
-                            >
+                            <Form.Group className="businessListingFormsDiv" controlId="yearEstablished" >
                               <Form.Label>YEAR OF ESTABLISHMENT</Form.Label>
-                              <Form.Select
-                                name="year_of_establishment"
-                                value={formData.year_of_establishment}
-                                onChange={handleChange}
-                              >
+                              <Form.Select name="year_of_establishment" value={formData.year_of_establishment} onChange={handleChange} >
                                 <option value="">Choose Year</option>
                                 {[...Array(50)].map((_, i) => (
-                                  <option key={i} value={2000 + i}>
-                                    {" "}
-                                    {2000 + i}{" "}
-                                  </option>
+                                  <option key={i} value={2000 + i}> {2000 + i}  </option>
                                 ))}
                               </Form.Select>
                             </Form.Group>
                           </div>
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="no_of_employees"
-                            >
+                            <Form.Group className="businessListingFormsDiv" controlId="no_of_employees"  >
                               <Form.Label>NUMBER OF EMPLOYEES</Form.Label>
-                              <Form.Control
-                                type="text"
-                                name="no_of_employees"
-                                value={formData.no_of_employees}
-                                onChange={handleChange}
-                                placeholder="Enter number of employees"
-                                isInvalid={!!errors.no_of_employees}
-                                maxLength={10}
+                              <Form.Control type="text" name="no_of_employees" value={formData.no_of_employees} onChange={handleChange}  placeholder="Enter number of employees"  isInvalid={!!errors.no_of_employees}  maxLength={10}
                                 onKeyPress={(e) => {
                                   // Allow only numbers
                                   if (!/^[0-9]*$/.test(e.key)) {
@@ -840,106 +601,77 @@ const EditBusinessForm = () => {
                                   }
                                 }}
                               />
-                              <Form.Control.Feedback type="invalid">
-                                {" "}
-                                {errors.no_of_employees}{" "}
-                              </Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid"> {errors.no_of_employees}  </Form.Control.Feedback>
                             </Form.Group>
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="business_link"
-                            >
+                            <Form.Group className="businessListingFormsDiv"  controlId="business_link" >
                               <Form.Label>BUSINESS WEBSITE LINK</Form.Label>
-                              <Form.Control
-                                type="text"
-                                name="business_link"
-                                value={formData.business_link}
-                                onChange={handleChange}
-                                placeholder="Paste your website link here"
-                                isInvalid={!!errors.business_link}
-                              />
-                              <Form.Control.Feedback type="invalid">
-                                {" "}
-                                {errors.business_link}
-                              </Form.Control.Feedback>
+                              <Form.Control type="text" name="business_link" value={formData.business_link} onChange={handleChange}  placeholder="Paste your website link here"  isInvalid={!!errors.business_link} />
+                              <Form.Control.Feedback type="invalid"> {errors.business_link} </Form.Control.Feedback>
                             </Form.Group>
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="file_name"
-                            >
-                              <Form.Label>CHOOSE IMAGES</Form.Label>
-                              <Form.Control
-                                type="file"
-                                name="file_name"
-                                multiple
-                                onChange={handleChange}
-                                accept="image/*"
-                              />
-                              {errors.file_name && (
-                                <p className="error-text">{errors.file_name}</p>
-                              )}
-                            </Form.Group>
-                          </div>
+  <Form.Group className="businessListingFormsDiv" controlId="file_name">
+    <Form.Label>CHOOSE IMAGES</Form.Label>
+    <Form.Control
+      type="file"
+      name="file_name"
+      multiple
+      onChange={(e) => {
+        const files = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+        setImagePreview(files); // Show new image previews
+      }}
+      accept="image/*"
+    />
+    {errors.file_name && <p className="error-text">{errors.file_name}</p>}
+  </Form.Group>
+</div>
+
+{/* Render the image previews */}
+<div>
+  {imagePreview.map((url, index) => (
+    <img key={index} src={url} alt={`Image ${index}`} width="100" />
+  ))}
+</div>
+
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsRadioDiv">
                               <Form.Label>CURRENT STATUS</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
                               <div className="businessListingFormsRadioDivMAIN">
-                                <Form.Check
-                                  type="radio"
-                                  label="Running"
-                                  name="current_status"
-                                  id="current_statusRunning"
-                                  value="Running"
-                                  onChange={handleChange}
-                                />
-                                <Form.Check
-                                  type="radio"
-                                  label="Closed"
-                                  name="current_status"
-                                  id="current_statusClosed"
-                                  className="radio_space"
-                                  value="Closed"
-                                  onChange={handleChange}
-                                />
+                              <Form.Check
+  type="radio"
+  label="Running"
+  name="current_status"
+  id="current_statusRunning"
+  value="Running"
+  checked={formData.current_status === "Running"}
+  onChange={handleChange}
+/>
+<Form.Check
+  type="radio"
+  label="Closed"
+  name="current_status"
+  id="current_statusClosed"
+  value="Closed"
+  checked={formData.current_status === "Closed"}
+  onChange={handleChange}
+/>
                               </div>
-                              {errors.current_status && (
-                                <div className="invalid-feedback d-block">
-                                  {" "}
-                                  {errors.current_status}{" "}
-                                </div>
-                              )}
+                              {errors.current_status && ( <div className="invalid-feedback d-block"> {errors.current_status} </div> )}
                             </Form.Group>
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group
-                              className="businessListingFormsDiv"
-                              controlId="phone_number"
-                            >
+                            <Form.Group className="businessListingFormsDiv" controlId="phone_number"  >
                               <Form.Label>MOBILE NUMBER</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Control
-                                className="no-spinner"
-                                type="number"
-                                name="phone_number"
-                                value={formData.phone_number}
-                                onChange={handlepriceChange}
-                                placeholder="Enter Mobile Number"
-                                maxLength={10}
-                                isInvalid={!!errors.phone_number}
-                              />
-                              <Form.Control.Feedback type="invalid">
-                                {" "}
-                                {errors.phone_number}
-                              </Form.Control.Feedback>
+                              <Form.Control className="no-spinner" type="number" name="phone_number"  value={formData.phone_number}  onChange={handlepriceChange}  placeholder="Enter Mobile Number"  maxLength={10}  isInvalid={!!errors.phone_number}  />
+                              <Form.Control.Feedback type="invalid"> {errors.phone_number}  </Form.Control.Feedback>
                             </Form.Group>
                           </div>
                         </>
@@ -947,78 +679,14 @@ const EditBusinessForm = () => {
 
                       <div className="col-12 businesListingSubmitButton">
                         {step > 0 && (
-                          <Button
-                            variant="secondary"
-                            onClick={handleBack}
-                            type="button"
-                          >
-                            {" "}
-                            Back{" "}
-                          </Button>
+                          <Button variant="secondary" onClick={handleBack} type="button" > Back </Button>
                         )}
                         {step < steps.length - 1 && (
-                          <Button
-                            variant="primary"
-                            onClick={handleNext}
-                            type="button"
-                          >
-                            {" "}
-                            Next{" "}
-                          </Button>
-                        )}
-                        {step === steps.length - 1 && (
-                          <>
-                            <Button
-                              variant="primary"
-                              onClick={
-                                formData.amount === 49
-                                  ? () => handlePaymentForBusiness()
-                                  : handlePayment
-                              }
-                            >
-                              {" "}
-                              Pay Now{" "}
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                      {step === steps.length - 1 && (
-                        <>
-                          <div className="price_radio">
-                            {amountError && (
-                              <p
-                                style={{
-                                  color: "red",
-                                  margin: "0px",
-                                  padding: "0px",
-                                }}
-                              >
-                                {amountError}
-                              </p>
+                          <Button variant="primary" onClick={handleNext}  type="button" > Next </Button> )}
+                           {step === steps.length - 1 && (
+                              <Button  variant="primary" onClick={UpdateForm} type="button" >  Save Changes  </Button>
                             )}
-                            {/* Radio button for Basic Listing */}
-                            <div className="radio-item">
-                              <label className="price-option">
-                                <input
-                                  type="radio"
-                                  name="listingType"
-                                  value="299"
-                                  className="radio-input"
-                                  onChange={(e) => handleAmountChange(e)}
-                                  checked={formData.amount === 299}
-                                />
-                                <div className="price-details">
-                                  <span className="price">₹299</span>
-                                  <div className="content">
-                                    <h3>Basic Listing</h3>
-                                    <p>Listing for Lifetime</p>
-                                  </div>
-                                </div>
-                              </label>
-                            </div>
-                          </div>
-                        </>
-                      )}
+                      </div>
                     </div>
                   </div>
                 </Form>

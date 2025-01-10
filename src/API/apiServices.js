@@ -6,6 +6,8 @@ export const SELL_BUSINESS_FORM_URL = `${BASE_URL}/add-business-sale`;
 export const SELL_PROPERTY_FORM_URL = `${BASE_URL}/add-property-sale`;
 export const SELL_PROPERTY_EDIT_FORM_URL = `${BASE_URL}/edit-property-sale-detail`;
 export const SELL_BUSINESS_EDIT_FORM_URL = `${BASE_URL}/edit-business-sale-detail`;
+export const FETCH_EDIT_BUSINESS_FORM_URL = `${BASE_URL}/edit-fetch-business-sale-detail`;
+export const FETCH_EDIT_PROPERTY_FORM_URL = `${BASE_URL}/edit-fetch-property-sale-detail`;
 export const HOME_BLOG_URL = `${BASE_URL}/blog-detail`;
 export const HOME_PROPERTY_DETAILS_URL = `${BASE_URL}/property-details`;
 export const HOME_BUSINESS_DETAILS_URL = `${BASE_URL}/business-details`;
@@ -605,6 +607,62 @@ export const fetchEditBusinessForm = async (formData) => {
     }
   } catch (error) {
     console.error("Error updating business form:", error.message);
+    throw error;
+  }
+};
+
+// ----------------------EDIT FETCH BUSINESS DETAILS------------------------------------
+export const editBusinessDetail = async (businessId) => {
+  if (!businessId) {
+    console.error("Invalid Business ID");
+    return;
+  }
+  try {
+    const response = await fetch(FETCH_EDIT_BUSINESS_FORM_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ business_id: businessId }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error(data.message || "Failed to fetch business details");
+    }
+  } catch (error) {
+    console.error("Error fetching business details:", error.message);
+    throw error;
+  }
+};
+
+// ----------------------EDIT FETCH PROPERTY DETAILS------------------------------------
+export const editPropertyDetail = async (propertyId) => {
+  if (!propertyId) {
+    console.error("Invalid Business ID");
+    return;
+  }
+  try {
+    const response = await fetch(FETCH_EDIT_PROPERTY_FORM_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ property_id: propertyId }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error(data.message || "Failed to fetch property details");
+    }
+  } catch (error) {
+    console.error("Error fetching property details:", error.message);
     throw error;
   }
 };

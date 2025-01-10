@@ -133,25 +133,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }
   };
 
-  const handlepriceChange = (e) => {
-    const { name, value } = e.target;
-
-    // Ensure only positive numbers are allowed
-    if (
-      name === "asking_price" ||
-      name === "reported_turnover_from" ||
-      name === "reported_turnover_to" ||
-      name === "phone_number"
-    ) {
-      // Allow only positive integers or zero
-      if (value === "" || /^[+]?\d+(\.\d+)?$/.test(value)) {
-        setFormData((prevState) => ({
-          ...prevState,
-          [name]: value,
-        }));
-      }
-    }
-  };
+ 
 
   const handleNext = () => {
     // Check if all required fields are filled
@@ -178,7 +160,37 @@ const [selectedStateId, setSelectedStateId] = useState("");
   const handleBack = () => {
     setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
+  const formatNumberWithCommas = (number) => {
+    // If there's a number, format it with commas
+    if (!number) return number;
+    
+    let [integerPart, decimalPart] = number.split('.');
+    let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+    return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+  };
 
+   // Handle the price input change
+  const handlepriceChange = (e) => {
+      const { name, value } = e.target;
+
+      // Ensure only positive numbers are allowed
+      if (
+        name === "asking_price" ||
+        name === "reported_turnover_from" ||
+        name === "reported_turnover_to" ||
+        name === "phone_number"
+      ) {
+        // Remove non-numeric characters except the dot
+        let rawValue = value.replace(/[^0-9.]/g, '');
+
+        // Update the raw value in the state (no commas yet)
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: rawValue,
+        }));
+      }
+  };
   const handleAmountChange = (e) => {
     const selectedAmount = e.target.value;
     setFormData(prevFormData => ({
@@ -720,7 +732,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                             </div>
                           )}
 
-                          <div className="col-lg-7 col-md-12 col-sm-12">
+                          {/* <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="reportedTurnover" >
                               <Form.Label>TURNOVER RANGE (Yearly)</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
@@ -732,6 +744,26 @@ const [selectedStateId, setSelectedStateId] = useState("");
                                 <span>TO</span>
                                 <div className="flex-column">
                                 <Form.Control  type="number"  name="reported_turnover_to"  value={formData.reported_turnover_to}  onChange={handlepriceChange}  placeholder="Eg: 1,50,000"  isInvalid={!!errors.reported_turnover_to} className="no-spinner"  />
+                                <Form.Control.Feedback type="invalid"> {errors.reported_turnover_to} </Form.Control.Feedback>
+                                </div>
+                              </div>
+                              <div>
+                                
+                              </div>
+                            </Form.Group>
+                          </div> */}
+                          <div className="col-lg-7 col-md-12 col-sm-12">
+                            <Form.Group className="businessListingFormsDiv" controlId="reportedTurnover" >
+                              <Form.Label>TURNOVER RANGE (Yearly)</Form.Label>
+                              <span className="vallidateRequiredStar">*</span>
+                              <div className="d-flex gap-3">
+                                <div className="turnover_range">
+                                  <Form.Control type="text" name="reported_turnover_from" value={formatNumberWithCommas(formData.reported_turnover_from)} onChange={handlepriceChange}  placeholder="Eg: 1,00,000"  isInvalid={!!errors.reported_turnover_from}  className="no-spinner"  />
+                                  <Form.Control.Feedback type="invalid"> {errors.reported_turnover_from} </Form.Control.Feedback>
+                                </div>
+                                <span>TO</span>
+                                <div className="flex-column">
+                                <Form.Control  type="text"  name="reported_turnover_to"  value={formatNumberWithCommas(formData.reported_turnover_to)}  onChange={handlepriceChange}  placeholder="Eg: 1,50,000"  isInvalid={!!errors.reported_turnover_to} className="no-spinner"  />
                                 <Form.Control.Feedback type="invalid"> {errors.reported_turnover_to} </Form.Control.Feedback>
                                 </div>
                               </div>
@@ -762,12 +794,28 @@ const [selectedStateId, setSelectedStateId] = useState("");
                             </Form.Group>
                           </div>
 
-                          <div className="col-lg-7 col-md-12 col-sm-12">
+                          {/* <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv"  controlId="asking_price" >
                               <Form.Label>PRICE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
                               <Form.Control type="number"  name="asking_price" value={formData.asking_price} onChange={handlepriceChange} placeholder="Enter Asking Price"  isInvalid={!!errors.asking_price} className="no-spinner" />
                               <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback></Form.Group>
+                          </div> */}
+                          <div className="col-lg-7 col-md-12 col-sm-12">
+                          <Form.Group className="businessListingFormsDiv" controlId="asking_price">
+        <Form.Label>PRICE</Form.Label>
+        <span className="vallidateRequiredStar">*</span>
+        <Form.Control
+          type="text"  // Changed type to text
+          name="asking_price"
+          value={formatNumberWithCommas(formData.asking_price)} // Format with commas
+          onChange={handlepriceChange} // Handle input change
+          placeholder="Enter Asking Price"
+          isInvalid={!!errors.asking_price}
+          className="no-spinner"
+        />
+        <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback>
+      </Form.Group>
                           </div>
 
                           <div className="col-7 additionalDetails">

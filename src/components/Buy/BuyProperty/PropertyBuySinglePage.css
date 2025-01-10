@@ -567,6 +567,8 @@ text-align: center;
   color: #888;
   margin-top: 20px;
 }
+
+
 @media (max-width: 768px) {
   .modal-dialog {
     max-width: 100%; /* Adjust modal width for tablets and smaller devices */

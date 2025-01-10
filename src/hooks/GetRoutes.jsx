@@ -25,6 +25,7 @@ import SellBusiness from "../pages/SellBusiness";
 import SellProperty from "../pages/SellProperty";
 
 import EditBusinessForm from "../components/editBusinessForm/EditBusinessForm";
+import EditPropertyForm from "../components/editPropertyForm/EditPropertyForm";
 
 export const routeArray = [
   {
@@ -136,6 +137,10 @@ export const routeArray = [
   {
     path: "/edit-business",
     element: <EditBusinessForm />,
+  },
+  {
+    path: "/edit-property",
+    element: <EditPropertyForm />,
   },
 
   // {

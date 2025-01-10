@@ -66,7 +66,35 @@ import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../AP
         }, [selectedStateId]); 
 
     // const [errors, setErrors] = useState({});
+    const formatNumberWithCommas = (number) => {
+      // If there's a number, format it with commas
+      if (!number) return number;
+      
+      let [integerPart, decimalPart] = number.split('.');
+      let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      
+      return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+    };
   
+     // Handle the price input change
+    const handlepriceChange = (e) => {
+        const { name, value } = e.target;
+  
+        // Ensure only positive numbers are allowed
+        if (
+          name === "asking_price" ||
+          name === "advance_price" 
+        ) {
+          // Remove non-numeric characters except the dot
+          let rawValue = value.replace(/[^0-9.]/g, '');
+  
+          // Update the raw value in the state (no commas yet)
+          setFormData((prevState) => ({
+            ...prevState,
+            [name]: rawValue,
+          }));
+        }
+    };
     const handleChange = (e) => {
       const { name, value, type, files } = e.target;
   
@@ -285,7 +313,7 @@ import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../AP
                           </div> */}
       
 
-      <div className="col-7">
+      {/* <div className="col-7">
       <Form.Group controlId="asking_price" className="businessListingFormsDiv">
   <Form.Label>PRICE</Form.Label>
   <span className="vallidateRequiredStar">*</span>
@@ -318,6 +346,54 @@ import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../AP
               name="advance_price"
               value={formData.advance_price}
               onChange={handleChange}
+              placeholder="Enter Advance Price"
+            
+              onKeyPress={(e) => {
+                // Allow only numbers
+                if (!/^[0-9]*$/.test(e.key)) {
+                  e.preventDefault();
+                }
+              }}
+            />
+             {errors?.advance_price && (
+    <small className="text-danger">{errors.advance_price}</small>
+  )}
+          </Form.Group>
+        </div>
+      )} */}
+      <div className="col-7">
+      <Form.Group controlId="asking_price" className="businessListingFormsDiv">
+  <Form.Label>PRICE</Form.Label>
+  <span className="vallidateRequiredStar">*</span>
+  <Form.Control
+    type="text"
+    name="asking_price"
+    value={formatNumberWithCommas(formData.asking_price)}
+    onChange={handlepriceChange}
+    placeholder="Enter Asking Price"
+    onKeyPress={(e) => {
+      if (!/^[0-9]*$/.test(e.key)) {
+        e.preventDefault();
+      }
+    }}
+  />
+  {errors?.asking_price && (
+    <small className="text-danger">{errors.asking_price}</small>
+  )}
+</Form.Group>
+
+      </div>
+
+      {formData.listing_type === "Renting" && (
+        <div className="col-7">
+          <Form.Group controlId="advance_price" className="businessListingFormsDiv">
+            <Form.Label> Advance</Form.Label>
+            <span className="vallidateRequiredStar">*</span>
+            <Form.Control
+              type="text"
+              name="advance_price"
+              value={formatNumberWithCommas(formData.advance_price)}
+              onChange={handlepriceChange}
               placeholder="Enter Advance Price"
             
               onKeyPress={(e) => {

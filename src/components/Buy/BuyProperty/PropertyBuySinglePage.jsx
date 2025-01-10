@@ -1,32 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { IoLocation } from "react-icons/io5";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import ScrollToTop from "../../ScrollToTop/ScrollToTop";
 import { useSelector } from "react-redux";
-import {
-  fetchViewBusinessRes,
-  fetchViewPropertyRes,
-  fetchPropertyRating,
-  fetchBusinessRating,
-} from "../../../API/apiServices";
+import { fetchPropertyRes, fetchBusinessRes, fetchViewBusinessRes, fetchViewPropertyRes, fetchPropertyRating, fetchBusinessRating, submitbusinessEnquiryForm, submitpropertyEnquiryForm } from "../../../API/apiServices";
 import { useLocation } from "react-router-dom";
 import "./PropertyBuySinglePage.css";
-import { IoShareSocial, IoMail, IoCall } from "react-icons/io5";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
-import { fetchPropertyRes, fetchBusinessRes } from "../../../API/apiServices";
-import {
-  submitbusinessEnquiryForm,
-  submitpropertyEnquiryForm,
-} from "../../../API/apiServices";
-import ReactStars from "react-rating-stars-component";
+import { IoShareSocial, IoMail, IoCall, IoLocation } from "react-icons/io5";
 import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
 import News from "../../Home/MainBanner/news/News";
 import Slider from "react-slick";
-
+import ReactStars from "react-rating-stars-component";
+import mapboxgl from 'mapbox-gl';
 
 function PropertyBuySinglePage() {
   
@@ -40,6 +27,146 @@ function PropertyBuySinglePage() {
   const [homeProperty, setHomeProperty] = useState([]);
   const [homeBusiness, setHomeBusiness] = useState([]);
   const user = useSelector((state) => state.auth.user);
+
+  const [coordinates, setCoordinates] = useState(null);
+  const [showFullMap, setShowFullMap] = useState(false);
+  const smallMapRef = useRef(null);
+  const fullMapRef = useRef(null);
+
+  const api_key = "pk.eyJ1IjoidGFsc3BvZ3JvdXAiLCJhIjoiY2pxb3ZsZ2V3MWs1ZjQ5cW50cDVmMHB4ciJ9.-7furrxLVkKCZez2khUFqA";
+
+  // Fetch coordinates for the city from Mapbox
+  const fetchCoordinates = async (city) => {
+    const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${city}.json?access_token=${api_key}`;
+    try {
+      console.log(city)
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        const [longitude, latitude] = data.features[0].geometry.coordinates;
+        return { latitude, longitude };
+      } else {
+        console.error("City not found.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching coordinates:", error);
+      return null;
+    }
+  };
+
+  // Fetch coordinates and update state
+  useEffect(() => {
+    if (property && property.city) {
+      fetchCoordinates(property.city).then((coords) => {
+        
+        if (coords) {
+          console.log('indore',property.city)
+          setCoordinates(coords);
+        }
+      });
+    }
+  }, [property]);
+
+    // Fetch coordinates and update state
+    useEffect(() => {
+      if (business && business.city) {
+        fetchCoordinates(business.city).then((coords) => {
+          
+          if (coords) {
+            console.log('indore',business.city)
+            setCoordinates(coords);
+          }
+        });
+      }
+    }, [business]);
+
+  // Initialize map when coordinates are fetched
+useEffect(() => {
+  if (coordinates) {
+    console.log("Initializing Map with coordinates:", coordinates);
+
+    mapboxgl.accessToken = api_key;
+    const map = new mapboxgl.Map({
+      container: showFullMap ? fullMapRef.current : smallMapRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [coordinates.longitude, coordinates.latitude], // Use fetched city coordinates
+      zoom: 10, // Zoom closer to the city
+    });
+
+    map.on("load", () => {
+      // 1. Add red circle layer
+      const geojsonData = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [coordinates.longitude, coordinates.latitude],
+            },
+          },
+        ],
+      };
+
+      map.addSource("city-point", {
+        type: "geojson",
+        data: geojsonData,
+      });
+
+      // Red Circle Layer
+      map.addLayer({
+        id: "city-circle",
+        type: "circle",
+        source: "city-point",
+        paint: {
+          "circle-radius": 10, // Adjust circle size
+          "circle-color": "red", // Circle color
+          "circle-opacity": 0.6,
+        },
+      });
+
+      // 2. Add custom location icon marker
+      const locationIcon = document.createElement('div');
+      locationIcon.style.width = '30px';
+      locationIcon.style.height = '30px';
+      locationIcon.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/6/6e/Font_Awesome_5_solid_map-marker-alt.svg')";
+      locationIcon.style.backgroundSize = 'cover';
+
+      new mapboxgl.Marker(locationIcon)
+        .setLngLat([coordinates.longitude, coordinates.latitude])
+        .setPopup(
+          new mapboxgl.Popup({ offset: 25 }).setHTML(
+            `<h3 style="color: red;">${property.city}</h3>` // Display city name in popup
+          )
+        )
+        .addTo(map);
+
+      // Optional: Add a text label layer for the city name
+      map.addLayer({
+        id: "city-label",
+        type: "symbol",
+        source: "city-point",
+        layout: {
+          "text-field": ["get", "city"], // Display city name
+          "text-size": 14,
+          "text-offset": [0, 1.5],
+          "text-anchor": "top",
+        },
+        paint: {
+          "text-color": "red",
+        },
+      });
+    });
+
+    return () => map.remove(); // Cleanup map on component unmount
+  }
+}, [coordinates, showFullMap]);
+
+  // Toggle map view
+  const toggleMapView = () => {
+    setShowFullMap(!showFullMap);
+  };
 
   const [formData, setFormData] = useState({
     user_id: user,
@@ -301,44 +428,19 @@ function PropertyBuySinglePage() {
                           <h1>{property.property_title}</h1>
                           <div className="boldBorder"></div>
                           <div className="prop_type">
-                            <h6>
-                              {" "}
-                              Property Type :{" "}
-                              <span>{property.property_type}</span>{" "}
-                            </h6>
+                            <h6>Property Type : <span>{property.property_type}</span> </h6>
                           </div>
                         </div>
                         <div className="col-lg-6 col-sm-12  d-flex justify-content-between align-items-center margin_class">
                           <div className="business_rating">
-                            <ReactStars
-                              className="rating"
-                              count={5}
-                              activeColor="#ffd700"
-                              value={userRating || averageRating}
-                              onChange={handleRatingChange}
-                            />
+                            <ReactStars className="rating" count={5} activeColor="#ffd700" value={userRating || averageRating} onChange={handleRatingChange} />
                           </div>
                           <div className="propertyBuyListingActions">
-                            <button>
-                              <IoShareSocial /> Share
-                            </button>
-                            <button>
-                              {" "}
-                              <IoMail /> Mail{" "}
-                            </button>
-                            <a
-                                href={`tel:${property.phone_number}`}
-                                className="call-btnn"
-                                style={{ textDecoration: "none" }}
-                              >
-                            <button>
-                              {" "}
-                              
-                                {" "}
-                                <IoCall /> Call{" "}
-                                </button>
+                            <button> <IoShareSocial /> Share  </button>
+                            <button> <IoMail /> Mail </button>
+                            <a href={`tel:${property.phone_number}`} className="call-btnn"  style={{ textDecoration: "none" }}  >
+                            <button> <IoCall /> Call  </button>
                               </a>
-                            
                           </div>
                         </div>
                       </div>
@@ -349,55 +451,23 @@ function PropertyBuySinglePage() {
                             <Slider {...sliderSettings}>
                               {images.map((image, index) => (
                                 <div key={index}>
-                                  <img
-                                    className="img-fluid"
-                                    style={{
-                                      cursor: "pointer",
-                                      width: "100%",
-                                      height: "300px",
-                                      objectFit: "contain",
-                                    }}
-                                    src={
-                                      image.startsWith("http")
-                                        ? image
-                                        : `${BASE_URL}/${image}`
-                                    }
-                                    alt={
-                                      property.property_title ||
-                                      "Property Image"
-                                    }
-                                  />
+                                  <img className="img-fluid"  style={{ cursor: "pointer",  width: "100%",  height: "300px", objectFit: "contain",  }}
+                                    src={ image.startsWith("http") ? image : `${BASE_URL}/${image}` }
+                                    alt={ property.property_title || "Property Image"  }  />
                                 </div>
                               ))}
                             </Slider>
                           ) : (
                           
-                            <img
-                              className="img-fluid"
-                              style={{
-                                objectFit: "contain",
-                              }}
-                              src={
-                                images[0].startsWith("http")
-                                  ? images[0]
-                                  : `${BASE_URL}/${images[0]}`
-                              }
-                              alt={property.property_title || "Property Image"}
-                            />
+                            <img className="img-fluid" style={{ objectFit: "contain", }}
+                              src={ images[0].startsWith("http") ? images[0]  : `${BASE_URL}/${images[0]}`   }  alt={property.property_title || "Property Image"}  />
                           )}
                         </div>
 
                         <div className="col-lg-6 col-sm-12">
                           <div className="row margin_asking price_location">
                             <div className="col-6 ask_price">
-                              <span>
-                                {" "}
-                                Asking Price : ₹{" "}
-                                <span className="green-text">
-                                  {" "}
-                                  {property.asking_price}{" "}
-                                </span>
-                              </span>
+                              <span> Asking Price : ₹ <span className="green-text"> {property.asking_price} </span> </span>
                             </div>
                             <div className="col-6 pro_city ">
                               <IoLocation /> <span> {property.city} </span>
@@ -410,99 +480,33 @@ function PropertyBuySinglePage() {
                                 <thead className=" table_heading">
                                   <tr>
                                     <th colSpan="3">Proposal</th>
-                                  
                                   </tr>
                                 </thead>
 
                                 <tbody>
                                   <tr>
-                                  
-                                    <td>
-                                      Listing Type: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.listing_type}{" "}
-                                      </span>
-                                    </td>
-                                    <td>
-                                      {" "}
-                                      Property Type: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.property_type}{" "}
-                                      </span>{" "}
-                                    </td>
-                                    <td>
-                                      {" "}
-                                      Bathroom: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.bathroom}{" "}
-                                      </span>{" "}
-                                    </td>
+                                    <td> Listing Type: <br /> <span className="green-text"> {property.listing_type} </span> </td>
+                                    <td>  Property Type: <br />  <span className="green-text"> {property.property_type} </span> </td>
+                                    <td>  Bathroom: <br /> <span className="green-text"> {property.bathroom} </span> </td>
                                   </tr>
 
                                   <tr>
-                                    <td>
-                                      {" "}
-                                      Business Status: <br />
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.project_status}{" "}
-                                      </span>{" "}
-                                    </td>
-                                    <td>
-                                      {" "}
-                                      Furnishing: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.furnishing}{" "}
-                                      </span>{" "}
-                                    </td>
-                                    <td>
-                                      {" "}
-                                      Carpet Area: <br />{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.sq_ft}{" "}
-                                      </span>{" "}
-                                    </td>
+                                    <td> Business Status: <br /> <span className="green-text"> {property.project_status} </span> </td>
+                                    <td> Furnishing: <br />  <span className="green-text"> {property.furnishing} </span> </td>
+                                    <td> Carpet Area: <br /> <span className="green-text">{property.sq_ft}  </span> </td>
                                   </tr>
 
                                   <tr>
-                                    <td>
-                                      {" "}
-                                      Listed By: <br /> ₹{" "}
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.listed_by}{" "}
-                                      </span>{" "}
-                                    </td>
-                                    <td>
-                                      {" "}
-                                      Project Status: <br />
-                                      <span className="green-text">
-                                        {" "}
-                                        {property.project_status}{" "}
-                                      </span>{" "}
-                                    </td>
+                                    <td> Listed By: <br /> ₹  <span className="green-text"> {property.listed_by}  </span>  </td>
+                                    <td> Project Status: <br /> <span className="green-text"> {property.project_status} </span> </td>
 
-                                    <td>
-                                      Documents Uploaded: <br />
-                                      <span className="green-text">
+                                    <td> Documents Uploaded: <br /> <span className="green-text">
                                         {(() => {
                                           try {
-                                            const files = JSON.parse(
-                                              property.file_name
-                                            );
-                                            return Array.isArray(files)
-                                              ? files.length
-                                              : 0;
+                                            const files = JSON.parse( property.file_name  );
+                                            return Array.isArray(files) ? files.length : 0;
                                           } catch (error) {
-                                            console.error(
-                                              "Error parsing file_name:",
-                                              error
-                                            );
+                                            console.error( "Error parsing file_name:", error );
                                             return 0;
                                           }
                                         })()}
@@ -517,7 +521,6 @@ function PropertyBuySinglePage() {
                       </div>
                     </div>
 
-                   
                     <div className="container_b">
                       <div className="descriptionSection">
                         <h3>Description</h3>
@@ -525,14 +528,10 @@ function PropertyBuySinglePage() {
                       </div>
 
                       <div className="button_box">
-                        <button className="enquiry-btn" onClick={toggleModal}>
-                          {" "}
-                          Enquiry Form{" "}
-                        </button>
+                        <button className="enquiry-btn" onClick={toggleModal}> Enquiry Form </button>
                       </div>
                     </div>
 
-                  
                     <Modal show={showModal} onHide={toggleModal} centered>
                       <Modal.Header closeButton>
                         <Modal.Title>Send Us A Message</Modal.Title>
@@ -545,43 +544,16 @@ function PropertyBuySinglePage() {
                         </p>
                         <form onSubmit={handlePropertyEnquirySubmit}>
                           <div className="ipt">
-                            <input
-                              type="text"
-                              name="name"
-                              placeholder="Full Name*"
-                              required
-                              value={formData.name}
-                              onChange={handleChange}
-                            />
+                            <input type="text" name="name" placeholder="Full Name*" required  value={formData.name} onChange={handleChange}   />
                           </div>
                           <div className="ipt">
-                            <input
-                              type="email"
-                              name="email"
-                              placeholder="Email*"
-                              required
-                              value={formData.email}
-                              onChange={handleChange}
-                            />
+                            <input  type="email"  name="email"  placeholder="Email*"  required value={formData.email} onChange={handleChange}  />
                           </div>
                           <div className="ipt">
-                            <input
-                              type="text"
-                              name="listing_title"
-                              placeholder="Listing Title*"
-                              required
-                              value={formData.listing_title}
-                              onChange={handleChange}
-                            />
+                            <input type="text" name="listing_title" placeholder="Listing Title*" required value={formData.listing_title} onChange={handleChange}   />
                           </div>
                           <div className="ipt">
-                            <textarea
-                              name="enquiry_message"
-                              placeholder="Message*"
-                              required
-                              value={formData.enquiry_message}
-                              onChange={handleChange}
-                            />
+                            <textarea name="enquiry_message" placeholder="Message*" required  value={formData.enquiry_message} onChange={handleChange}  />
                           </div>
                           <div className="btn-cont">
                             <button type="submit">SEND MESSAGE</button>
@@ -592,15 +564,48 @@ function PropertyBuySinglePage() {
 
                   
                     <div className="mapLocationDiv">
-                      <iframe
-                        style={{ width: "100%" }}
-                        src="https://www.google.com/maps/embed?pb=..."
-                        width="600"
-                        height="450"
-                        allowFullScreen=""
-                        loading="lazy"
-                      ></iframe>
-                    </div>
+                    <div
+        ref={smallMapRef}
+        style={{
+          width: "100%",
+          height: "450px",
+          visibility: showFullMap ? "hidden" : "visible", // Hide small map when full map is visible
+          position: "relative",
+        }}
+      >
+        {/* Button to toggle full map */}
+        <div className="toggle-map-icon" onClick={toggleMapView}>
+          {showFullMap ? (
+            <>
+              <span>Hide Map</span>
+            </>
+          ) : (
+            <>
+              <span>Show Full Map</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Display the full map when `showFullMap` is true */}
+      {showFullMap && (
+        <div className="map-overlay">
+          <div className="map-overlay-content">
+            <span className="map-overlay-close" onClick={toggleMapView}> 
+              <i className="ri-close-line"></i>
+            </span>
+            <div
+              ref={fullMapRef}
+              style={{
+                width: "100%",
+                height: "600px",
+                position: "relative",
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </div>
                   </>
                 </div>
               )}
@@ -616,82 +621,19 @@ function PropertyBuySinglePage() {
                             <div className="propertyBuyClsNameCOL">
                               <div className="propertyBuyClsNameBox">
                                 <div className="promotedTextWrapper">
-                                  <img
-                                    className="img-fluid"
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() =>
-                                      handlepropertyNavigate(
-                                        "property",
-                                        property.id
-                                      )
-                                    }
-                                    src={(() => {
-                                      try {
-                                        const fileName = property.file_name;
-                                        const files =
-                                          typeof fileName === "string" &&
-                                          fileName.startsWith("[")
-                                            ? JSON.parse(fileName)
-                                            : fileName;
-
-                                        if (typeof files === "string") {
-                                          return files.startsWith("http")
-                                            ? files
-                                            : `${BASE_URL}/${files}`;
-                                        } else if (
-                                          Array.isArray(files) &&
-                                          files.length > 0
-                                        ) {
-                                          return files[0].startsWith("http")
-                                            ? files[0]
-                                            : `${BASE_URL}/${files[0]}`;
-                                        } else {
-                                          return "default-image.jpg";
-                                        }
-                                      } catch (error) {
-                                        console.error(
-                                          "Error parsing file_name:",
-                                          error
-                                        );
-                                        return "default-image.jpg";
-                                      }
-                                    })()}
-                                    alt={property.title || "property Image"}
-                                  />
+                                  <img className="img-fluid" alt={property.title || "property Image"}  />
                                 </div>
                                 <h5>{property.property_title}</h5>
                                 <div className="home_price">
-                                  <h6>
-                                    {" "}
-                                    Price: ₹{" "}
-                                    <span className="ask_price_side">
-                                      {" "}
-                                      {property.asking_price}{" "}
-                                    </span>{" "}
-                                  </h6>{" "}
-                                  <span className="home_con">
-                                    {" "}
-                                    {property.listing_type}{" "}
-                                  </span>
+                                  <h6> Price: ₹ <span className="ask_price_side"> {property.asking_price}
+                                    </span></h6>  <span className="home_con">{property.listing_type} </span>
                                 </div>
                                 <div>
-                                  <h6>
-                                    Property Type :{" "}
-                                    <strong>{property.property_type}</strong>{" "}
-                                  </h6>
+                                  <h6> Property Type : <strong>{property.property_type}</strong> </h6>
                                 </div>
                                 <div className="location-call">
-                                  <h6>
-                                    {" "}
-                                    <IoLocation /> {property.city}{" "}
-                                  </h6>
-                                  <a
-                                    href={`tel:${property.phone_number}`}
-                                    className="call-btn"
-                                    style={{ textDecoration: "none" }}
-                                  >
-                                    {" "}
-                                    Call <FaPhoneAlt />{" "}
+                                  <h6> <IoLocation /> {property.city} </h6>
+                                  <a href={`tel:${property.phone_number}`}  className="call-btn"  style={{ textDecoration: "none" }}  > Call <FaPhoneAlt />
                                   </a>
                                 </div>
                               </div>
@@ -716,47 +658,19 @@ function PropertyBuySinglePage() {
                           <h1>{business.title}</h1>
                           <div className="boldBorder"></div>
                           <div className="prop_type">
-                            <h6>
-                              {" "}
-                              Business Type :{" "}
-                              <span>{business.business_type}</span>{" "}
-                            </h6>
+                            <h6> Business Type : <span>{business.business_type}</span>  </h6>
                           </div>
                         </div>
                         <div className="col-lg-6 col-sm-12 d-flex justify-content-between align-items-center margin_class">
                         <div className="business_rating">
-                            <ReactStars
-                              count={5}
-                              activeColor="#ffd700"
-                              value={userRating || averageRating}
-                              onChange={handleRatingChange}
-                            />
+                            <ReactStars count={5} activeColor="#ffd700" value={userRating || averageRating} onChange={handleRatingChange}  />
                           </div>
                           <div className="propertyBuyListingActions">
-                            <button>
-                              <IoShareSocial /> Share{" "}
-                            </button>
-                            <button>
-                              {" "}
-                              <IoMail /> Mail{" "}
-                            </button>
-                         
-                            <a
-                                href={`tel:${business.phone_number}`}
-                                className="call-btnn"
-                                style={{ textDecoration: "none" }}
-                              >
-                            <button>
-                              {" "}
-                              
-                                {" "}
-                                <IoCall /> Call{" "}
-                                </button>
-                              </a>{" "}
-                            
+                            <button> <IoShareSocial /> Share  </button>
+                            <button> <IoMail /> Mail </button>
+                              <a href={`tel:${business.phone_number}`}  className="call-btnn" style={{ textDecoration: "none" }} >
+                            <button><IoCall /> Call </button> </a>
                           </div>
-
-                          
                         </div>
                       </div>
 
@@ -767,60 +681,29 @@ function PropertyBuySinglePage() {
                             <Slider {...sliderSettings}>
                               {imagesBusiness.map((image, index) => (
                                 <div key={index}>
-                                  <img
-                                    className="img-fluid"
-                                    style={{
-                                      cursor: "pointer",
-                                      width: "100%",
-                                      height: "300px",
-                                      objectFit: "contain",
-                                    }}
-                                    src={
-                                      image.startsWith("http")
-                                        ? image
-                                        : `${BASE_URL}/${image}`
-                                    }
-                                    alt={business.title || "Business Image"}
-                                  />
+                                  <img className="img-fluid" style={{ cursor: "pointer", width: "100%", height: "300px", objectFit: "contain", }}
+                                    src={  image.startsWith("http") ? image : `${BASE_URL}/${image}` } alt={business.title || "Business Image"}  />
                                 </div>
                               ))}
                             </Slider>
                           ) : (
                             // Render single image if there's only one
-                            <img
-                              className="img-fluid"
-                              style={{
-                                objectFit: "contain",
-                              }}
-                              src={
-                                imagesBusiness[0].startsWith("http")
-                                  ? imagesBusiness[0]
-                                  : `${BASE_URL}/${imagesBusiness[0]}`
-                              }
-                              alt={business.title || "Business Image"}
-                            />
+                            <img className="img-fluid" style={{ objectFit: "contain",   }}
+                              src={  imagesBusiness[0].startsWith("http")  ? imagesBusiness[0]  : `${BASE_URL}/${imagesBusiness[0]}`}
+                              alt={business.title || "Business Image"}  />
                           )}
                         </div>
                         <div className="col-lg-6 col-sm-12">
                           <div className="row margin_asking">
                             <div className="d-flex justify-content-between price_location">
                               <div className="col-6 ask_price">
-                                <span>
-                                  {" "}
-                                  Asking Price : ₹{" "}
-                                  <span className="green-text">
-                                    {" "}
-                                    {business.asking_price}{" "}
-                                  </span>{" "}
-                                </span>
+                                <span> Asking Price : ₹  <span className="green-text"> {business.asking_price} </span> </span>
                               </div>
                               <div className="col-6 pro_city">
                                 <IoLocation /> <span> {business.city} </span>
                               </div>
                             </div>
                           </div>
-
-                         
                           <div>
                            
                             <div className="propertyInfoTableContainer">
@@ -828,48 +711,31 @@ function PropertyBuySinglePage() {
                                 <thead className=" table_heading">
                                   <tr>
                                     <th colSpan="2">Proposal</th>
-                                 
-                                  </tr>
+                                     </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                  
                                     <td>  REPORTED TURNOVER (YEARLY): <br /> ₹ <span className="green-text"> {business.reported_turnover_from} -
                                         {business.reported_turnover_to} </span> </td>
                                     <td> PROFITABILITY(EBITDA MARGIN) : <br /> <span className="green-text"> {business.ebitda_margin} </span> </td>
                                   </tr>
-                                  <tr>
-                                   
-                                    <td> BUSINESS STATUS: <br />
-                                      <span className="green-text"> {business.current_status}
-                                      </span>
+
+                                  <tr>    
+                                    <td> BUSINESS STATUS: <br /> <span className="green-text"> {business.current_status} </span>
                                     </td>
                                     <td>  NUMBER OF EMPLOYEES: <br /> <span className="green-text"> {business.no_of_employees} </span> </td>
                                   </tr>
                                   <tr>
-                                    
-                                    <td>
-                                    
-                                      YEAR OF ESTABLISHMENT: <br />
-                                      <span className="green-text"> {business.year_of_establishment}
-                                      </span>
-                                    </td>
+                                     <td> YEAR OF ESTABLISHMENT: <br /> <span className="green-text"> {business.year_of_establishment} </span> </td>
                                     <td>
                                       DOCUMENTS UPLOADED: <br />
                                       <span className="green-text">
                                         {(() => {
-                                          try {
-                                            const files = JSON.parse(
-                                              business.file_name
-                                            );
-                                            return Array.isArray(files)
-                                              ? files.length
-                                              : 0;
+                                          try { 
+                                            const files = JSON.parse( business.file_name );
+                                            return Array.isArray(files) ? files.length  : 0;
                                           } catch (error) {
-                                            console.error(
-                                              "Error parsing file_name:",
-                                              error
-                                            );
+                                            console.error("Error parsing file_name:",  error);
                                             return 0;
                                           }
                                         })()}
@@ -885,34 +751,18 @@ function PropertyBuySinglePage() {
                     </>
                   </div>
 
-               
                   <div className="container_b">
                     <div className="descriptionSection">
                       <h3>Description</h3>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            business.description ||
-                            "<p>No description available</p>",
-                        }}
-                      />
+                      <div dangerouslySetInnerHTML={{ __html: business.description || "<p>No description available</p>", }} />
                     </div>
 
                     <div className="button_box">
-                      <button className="enquiry-btn" onClick={toggleModal}>
-                        {" "}
-                        Enquiry Form{" "}
-                      </button>
+                      <button className="enquiry-btn" onClick={toggleModal}> Enquiry Form </button>
                     </div>
                   </div>
 
-                 
-                  <Modal
-                    show={showModal}
-                    onHide={toggleModal}
-                    centered
-                    dialogClassName="custom-modal-width"
-                  >
+                  <Modal  show={showModal} onHide={toggleModal}  centered dialogClassName="custom-modal-width" >
                     <Modal.Header closeButton>
                       <Modal.Title>Send Us A Message</Modal.Title>
                     </Modal.Header>
@@ -924,43 +774,16 @@ function PropertyBuySinglePage() {
                       </p>
                       <form onSubmit={handleBusinessEnquirySubmit}>
                         <div className="ipt">
-                          <input
-                            type="text"
-                            name="name"
-                            placeholder="Full Name*"
-                            required
-                            value={formData.name}
-                            onChange={handleChange}
-                          />
+                          <input type="text" name="name" placeholder="Full Name*" required value={formData.name} onChange={handleChange} />
                         </div>
                         <div className="ipt">
-                          <input
-                            type="email"
-                            name="email"
-                            placeholder="Email*"
-                            required
-                            value={formData.email}
-                            onChange={handleChange}
-                          />
+                          <input type="email" name="email" placeholder="Email*"  required  value={formData.email}  onChange={handleChange}  />
                         </div>
                         <div className="ipt">
-                          <input
-                            type="text"
-                            name="listing_title"
-                            placeholder="Listing Title*"
-                            required
-                            value={formData.listing_title}
-                            onChange={handleChange}
-                          />
+                          <input type="text" name="listing_title" placeholder="Listing Title*" required value={formData.listing_title} onChange={handleChange} />
                         </div>
                         <div className="ipt">
-                          <textarea
-                            name="enquiry_message"
-                            placeholder="Message*"
-                            required
-                            value={formData.enquiry_message}
-                            onChange={handleChange}
-                          />
+                          <textarea  name="enquiry_message"  placeholder="Message*"  required value={formData.enquiry_message} onChange={handleChange} />
                         </div>
                         <div className="btn-cont">
                           <button type="submit">SEND MESSAGE</button>
@@ -969,17 +792,49 @@ function PropertyBuySinglePage() {
                     </Modal.Body>
                   </Modal>
 
-                
                   <div className="mapLocationDiv">
-                    <iframe
-                      style={{ width: "100%" }}
-                      src="https://www.google.com/maps/embed?pb=..."
-                      width="600"
-                      height="450"
-                      allowFullScreen=""
-                      loading="lazy"
-                    ></iframe>
-                  </div>
+                    <div
+        ref={smallMapRef}
+        style={{
+          width: "100%",
+          height: "450px",
+          visibility: showFullMap ? "hidden" : "visible", // Hide small map when full map is visible
+          position: "relative",
+        }}
+      >
+        {/* Button to toggle full map */}
+        <div className="toggle-map-icon" onClick={toggleMapView}>
+          {showFullMap ? (
+            <>
+              <span>Hide Map</span>
+            </>
+          ) : (
+            <>
+              <span>Show Full Map</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Display the full map when `showFullMap` is true */}
+      {showFullMap && (
+        <div className="map-overlay">
+          <div className="map-overlay-content">
+            <span className="map-overlay-close" onClick={toggleMapView}> 
+              <i className="ri-close-line"></i>
+            </span>
+            <div
+              ref={fullMapRef}
+              style={{
+                width: "100%",
+                height: "600px",
+                position: "relative",
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </div>
                 </div>
               )}
 
@@ -995,85 +850,41 @@ function PropertyBuySinglePage() {
                             <div className="propertyBuyClsNameCOL">
                               <div className="propertyBuyClsNameBox">
                                 <div className="promotedTextWrapper">
-                                  <img
-                                    className="img-fluid"
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() =>
-                                      handlebusinessNavigate(
-                                        "business",
-                                        list.id
-                                      )
-                                    }
+                                  <img  className="img-fluid" style={{ cursor: "pointer" }} onClick={() => handlebusinessNavigate( "business",
+                                        list.id  ) }
                                     src={(() => {
                                       try {
                                         const fileName = list.file_name;
-                                        const files =
-                                          typeof fileName === "string" &&
-                                          fileName.startsWith("[")
-                                            ? JSON.parse(fileName)
-                                            : fileName;
+                                        const files = typeof fileName === "string" && fileName.startsWith("[") ? JSON.parse(fileName) : fileName;
 
                                         if (typeof files === "string") {
                                           return files.startsWith("http")
-                                            ? files
-                                            : `${BASE_URL}/${files}`;
+                                            ? files : `${BASE_URL}/${files}`;
                                         } else if (
-                                          Array.isArray(files) &&
-                                          files.length > 0
+                                          Array.isArray(files) &&  files.length > 0
                                         ) {
-                                          return files[0].startsWith("http")
-                                            ? files[0]
-                                            : `${BASE_URL}/${files[0]}`;
+                                          return files[0].startsWith("http") ? files[0]  : `${BASE_URL}/${files[0]}`;
                                         } else {
                                           return "default-image.jpg";
                                         }
                                       } catch (error) {
-                                        console.error(
-                                          "Error parsing or handling file_name:",
-                                          error
-                                        );
+                                        console.error( "Error parsing or handling file_name:",  error );
                                         return "default-image.jpg";
                                       }
-                                    })()}
-                                    alt={list.title || "business Image"}
-                                  />
+                                    })()}  alt={list.title || "business Image"}  />
                                 </div>
                                 <h5>{list.title}</h5>
+
                                 <div className="home_price">
-                                  <h6>
-                                    {" "}
-                                    Price: ₹{" "}
-                                    <span className="ask_price_side">
-                                      {list.asking_price}
-                                    </span>
-                                  </h6>
-                                  <span className="home_con">
-                                    {" "}
-                                    {list.listing_type}{" "}
-                                  </span>
+                                  <h6> Price: ₹ <span className="ask_price_side"> {list.asking_price}  </span> </h6>
+                                  <span className="home_con"> {list.listing_type} </span>
                                 </div>
-                                <h6>
-                                  {" "}
-                                  Reported Sale (yearly): <br />₹{" "}
-                                  <span className="green-text">
-                                    {" "}
-                                    {list.reported_turnover_from} -{" "}
-                                    {list.reported_turnover_to}{" "}
-                                  </span>
-                                </h6>
+
+                                <h6> Reported Sale (yearly): <br />₹  <span className="green-text">  {list.reported_turnover_from} -  {list.reported_turnover_to} </span> </h6>
 
                                 <div className="location-call">
-                                  <h6>
-                                    <IoLocation /> {list.city}
-                                  </h6>
-                                  <a
-                                    href={`tel:${list.phone_number}`}
-                                    className="call-btn"
-                                    style={{ textDecoration: "none" }}
-                                  >
-                                    {" "}
-                                    Call <FaPhoneAlt />
-                                  </a>
+                                  <h6> <IoLocation /> {list.city} </h6>
+                                  <a href={`tel:${list.phone_number}`} className="call-btn"  style={{ textDecoration: "none" }}  > Call <FaPhoneAlt />  </a>
                                 </div>
                               </div>
                             </div>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./ProfileListingDetails.css";
 import { IoLocation } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import { fetchListingDetail, fetchUpdateBusinessStock, fetchUpdatePropertyStock, fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes, fetchBusinessFav, fetchPropertyFav } from "../../API/apiServices"; 
+import { fetchListingDetail, fetchUpdateBusinessStock, fetchUpdatePropertyStock, fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchEnquiryDetailRes, editBusinessDetail, editPropertyDetail, fetchBusinessFav, fetchPropertyFav } from "../../API/apiServices"; 
 import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
 import { toast } from 'react-toastify';
 
@@ -27,7 +27,11 @@ function ProfileListingDetails() {
   const [amountError, setAmountError] = useState(""); // Error state for invalid selection
   const [boostName, setBoostName] = useState(""); // State to store selected boost name (week/month)
   const [isProcessing, setIsProcessing] = useState(false);
-  
+  const [isModalOpenBusiness, setIsModalOpenBusiness] = useState(false);
+  const [isModalOpenProperty, setIsModalOpenProperty] = useState(false);
+  const [selectedBusinessId, setSelectedBusinessId] = useState(null); // To store the businessId
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null); // To store the businessId
+
   const handleAmountChange = (e) => {
     const selectedAmount = parseInt(e.target.value);
     setAmount(selectedAmount);
@@ -42,12 +46,17 @@ function ProfileListingDetails() {
     setAmountError(""); // Reset any previous errors
   };
 
-  const fetchPaymentBusinessDetails = async (businessId, selectedAmount, boostName) => {
+  const fetchPaymentBusinessDetails = async (
+    businessId,
+    selectedAmount,
+    boostName
+  ) => {
     try {
       if (!user || !businessId) {
-        throw new Error("Login ID or Property ID is missing.");
+        throw new Error("Login ID or Business ID is missing.");
       }
 
+      console.log("check business_id fetchPaymentBusinessDetails", businessId);
       const payload = {
         amount: selectedAmount, // Dynamic amount based on radio selection
         user_id: user,
@@ -66,7 +75,9 @@ function ProfileListingDetails() {
         console.log("Payment API Response:", response.data);
         return response.data; // Returning the complete response
       } else {
-        throw new Error(response.data.message || "Failed to fetch payment details.");
+        throw new Error(
+          response.data.message || "Failed to fetch payment details."
+        );
       }
     } catch (error) {
       console.error("Error fetching payment details:", error.message);
@@ -76,14 +87,20 @@ function ProfileListingDetails() {
   };
 
   const handlePaymentForBusiness = async (businessId) => {
+    console.log("check business_id handlePaymentForBusiness", businessId);
     if (!amount) {
       setAmountError("Please select a payment option.");
       return;
     }
 
-    const paymentData = await fetchPaymentBusinessDetails(businessId, amount, boostName);
+    const paymentData = await fetchPaymentBusinessDetails(
+      businessId,
+      amount,
+      boostName
+    );
 
     console.log("Fetched Payment Data:", paymentData);
+    console.log("check business_id 3",businessId);
 
     if (!user) {
       // If the user is not logged in, redirect to the login page
@@ -111,7 +128,10 @@ function ProfileListingDetails() {
         handler: async function (response) {
           console.log("Payment successful response:", response);
           try {
-            await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
+            await updateBusinessHandlePayment(
+              response.razorpay_payment_id,
+              payment_details.id
+            );
           } catch (error) {
             console.error("Error during payment processing:", error.message);
             alert("Error updating payment status. Please contact support.");
@@ -119,7 +139,7 @@ function ProfileListingDetails() {
         },
         prefill: {
           name: user_details?.name || "User Name",
-          email: user_details?.email || "user@example.com",
+          email: user_details?.email || "mailto:user@example.com",
           contact: user_details?.phone_number || "9999999999",
         },
         theme: {
@@ -139,7 +159,8 @@ function ProfileListingDetails() {
 
   const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
     try {
-      const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
+      const url =
+        "https://bxell.com/bxell/admin/api/update-business-boost-payment";
       const payload = { payment_id: razorpay_payment_id, id };
 
       console.log("Updating business payment status with payload:", payload);
@@ -163,7 +184,11 @@ function ProfileListingDetails() {
     }
   };
 // --------------------------------property payment-----------------------------
-const fetchPaymentPropertDetails = async (propertyId, selectedAmount, boostName) => {
+const fetchPaymentPropertDetails = async (
+  propertyId,
+  selectedAmount,
+  boostName
+) => {
   try {
     if (!user || !propertyId) {
       throw new Error("Login ID or Property ID is missing.");
@@ -176,7 +201,7 @@ const fetchPaymentPropertDetails = async (propertyId, selectedAmount, boostName)
       boost_name: boostName, // Dynamic boost name (week or month)
     };
 
-    console.log("Sending payload for business payment:", payload);
+    console.log("Sending payload for property payment:", payload);
 
     const response = await axios.post(
       "https://bxell.com/bxell/admin/api/create-property-boost-payment",
@@ -187,7 +212,9 @@ const fetchPaymentPropertDetails = async (propertyId, selectedAmount, boostName)
       console.log("Payment API Response:", response.data);
       return response.data; // Returning the complete response
     } else {
-      throw new Error(response.data.message || "Failed to fetch payment details.");
+      throw new Error(
+        response.data.message || "Failed to fetch payment details."
+      );
     }
   } catch (error) {
     console.error("Error fetching payment details:", error.message);
@@ -202,7 +229,11 @@ const handlePaymentForProperty = async (propertyId) => {
     return;
   }
 
-  const paymentData = await fetchPaymentPropertDetails(propertyId, amount, boostName);
+  const paymentData = await fetchPaymentPropertDetails(
+    propertyId,
+    amount,
+    boostName
+  );
 
   console.log("Fetched Payment Data:", paymentData);
 
@@ -232,7 +263,10 @@ const handlePaymentForProperty = async (propertyId) => {
       handler: async function (response) {
         console.log("Payment successful response:", response);
         try {
-          await updatePropertyHandlePayment(response.razorpay_payment_id, payment_details.id);
+          await updatePropertyHandlePayment(
+            response.razorpay_payment_id,
+            payment_details.id
+          );
         } catch (error) {
           console.error("Error during payment processing:", error.message);
           alert("Error updating payment status. Please contact support.");
@@ -240,7 +274,7 @@ const handlePaymentForProperty = async (propertyId) => {
       },
       prefill: {
         name: user_details?.name || "User Name",
-        email: user_details?.email || "user@example.com",
+        email: user_details?.email || "mailto:user@example.com",
         contact: user_details?.phone_number || "9999999999",
       },
       theme: {
@@ -260,7 +294,8 @@ const handlePaymentForProperty = async (propertyId) => {
 
 const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
   try {
-    const url = "https://bxell.com/bxell/admin/api/update-property-boost-payment";
+    const url =
+      "https://bxell.com/bxell/admin/api/update-property-boost-payment";
     const payload = { payment_id: razorpay_payment_id, id };
 
     console.log("Updating business payment status with payload:", payload);
@@ -343,15 +378,46 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
     }
   };
 
-    const handlepropertyNavigate = (type, id) => {
+    // const handlepropertyNavigate = (type, id) => {
    
-      navigate("/single-page", { state: { type, id } });
+    //   navigate("/single-page", { state: { type, id } });
+    // };
+    const handlePropertyEditClick = async (propertyId) => { 
+      try {
+        const response = await editPropertyDetail(propertyId);
+        console.log("API property Response:", response);
+    
+        // Navigate to the edit-business page with the API response
+        if (response?.result) {
+          navigate("/edit-property", {
+            state: { propertyDataData: response.property_detail },
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch property details:", error.message);
+      }
     };
-  
-    const handlebusinessNavigate = (type, id) => {
+    // const handlebusinessNavigate = (type, id) => {
      
-      navigate("/edit-business", { state: { type, id } });
-    };
+    //   navigate("/edit-business", { state: { type, id } });
+    // };
+   const handleEditClick = async (businessId) => { 
+  try {
+    const response = await editBusinessDetail(businessId);
+    console.log("API Response:", response);
+
+    // Navigate to the edit-business page with the API response
+    if (response?.result) {
+      navigate("/edit-business", {
+        state: { businessData: response.business_detail },
+      });
+    }
+  } catch (error) {
+    console.error("Failed to fetch business details:", error.message);
+  }
+};
+
+    
  
   // ---------------Enquiry form api-------------------------
   useEffect(() => {
@@ -486,14 +552,29 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
   if (!listingDetails) {
     return <p>Loading listings...</p>;
   }
-  
-  const handleBoostClick = () => {
-    setIsModalOpen(true);
+  const handleBoostClickBusiness = (businessId) => {
+    console.log(businessId); // Log the selected businessId
+    setSelectedBusinessId(businessId); // Save the businessId in state
+    setIsModalOpenBusiness(true); // Open the modal
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseModalBusiness = () => {
+    setIsModalOpenBusiness(false);
+    setSelectedBusinessId(null); // Reset the selected businessId
   };
+
+  const handleBoostClickProperty = (propertyId) => {
+    console.log(propertyId); // Log the selected businessId
+    setSelectedPropertyId(propertyId); // Save the businessId in state
+    setIsModalOpenProperty(true); // Open the modal
+  };
+
+  const handleCloseModalProperty = () => {
+    setIsModalOpenProperty(false);
+    setSelectedPropertyId(null); // Reset the selected businessId
+  };
+
+
   
   return (
     <>
@@ -524,7 +605,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                  paginate(businessSale).map((business, index) => (
                     <div className="col-lg-3 col-md-6 col-sm-6 listingDetailCOLBoost" key={index}>
                       <div className="listingDetailBoxBoost">
-                        <div className="promotedTextWrapperBoost">
+                        <div className="promotedTextWrapperBoost image-wrapper">
                           {business.file_name ? (
                             <img className="img-fluid" style={{ cursor: "pointer" }} onClick={() =>  handlebusinessNavigate("business", business.id) }
                               src={(() => {
@@ -541,6 +622,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                           ) : (
                             <p>No images available</p>
                           )}
+                            <button className="edit-button"  onClick={() => handleEditClick(business.id)} > Edit </button>
                         </div>
                         <h5>{business.title}</h5>
                         <div className="home_priceBoost">
@@ -552,7 +634,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                         </div>
                         <div className="home_callBoost">
                           <h6>  <IoLocation /> {business.city} </h6>
-                          <h6>Call</h6>
+                          {/* <h6>Call</h6> */}
                         </div>
                         <div className="status-controls">
                           <label className="custom-checkbox">
@@ -561,54 +643,111 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             <input  type="checkbox"  checked={soldStatus[business.id]?.off || false} onChange={() => handleCheckboxChange(   business.id,  "off", "business"  )  } disabled={soldStatus[business.id]?.on}  />   OFF </label>
                         </div>
                         <div className="btn_boost_container">
-                        <div className="sold_status">
-                          {soldStatus[business.id]?.on && ( <button className="btn_boost">Sold</button> )}
-                          {soldStatus[business.id]?.off && ( <button className="btn_boost">Unsold</button>  )}
+                          <div className="sold_status">
+                            {soldStatus[business.id]?.on && (
+                              <button className="btn_boost">Sold</button>
+                            )}
+                            {soldStatus[business.id]?.off && (
+                              <button className="btn_boost">Unsold</button>
+                            )}
+                          </div>
+                        
+                          <button
+                            className="pay_now_btn"
+                            onClick={() =>
+                              handleBoostClickBusiness(business.id)
+                            }
+                          >
+                            {" "}
+                            Boost{" "}
+                          </button>
                         </div>
-                        {/* <button className="pay_now_btn"  onClick={() => handlePaymentForBusiness(business.id)}>Pay Now</button> */}
-                         {/* Payment Button */}
-                         <button className="pay_now_btn" onClick={handleBoostClick}> Boost </button>
-                      </div>
                         <div>
                           {/* Price Radio Buttons */}
-                          {isModalOpen && (
-                          <div className="modal_overlay">
-                            <div className="modal_content">
-                              <button className="close_modal_btn" onClick={handleCloseModal}> &times; </button>
+                          {isModalOpenBusiness && (
+                            <div className="modal_overlay">
+                              <div className="modal_content">
+                                <button
+                                  className="close_modal_btn"
+                                  onClick={handleCloseModalBusiness}
+                                >
+                                  &times;
+                                </button>
 
-                              <div className="price_radio_section">
-                                {amountError && ( <p style={{ color: "red", margin: "0px", padding: "0px" }}> {amountError} </p> )}
+                                <div className="price_radio_section">
+                                  {amountError && (
+                                    <p
+                                      style={{
+                                        color: "red",
+                                        margin: "0px",
+                                        padding: "0px",
+                                      }}
+                                    >
+                                      {amountError}
+                                    </p>
+                                  )}
 
-                                <div className="price_radio_box">
-                                  <div className="radio_item_box">
-                                    <label className="price_option_box">
-                                    <input type="radio" name="listingType" value="149" className="radio_input_box" onClick={handleAmountChange} checked={amount === 149} />
-                                      <div className="price_details_box">
-                                        <span className="price_box">₹149</span>
-                                        <div className="content_box">
-                                          <h3>Basic Boost Listing (for 1 month)</h3>
+                                  <div className="price_radio_box">
+                                   
+                                    <div className="radio_item_box">
+                                      <label className="price_option_box">
+                                        <input
+                                          type="radio"
+                                          name="listingType"
+                                          value="149"
+                                          className="radio_input_box"
+                                          onChange={handleAmountChange}
+                                        />
+                                        <div className="price_details_box">
+                                          <span className="price_box">
+                                            ₹149
+                                          </span>
+                                          <div className="content_box">
+                                            <h3>
+                                              Basic Boost Listing (for 1 month)
+                                            </h3>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </label>
+                                      </label>
+                                    </div>
+
+                                  
+                                    <div className="radio_item_box">
+                                      <label className="price_option_box">
+                                        <input
+                                          type="radio"
+                                          name="listingType"
+                                          value="49"
+                                          className="radio_input_box"
+                                          onChange={handleAmountChange}
+                                        />
+                                        <div className="price_details_box">
+                                          <span className="price_box">₹49</span>
+                                          <div className="content_box">
+                                            <h3>
+                                              Basic Boost Listing (for 1 week)
+                                            </h3>
+                                          </div>
+                                        </div>
+                                      </label>
+                                    </div>
                                   </div>
 
-                                  <div className="radio_item_box">
-                                    <label className="price_option_box">
-                                      <input type="radio" name="listingType" value="49" className="radio_input_box" onClick={handleAmountChange} checked={amount === 49} />
-                                      <div className="price_details_box">
-                                        <span className="price_box">₹49</span>
-                                        <div className="content_box">
-                                          <h3>Basic Boost Listing (for 1 week)</h3>
-                                        </div>
-                                      </div>
-                                    </label>
-                                  </div>
+                                
+                                  <button
+                                    className="pay_now_btn"
+                                    onClick={() =>
+                                      handlePaymentForBusiness(
+                                        selectedBusinessId
+                                      )
+                                    }
+                                  >
+                                    Pay Now
+                                  </button>
                                 </div>
-                                <button className="pay_now_btn" onClick={() => handlePaymentForBusiness(business.id)} > Pay Now </button>
                               </div>
                             </div>
-                          </div>
-                        )}
+                          )}
                         </div>
                       </div>
                     </div>
@@ -636,7 +775,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                  paginate(propertySale).map((property, index) => (
                     <div className="col-lg-3 col-md-6 col-sm-6 listingDetailCOLBoost" key={index}>
                       <div className="listingDetailBoxBoost">
-                        <div className="promotedTextWrapperBoost">
+                        <div className="promotedTextWrapperBoost image-wrapper">
                           {property.file_name ? (
                             <img  className="img-fluid" style={{ cursor: "pointer" }} onClick={() =>  handlepropertyNavigate("property", property.id) }
                              src={(() => {
@@ -652,6 +791,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                           ) : (
                             <p>No images available</p>
                           )}
+                           <button className="edit-button"  onClick={() => handlePropertyEditClick(property.id)} > Edit </button>
                         </div>
                         <h5>{property.property_title}</h5>
                         <div className="home_priceBoost">
@@ -661,7 +801,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                         <div>   <h6>Property Type : <strong>{property.property_type}</strong></h6>  </div>
                         <div className="home_callBoost">
                           <h6><IoLocation /> {property.city}  </h6>
-                          <h6>Call</h6>
+                          {/* <h6>Call</h6> */}
                         </div>
                         <div className="status-controls">
                           <label className="custom-checkbox">
@@ -670,50 +810,107 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             <input type="checkbox"   checked={soldStatus[property.id]?.off || false} onChange={() =>  handleCheckboxChange(  property.id,  "off",  "property"   )   } disabled={soldStatus[property.id]?.on}  />  OFF </label> <br />
                         </div>
                         <div className="btn_boost_container">
-                      <div className="sold_status">
-                        {soldStatus[property.id]?.on && <button className="btn_boost">Sold</button>}
-                        {soldStatus[property.id]?.off && <button className="btn_boost">Unsold</button>}
-                      </div>
-                      <div>
-                          {/* Boost Button */}
-                          <button className="pay_now_btn" onClick={handleBoostClick}> Boost </button>
+                          <div className="sold_status">
+                            {soldStatus[property.id]?.on && (
+                              <button className="btn_boost">Sold</button>
+                            )}
+                            {soldStatus[property.id]?.off && (
+                              <button className="btn_boost">Unsold</button>
+                            )}
                           </div>
-                          {/* Modal */}
-                          {isModalOpen && (
+                          <div>
+                          
+                            <button
+                              className="pay_now_btn"
+                              onClick={() =>
+                                handleBoostClickProperty(property.id)
+                              }
+                            >
+                              {" "}
+                              Boost{" "}
+                            </button>
+                          </div>
+                         
+                          {isModalOpenProperty && (
                             <div className="modal_overlay">
                               <div className="modal_content">
-                                <button className="close_modal_btn" onClick={handleCloseModal}> &times; </button>
-
+                                <button
+                                  className="close_modal_btn"
+                                  onClick={handleCloseModalProperty}
+                                >
+                                  {" "}
+                                  &times;{" "}
+                                </button>
+                               
                                 <div className="price_radio_section">
-                                  {amountError && ( <p style={{ color: "red", margin: "0px", padding: "0px" }}> {amountError} </p> )}
+                                  {amountError && (
+                                    <p
+                                      style={{
+                                        color: "red",
+                                        margin: "0px",
+                                        padding: "0px",
+                                      }}
+                                    >
+                                      {" "}
+                                      {amountError}{" "}
+                                    </p>
+                                  )}
 
                                   <div className="price_radio_box">
-                                    <div className="radio_item_box">
-                                      <label className="price_option_box">
-                                        <input type="radio"  name="listingType" value="149"  className="radio_input_box"   onChange={handleAmountChange}  checked={amount === 149}  />
-                                        <div className="price_details_box">
-                                          <span className="price_box">₹149</span>
-                                          <div className="content_box">
-                                            <h3>Basic Boost Listing (for 1 month)</h3>
-                                          </div>
+                                    <div class="form-check">
+                                      <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        value="149"
+                                        name="listingType"
+                                        id="flexRadioDefault1"
+                                        onChange={handleAmountChange}
+                                      />
+                                      <label
+                                        class="form-check-label"
+                                        for="flexRadioDefault1"
+                                      >
+                                        <span className="price_box">₹149</span>
+                                        <div className="content_box">
+                                          <h3>
+                                            Basic Boost Listing (for 1 month)
+                                          </h3>
                                         </div>
                                       </label>
                                     </div>
 
-                                    <div className="radio_item_box">
-                                      <label className="price_option_box">
-                                        <input type="radio"  name="listingType" value="49" className="radio_input_box" onChange={handleAmountChange} checked={amount === 49} />
-                                        <div className="price_details_box">
-                                          <span className="price_box">₹49</span>
-                                          <div className="content_box">
-                                            <h3>Basic Boost Listing (for 1 week)</h3>
-                                          </div>
+                                    <div class="form-check">
+                                      <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        value="49"
+                                        name="listingType"
+                                        id="flexRadioDefault1"
+                                        onChange={handleAmountChange}
+                                      />
+                                      <label
+                                        class="form-check-label"
+                                        for="flexRadioDefault1"
+                                      >
+                                        <span className="price_box">₹49</span>
+                                        <div className="content_box">
+                                          <h3>
+                                            Basic Boost Listing (for 1 week)
+                                          </h3>
                                         </div>
                                       </label>
                                     </div>
                                   </div>
 
-                                  <button className="pay_now_btn" onClick={() => handlePaymentForProperty(property.id) } > Pay Now  </button>
+                                  <button
+                                    className="pay_now_btn"
+                                    onClick={() =>
+                                      handlePaymentForProperty(property.id)
+                                    }
+                                  >
+                                    {" "}
+                                    Pay Now{" "}
+                                  </button>
                                 </div>
                               </div>
                             </div>
