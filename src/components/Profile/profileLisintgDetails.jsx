@@ -319,64 +319,119 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
   }
 };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
-  
-  // Get current listings based on pagination
-  const paginate = (items) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return items.slice(startIndex, endIndex);
-  };
-  
-  // Handle pagination button clicks
-  const handlePagelisChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-  
-  const totalPages = Math.ceil(businessSale.length / itemsPerPage);
-  // ------------------------fav pagination--------------------------
 
-  const ITEMS_PER_PAGE = 4;
-  const [currentPropertyPage, setCurrentPropertyPage] = useState(1); // Property pagination
-  const [currentBusinessPage, setCurrentBusinessPage] = useState(1);
+const handlepropertyNavigate = (type, id) => {
+   
+  navigate("/single-page", { state: { type, id } });
+};
+const handlebusinessNavigate = (type, id) => {
+ 
+  navigate("/single-page", { state: { type, id } });
+};
+
+  const [currentPageBusiness, setCurrentPageBusiness] = useState(1);
+const [itemsPerPageBusiness] = useState(4); // Number of items per page for businesses
+
+const [currentPageProperty, setCurrentPageProperty] = useState(1);
+const [itemsPerPageProperty] = useState(4); // Number of items per page for properties
+
+const [currentPageBusinessFav, setCurrentPageBusinessFav] = useState(1);
+const [itemsPerPageBusinessFav] = useState(4); // Number of items per page for businesses
+
+const [currentPagePropertyFav, setCurrentPagePropertyFav] = useState(1);
+const [itemsPerPagePropertyFav] = useState(4); // Number of items per page for properties
+
+const handleBusinessPageChange = (pageNumber) => {
+  setCurrentPageBusiness(pageNumber);
+};
+
+const handlePropertyPageChange = (pageNumber) => {
+  setCurrentPageProperty(pageNumber);
+};
+
+const handleBusinessPageChangeFav = (pageNumber) => {
+  setCurrentPageBusinessFav(pageNumber);
+};
+
+const handlePropertyPageChangeFav = (pageNumber) => {
+  setCurrentPagePropertyFav(pageNumber);
+};
+
+// Total pages for each category
+const totalPagesBusiness = Math.ceil((businessSale?.length || 0) / itemsPerPageBusiness);
+const totalPagesProperty = Math.ceil((propertySale?.length || 0) / itemsPerPageProperty);
+
+const totalPagesBusinessFav = Math.ceil((businessData?.length || 0) / itemsPerPageBusinessFav);
+const totalPagesPropertyFav = Math.ceil((propertyData?.length || 0) / itemsPerPagePropertyFav);
+
+const currentBusinessSale = businessSale.slice(
+  (currentPageBusiness - 1) * itemsPerPageBusiness,
+  currentPageBusiness * itemsPerPageBusiness
+);
+
+const currentPropertySale = propertySale.slice(
+  (currentPageProperty - 1) * itemsPerPageProperty,
+  currentPageProperty * itemsPerPageProperty
+);
+
+const currentBusinessSaleFav = businessData.slice(
+  (currentPageBusinessFav - 1) * itemsPerPageBusinessFav,
+  currentPageBusinessFav * itemsPerPageBusinessFav
+);
+
+const currentPropertySaleFav = propertyData.slice(
+  (currentPagePropertyFav - 1) * itemsPerPagePropertyFav,
+  currentPagePropertyFav * itemsPerPagePropertyFav
+);
+
+const handlePreviousPage = () => {
+  if (currentPageProperty > 1) {
+    handlePropertyPageChange(currentPageProperty - 1);
+  }
+};
+
+const handleNextPage = (totalPages) => {
+  if (currentPageProperty < totalPages) {
+    handlePropertyPageChange(currentPageProperty + 1);
+  }
+};
+
+const handlePreviousPageFav = () => {
+  if (currentPagePropertyFav > 1) {
+    handlePropertyPageChangeFav(currentPagePropertyFav - 1);
+  }
+};
+
+const handleNextPageFav = (totalPages) => {
+  if (currentPagePropertyFav < totalPages) {
+    handlePropertyPageChangeFav(currentPagePropertyFav + 1);
+  }
+};
+
+const handleBusinessPreviousPage = () => {
+  if (currentPageBusiness > 1) {
+    handleBusinessPageChange(currentPageBusiness - 1);
+  }
+};
+
+const handleBusinessNextPage = (totalPages) => {
+  if (currentPageBusiness < totalPages) {
+    handleBusinessPageChange(currentPageBusiness + 1);
+  }
+};
+
+const handleBusinessPreviousPageFav = () => {
+  if (currentPageBusinessFav > 1) {
+    handleBusinessPageChangeFav(currentPageBusinessFav - 1);
+  }
+};
+
+const handleBusinessNextPageFav = (totalPages) => {
+  if (currentPageBusinessFav < totalPages) {
+    handleBusinessPageChangeFav(currentPageBusinessFav + 1);
+  }
+};
   
-  const paginatedPropertyData = propertyData.slice(
-    (currentPropertyPage - 1) * ITEMS_PER_PAGE,
-    currentPropertyPage * ITEMS_PER_PAGE
-  );
-  
-  const paginatedBusinessData = businessData.slice(
-    (currentBusinessPage - 1) * ITEMS_PER_PAGE,
-    currentBusinessPage * ITEMS_PER_PAGE
-  );
-  
-  const totalPropertyPages = Math.ceil(propertyData.length / ITEMS_PER_PAGE);
-  const totalBusinessPages = Math.ceil(businessData.length / ITEMS_PER_PAGE);
-  
-  // Handle Page Change
-  const handlePageChange = (page) => {
-    setCurrentPropertyPage(page);
-    setCurrentBusinessPage(page);
-  };
-  
-  // Handle Previous Page
-  const handlePreviousPage = (type) => {
-    if (type === "property" && currentPropertyPage > 1) {
-      setCurrentPropertyPage((prevPage) => prevPage - 1);
-    } else if (type === "business" && currentBusinessPage > 1) {
-      setCurrentBusinessPage((prevPage) => prevPage - 1);
-    }
-  };
-  
-  // Handle Next Page
-  const handleNextPage = (type, totalPages) => {
-    if (type === "property" && currentPropertyPage < totalPages) {
-      setCurrentPropertyPage((prevPage) => prevPage + 1);
-    } else if (type === "business" && currentBusinessPage < totalPages) {
-      setCurrentBusinessPage((prevPage) => prevPage + 1);
-    }
-  };
 
     // const handlepropertyNavigate = (type, id) => {
    
@@ -602,7 +657,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
 
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
                 {businessSale.length > 0 ? (
-                 paginate(businessSale).map((business, index) => (
+                 currentBusinessSale.map((business, index) => (
                     <div className="col-lg-3 col-md-6 col-sm-6 listingDetailCOLBoost" key={index}>
                       <div className="listingDetailBoxBoost">
                         <div className="promotedTextWrapperBoost image-wrapper">
@@ -779,22 +834,37 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                 )}
               </div>
               <div className="pagination-controls">
-                <button onClick={() => handlePagelisChange(currentPage - 1)} className="page-button" disabled={currentPage === 1} > Previous </button>
-
-                {/* Generate page numbers dynamically */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button  key={page} onClick={() => handlePagelisChange(page)} className={`page-button ${page === currentPage ? "active" : ""}`} > {page} </button>
-                ))}
-
-                <button onClick={() => handlePagelisChange(currentPage + 1)} className="page-button" disabled={currentPage === totalPages} > Next </button>
-              </div>
+              <button
+                onClick={handleBusinessPreviousPage}
+                className="page-button"
+                disabled={currentPageBusiness === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPagesBusiness }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handleBusinessPageChange(page)}
+                  className={`page-button ${page === currentPageBusiness ? "active" : ""}`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => handleBusinessNextPage(totalPagesBusiness)}
+                className="page-button"
+                disabled={currentPageBusiness === totalPagesBusiness}
+              >
+                Next
+              </button>
+            </div>
                           {/* {/ Property Listings /} */} 
                  <div className="explorePropertyHed homeListingDetailBoost">
                 <h6> PROPERTY LISTINGS BY YOU</h6>
               </div>
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
                 {propertySale.length > 0 ? (
-                 paginate(propertySale).map((property, index) => (
+                 currentPropertySale.map((property, index) => (
                     <div className="col-lg-3 col-md-6 col-sm-6 listingDetailCOLBoost" key={index}>
                       <div className="listingDetailBoxBoost">
                         <div className="promotedTextWrapperBoost image-wrapper">
@@ -975,13 +1045,32 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                 )}
               </div>
               <div className="pagination-controls">
-                <button onClick={() => handlePagelisChange(currentPage - 1)} className="page-button" disabled={currentPage === 1} > Previous </button>
-                {/* Generate page numbers dynamically */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button key={page}  onClick={() => handlePagelisChange(page)} className={`page-button ${page === currentPage ? "active" : ""}`}  >  {page} </button>
-                ))}
-                <button onClick={() => handlePagelisChange(currentPage + 1)} className="page-button"  disabled={currentPage === totalPages} > Next </button>
-              </div>
+              <button
+                onClick={handlePreviousPage}
+                className="page-button"
+                disabled={currentPageProperty === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPagesProperty }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePropertyPageChange(page)}
+                  className={`page-button ${
+                    page === currentPageProperty ? "active" : ""
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => handleNextPage(totalPagesProperty)}
+                className="page-button"
+                disabled={currentPageProperty === totalPagesProperty}
+              >
+                Next
+              </button>
+            </div>
             </>
           )}
         </div>
@@ -996,13 +1085,42 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
               {propertyData.length > 0 && (
                 <div className="row propertyBuyListingRow_1">
                   
-                  {paginatedPropertyData.map((property, index) => (
+                  {currentPropertySaleFav.map((property, index) => (
                     <div  className="col-lg-3 col-md-6 col-sm-6 recommendationsClsNameCOL"  key={index} >
                       <div className="recommendationsClsNameBox">
                         <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
                           <div   className="wishlist-heart"  style={{   position: "absolute",  top: "10px",  right: "10px",  zIndex: 10,  }}   >
                             <FaHeart className="wishlist-icon" />  </div>
-                          <img  className="img-fluid promotedTextWrapperBoost"  src={ property.property_sale?.file_name ? JSON.parse(property.property_sale.file_name)[0]  : "default-image.jpg" }  alt={property.property_sale?.property_title}  />
+                        
+
+                          <img className="img-fluid" onClick={() =>  handlepropertyNavigate("property", property.id) }
+                              src={(() => {
+                                try {
+                                  const fileName =   property.property_sale?.file_name ;
+
+                                  // Parse the file_name if it's a JSON string
+                                  const files = typeof fileName === "string" &&  fileName.startsWith("[") ? JSON.parse(fileName)  : fileName;
+
+                                  if (typeof files === "string") {
+                                    // Single image case
+                                    return files.startsWith("http") ? files  : `${BASE_URL}/${files}`;
+                                  } else if (
+                                    Array.isArray(files) &&  files.length > 0
+                                  ) {
+                                    // Multiple images case
+                                    return files[0].startsWith("http") ? files[0]   : `${BASE_URL}/${files[0]}`;
+                                  } else {
+                                    // Default image as fallback
+                                    return "default-image.jpg";
+                                  }
+                                } catch (error) {
+                                  console.error( "Error parsing or handling file_name:", error );
+                                  return "default-image.jpg";
+                                }
+                              })()}
+                              alt={property.property_title || "property Image"}
+                            />
+
                           {property.property_sale.subscription && property.property_sale.subscription.length > 0 && property.property_sale.subscription[0].status === "Valid" && (
                                   <div className="promotedText">
                                     {property.property_sale.subscription[0].type}
@@ -1036,15 +1154,33 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
               )}
               
                {/* Property Pagination */}
-          <div className="pagination-controls">
-            <button  onClick={() => handlePreviousPage("property")} className="page-button" disabled={currentPropertyPage === 1} >
-              Previous </button>
-            {Array.from({ length: totalPropertyPages }, (_, i) => i + 1).map((page) => (
-              <button  key={page}  onClick={() => handlePageChange(page)}  className={`page-button ${page === currentPropertyPage ? "active" : ""}`}  >
-                {page}  </button>
-            ))}
-            <button onClick={() => handleNextPage("property", totalPropertyPages)} className="page-button"  disabled={currentPropertyPage === totalPropertyPages} > Next </button>
-          </div>
+               <div className="pagination-controls">
+              <button
+                onClick={handlePreviousPageFav}
+                className="page-button"
+                disabled={currentPagePropertyFav === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPagesPropertyFav }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePropertyPageChangeFav(page)}
+                  className={`page-button ${
+                    page === currentPagePropertyFav ? "active" : ""
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => handleNextPageFav(totalPagesPropertyFav)}
+                className="page-button"
+                disabled={currentPagePropertyFav === totalPagesPropertyFav}
+              >
+                Next
+              </button>
+               </div>
 
 
           <div className="explorePropertyHed homeListingDetailBoost">
@@ -1052,7 +1188,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
             </div>
               {businessData.length > 0 ? (
                 <div className="row propertyBuyListingRow_1">
-                  {paginatedBusinessData.map((business, index) => (
+                  {currentBusinessSaleFav.map((business, index) => (
                     <div   className="col-lg-3 col-md-6 col-sm-6 recommendationsClsNameCOL" key={index} >
                       <div className="recommendationsClsNameBox">
                         <div  className="propertyBuyListingBox"  style={{ position: "relative" }} >
@@ -1120,17 +1256,31 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                 <div>No favorite businesses available</div>
               )}
                {/* Business Pagination */}
-          <div className="pagination-controls">
-            <button onClick={() => handlePreviousPage("business")}  className="page-button"  disabled={currentBusinessPage === 1} >
-              Previous </button>
-            {Array.from({ length: totalBusinessPages }, (_, i) => i + 1).map((page) => (
-              <button  key={page} onClick={() => handlePageChange(page)} className={`page-button ${page === currentBusinessPage ? "active" : ""}`} >
-                {page} </button>
-            ))}
-            <button  onClick={() => handleNextPage("business", totalBusinessPages)} className="page-button"  disabled={currentBusinessPage === totalBusinessPages} >
-              Next
-            </button>
-          </div>
+               <div className="pagination-controls">
+              <button
+                onClick={handleBusinessPreviousPageFav}
+                className="page-button"
+                disabled={currentPageBusinessFav === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPagesBusinessFav }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handleBusinessPageChangeFav(page)}
+                  className={`page-button ${page === currentPageBusinessFav ? "active" : ""}`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => handleBusinessNextPageFav(totalPagesBusinessFav)}
+                className="page-button"
+                disabled={currentPageBusinessFav === totalPagesBusinessFav}
+              >
+                Next
+              </button>
+            </div>
             </div>
             </>
           )}
