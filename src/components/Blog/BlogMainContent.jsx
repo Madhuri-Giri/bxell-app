@@ -59,7 +59,7 @@ const BlogMainContent = () => {
         <div className="container homeBrowserListingSecHED">
           <div className="row">
             <div className="col-12">
-              <h2>Browse Blog List</h2>
+              {/* <h2>Browse Blog List</h2> */}
             </div>
           </div>
         </div>

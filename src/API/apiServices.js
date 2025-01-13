@@ -611,8 +611,28 @@ export const fetchEditBusinessForm = async (formData) => {
   }
 };
 
+export const fetchEditPropertyForm = async (formData) => { 
+  try {
+    const response = await fetch(SELL_PROPERTY_EDIT_FORM_URL, {
+      method: "POST",
+      body: formData, // Use FormData directly
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return data; // Return success response
+    } else {
+      throw new Error(data.message || "Failed to update property form");
+    }
+  } catch (error) {
+    console.error("Error updating property form:", error.message);
+    throw error;
+  }
+};
+
 // ----------------------EDIT FETCH BUSINESS DETAILS------------------------------------
 export const editBusinessDetail = async (businessId) => {
+
   if (!businessId) {
     console.error("Invalid Business ID");
     return;
@@ -642,7 +662,7 @@ export const editBusinessDetail = async (businessId) => {
 // ----------------------EDIT FETCH PROPERTY DETAILS------------------------------------
 export const editPropertyDetail = async (propertyId) => {
   if (!propertyId) {
-    console.error("Invalid Business ID");
+    console.error("Invalid property ID");
     return;
   }
   try {

@@ -104,8 +104,6 @@ const EditBusinessForm = () => {
     }
   }, [businessData]);
 
-  
-
   // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -328,30 +326,30 @@ const EditBusinessForm = () => {
                       {step === 1 && (
                         <>
                       <div className="col-lg-7 col-md-12 col-sm-12">
-       <Form.Group className="businessListingFormsDiv" controlId="country">
-         <Form.Label>COUNTRY</Form.Label>
-         <span className="vallidateRequiredStar">*</span>
-         <div className="country-box-container">
-           {countries.map((country) => (
-             <div
-               key={country.id}
-               className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
-               onClick={() => {
-                 setSelectedCountryId(country.id); // Update the selected country ID
-                 setFormData((prev) => ({
-                   ...prev,
-                   country: country.name, // Update the country in form data
-                   state: "", // Reset state selection
-                 }));
-               }}
-             >
-               {country.name}
-             </div>
-           ))}
-         </div>
-         {errors.country && <div className="error-message">{errors.country}</div>}
-       </Form.Group>
-     </div>
+                        <Form.Group className="businessListingFormsDiv" controlId="country">
+                          <Form.Label>COUNTRY</Form.Label>
+                          <span className="vallidateRequiredStar">*</span>
+                          <div className="country-box-container">
+                            {countries.map((country) => (
+                              <div
+                                key={country.id}
+                                className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
+                                onClick={() => {
+                                  setSelectedCountryId(country.id); // Update the selected country ID
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    country: country.name, // Update the country in form data
+                                    state: "", // Reset state selection
+                                  }));
+                                }}
+                              >
+                                {country.name}
+                              </div>
+                            ))}
+                          </div>
+                          {errors.country && <div className="error-message">{errors.country}</div>}
+                        </Form.Group>
+                      </div>
 
 <div className="col-lg-7 col-md-12 col-sm-12">
   <Form.Group className="businessListingFormsDiv" controlId="state">

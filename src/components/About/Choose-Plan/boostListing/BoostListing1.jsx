@@ -53,7 +53,16 @@ const BoostListing1 = () => {
        fetchListDetail(user); // Pass the user ID here
      }
    }, [user]);
-  
+
+   
+    const handlepropertyNavigate = (type, id) => {
+   
+      navigate("/single-page", { state: { type, id } });
+    };
+    const handlebusinessNavigate = (type, id) => {
+     
+      navigate("/single-page", { state: { type, id } });
+    };
   // ----------------------propert payment -------------------------------
   const fetchPaymentPropertyDetails = async (propertyId) => {
     try {
@@ -320,7 +329,7 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                     <div className="promotedTextWrapperBoost">
                       {business.file_name ? (
                         <img
-                        className="img-fluid"
+                        className="img-fluid"  style={{ cursor: "pointer" }} 
                         onClick={() => handlebusinessNavigate("business", business.id)}
                         src={(() => {
                           try {
@@ -353,7 +362,16 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                         <p>No images available</p>
                       )}
                     </div>
-                    <h5>{business.title}</h5>
+                    <div className="inter_text d-flex  justify-content-between">
+                  <h5>{business.title}</h5>
+                        <span className="interested">  {business.view} Interested  </span>
+                        </div>
+                    {business.subscription && business.subscription.length > 0 && business.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {business.subscription[0].type}
+                                  </div>
+                                )}
+
                     <div className="home_priceBoost">
                       <h6>
                         Asking Price: <span>₹{business.asking_price}</span>
@@ -368,9 +386,9 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                       <h6>
                         <IoLocation /> {business.city}
                       </h6>
-                      <h6>Call</h6>
+                      {/* <h6>Call</h6> */}
                     </div>
-                    <div className="btn_boost" onClick={() => handlePaymentForBusiness(business.id)} style={{cursor:"pointer"}}> 
+                    <div className="btn_boost" onClick={() => handlePaymentForBusiness(business.id)} style={{cursor:"pointer", textAlign: "center"}}> 
                     <button className="btn_boost">Pay now</button>
                     </div>
                   </div>
@@ -393,6 +411,7 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                       {property.file_name ? (
                         <img
                           className="img-fluid"
+                          style={{ cursor: "pointer" }} onClick={() =>  handlepropertyNavigate("property", property.id) }
                           src={(() => {
                             try {
                               const fileName = property.file_name;
@@ -424,7 +443,16 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                         <p>No images available</p>
                       )}
                     </div>
-                    <h5>{property.property_title}</h5>
+                    <div className="inter_text d-flex  justify-content-between">
+                        <h5>{property.property_title}</h5>
+                        <span className="interested">  {property.view} Interested  </span>
+                        </div>
+                    {property.subscription && property.subscription.length > 0 && property.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {property.subscription[0].type}
+                                  </div>
+                                )}
+                                 
                     <div className="home_priceBoost">
                       <h6>
                         Price: <span>₹{property.asking_price}</span>
@@ -438,9 +466,9 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
                       <h6>
                         <IoLocation /> {property.city}
                       </h6>
-                      <h6>Call</h6>
+                      {/* <h6>Call</h6> */}
                     </div>
-                    <div className="btn_boost" onClick={() => handlePaymentForProperty(property.id)} style={{cursor:"pointer"}}> <button className="btn_boost"  >Pay now</button> </div>
+                    <div className="btn_boost" onClick={() => handlePaymentForProperty(property.id)} style={{cursor:"pointer", textAlign: "center"}}> <button className="btn_boost"  >Pay now</button> </div>
                    
                   </div>
                

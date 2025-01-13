@@ -26,6 +26,12 @@ import SellProperty from "../pages/SellProperty";
 
 import EditBusinessForm from "../components/editBusinessForm/EditBusinessForm";
 import EditPropertyForm from "../components/editPropertyForm/EditPropertyForm";
+import Page3Land1 from "../components/editPropertyForm/Page3Land1";
+import Land1 from "../components/editPropertyForm/Land1";
+import Page3ROC1 from "../components/editPropertyForm/Page3ROC1";
+import Page3Common1 from "../components/editPropertyForm/Page3Common1";
+import RentalOfficeComplex1 from "../components/editPropertyForm/RentalOfficeComplex1";
+import HouseApartment1 from "../components/editPropertyForm/HouseApartment1";
 
 export const routeArray = [
   {
@@ -79,6 +85,30 @@ export const routeArray = [
   {
     path: "/test5",
     element: <Page3Land />,
+  },
+  {
+    path: "/test6",
+    element: <HouseApartment1 />,
+  },
+  {
+    path: "/test7",
+    element: <RentalOfficeComplex1 />,
+  },
+  {
+    path: "/test8",
+    element: <Page3Common1 />,
+  },
+  {
+    path: "/test9",
+    element: <Page3ROC1 />,
+  },
+  {
+    path: "/test10",
+    element: <Land1 />,
+  },
+  {
+    path: "/test11",
+    element: <Page3Land1 />,
   },
   {
     path: "/single-page",

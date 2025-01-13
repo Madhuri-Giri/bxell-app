@@ -13,7 +13,7 @@ import { FaHeart, FaRegHeart, FaPhoneAlt } from "react-icons/fa";
 import News from "../../Home/MainBanner/news/News";
 import Slider from "react-slick";
 import ReactStars from "react-rating-stars-component";
-import mapboxgl from 'mapbox-gl';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 function PropertyBuySinglePage() {
   
@@ -33,18 +33,17 @@ function PropertyBuySinglePage() {
   const smallMapRef = useRef(null);
   const fullMapRef = useRef(null);
 
-  const api_key = "pk.eyJ1IjoidGFsc3BvZ3JvdXAiLCJhIjoiY2pxb3ZsZ2V3MWs1ZjQ5cW50cDVmMHB4ciJ9.-7furrxLVkKCZez2khUFqA";
+  const googleApiKey = "AIzaSyCMlSAyBPURMfD8HzSj1z_vDD-pcoZuOhI";
 
-  // Fetch coordinates for the city from Mapbox
+  // Fetch coordinates using Google Maps Geocoding API
   const fetchCoordinates = async (city) => {
-    const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${city}.json?access_token=${api_key}`;
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${googleApiKey}`;
     try {
-      console.log(city)
       const response = await fetch(apiUrl);
       const data = await response.json();
-      if (data.features && data.features.length > 0) {
-        const [longitude, latitude] = data.features[0].geometry.coordinates;
-        return { latitude, longitude };
+      if (data.results && data.results.length > 0) {
+        const { lat, lng } = data.results[0].geometry.location;
+        return { latitude: lat, longitude: lng };
       } else {
         console.error("City not found.");
         return null;
@@ -55,115 +54,63 @@ function PropertyBuySinglePage() {
     }
   };
 
-  // Fetch coordinates and update state
+  // Fetch coordinates when property or business city changes
   useEffect(() => {
     if (property && property.city) {
       fetchCoordinates(property.city).then((coords) => {
-        
         if (coords) {
-          console.log('indore',property.city)
           setCoordinates(coords);
         }
       });
     }
   }, [property]);
 
-    // Fetch coordinates and update state
-    useEffect(() => {
-      if (business && business.city) {
-        fetchCoordinates(business.city).then((coords) => {
-          
-          if (coords) {
-            console.log('indore',business.city)
-            setCoordinates(coords);
-          }
-        });
-      }
-    }, [business]);
+  useEffect(() => {
+    if (business && business.city) {
+      fetchCoordinates(business.city).then((coords) => {
+        if (coords) {
+          setCoordinates(coords);
+        }
+      });
+    }
+  }, [business]);
 
-  // Initialize map when coordinates are fetched
-useEffect(() => {
-  if (coordinates) {
-    console.log("Initializing Map with coordinates:", coordinates);
+  // Initialize Google Map when coordinates are fetched
+  useEffect(() => {
+    if (coordinates) {
+      console.log("Initializing Map with coordinates:", coordinates);
 
-    mapboxgl.accessToken = api_key;
-    const map = new mapboxgl.Map({
-      container: showFullMap ? fullMapRef.current : smallMapRef.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [coordinates.longitude, coordinates.latitude], // Use fetched city coordinates
-      zoom: 10, // Zoom closer to the city
-    });
+      // Initialize the map (small map or full map based on state)
+      const map = new google.maps.Map(
+        showFullMap ? fullMapRef.current : smallMapRef.current,
+        {
+          center: { lat: coordinates.latitude, lng: coordinates.longitude },
+          zoom: 10,
+        }
+      );
 
-    map.on("load", () => {
-      // 1. Add red circle layer
-      const geojsonData = {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [coordinates.longitude, coordinates.latitude],
-            },
-          },
-        ],
+      const marker = new google.maps.Marker({
+        position: { lat: coordinates.latitude, lng: coordinates.longitude },
+        map: map,
+        title: property?.city || business?.city,
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `<h3>${property?.city || business?.city}</h3>`,
+      });
+
+      marker.addListener("click", () => {
+        infoWindow.open(map, marker);
+      });
+
+      // Cleanup function when map or component unmounts
+      return () => {
+        google.maps.event.clearInstanceListeners(map);
       };
+    }
+  }, [coordinates, showFullMap]);
 
-      map.addSource("city-point", {
-        type: "geojson",
-        data: geojsonData,
-      });
-
-      // Red Circle Layer
-      map.addLayer({
-        id: "city-circle",
-        type: "circle",
-        source: "city-point",
-        paint: {
-          "circle-radius": 10, // Adjust circle size
-          "circle-color": "red", // Circle color
-          "circle-opacity": 0.6,
-        },
-      });
-
-      // 2. Add custom location icon marker
-      const locationIcon = document.createElement('div');
-      locationIcon.style.width = '30px';
-      locationIcon.style.height = '30px';
-      locationIcon.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/6/6e/Font_Awesome_5_solid_map-marker-alt.svg')";
-      locationIcon.style.backgroundSize = 'cover';
-
-      new mapboxgl.Marker(locationIcon)
-        .setLngLat([coordinates.longitude, coordinates.latitude])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 }).setHTML(
-            `<h3 style="color: red;">${property.city}</h3>` // Display city name in popup
-          )
-        )
-        .addTo(map);
-
-      // Optional: Add a text label layer for the city name
-      map.addLayer({
-        id: "city-label",
-        type: "symbol",
-        source: "city-point",
-        layout: {
-          "text-field": ["get", "city"], // Display city name
-          "text-size": 14,
-          "text-offset": [0, 1.5],
-          "text-anchor": "top",
-        },
-        paint: {
-          "text-color": "red",
-        },
-      });
-    });
-
-    return () => map.remove(); // Cleanup map on component unmount
-  }
-}, [coordinates, showFullMap]);
-
-  // Toggle map view
+  // Toggle between small and full map views
   const toggleMapView = () => {
     setShowFullMap(!showFullMap);
   };
@@ -564,34 +511,24 @@ useEffect(() => {
 
                   
                     <div className="mapLocationDiv">
-                    <div
+      <div
         ref={smallMapRef}
         style={{
           width: "100%",
           height: "450px",
-          visibility: showFullMap ? "hidden" : "visible", // Hide small map when full map is visible
+          visibility: showFullMap ? "hidden" : "visible", 
           position: "relative",
         }}
       >
-        {/* Button to toggle full map */}
         <div className="toggle-map-icon" onClick={toggleMapView}>
-          {showFullMap ? (
-            <>
-              <span>Hide Map</span>
-            </>
-          ) : (
-            <>
-              <span>Show Full Map</span>
-            </>
-          )}
+          {showFullMap ? <span>Hide Map</span> : <span>Show Full Map</span>}
         </div>
       </div>
 
-      {/* Display the full map when `showFullMap` is true */}
       {showFullMap && (
         <div className="map-overlay">
           <div className="map-overlay-content">
-            <span className="map-overlay-close" onClick={toggleMapView}> 
+            <span className="map-overlay-close" onClick={toggleMapView}>
               <i className="ri-close-line"></i>
             </span>
             <div
@@ -793,34 +730,24 @@ useEffect(() => {
                   </Modal>
 
                   <div className="mapLocationDiv">
-                    <div
+      <div
         ref={smallMapRef}
         style={{
           width: "100%",
           height: "450px",
-          visibility: showFullMap ? "hidden" : "visible", // Hide small map when full map is visible
+          visibility: showFullMap ? "hidden" : "visible", 
           position: "relative",
         }}
       >
-        {/* Button to toggle full map */}
         <div className="toggle-map-icon" onClick={toggleMapView}>
-          {showFullMap ? (
-            <>
-              <span>Hide Map</span>
-            </>
-          ) : (
-            <>
-              <span>Show Full Map</span>
-            </>
-          )}
+          {showFullMap ? <span>Hide Map</span> : <span>Show Full Map</span>}
         </div>
       </div>
 
-      {/* Display the full map when `showFullMap` is true */}
       {showFullMap && (
         <div className="map-overlay">
           <div className="map-overlay-content">
-            <span className="map-overlay-close" onClick={toggleMapView}> 
+            <span className="map-overlay-close" onClick={toggleMapView}>
               <i className="ri-close-line"></i>
             </span>
             <div

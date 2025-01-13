@@ -231,7 +231,14 @@
     display: flex;
     gap: 10px; 
   }
-  
+  .boost_text{
+    color: gray;
+    font-size: 12px;
+  }
+  .interested {
+    font-size: 14px;
+    color: #008080;
+}
  
   .btn_boost {
     background-color: #008080;

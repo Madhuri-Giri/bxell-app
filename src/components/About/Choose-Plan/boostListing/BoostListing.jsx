@@ -54,6 +54,15 @@ useEffect(() => {
   }
 }, [user]);
 
+const handlepropertyNavigate = (type, id) => {
+   
+  navigate("/single-page", { state: { type, id } });
+};
+const handlebusinessNavigate = (type, id) => {
+ 
+  navigate("/single-page", { state: { type, id } });
+};
+
 const fetchPaymentPropertyDetails = async (propertyId) => {
   try {
     if (!user || !propertyId) {
@@ -317,7 +326,7 @@ try {
                 <div className="listingDetailBoxBoost">
                   <div className="promotedTextWrapperBoost">
                     {business.file_name ? (
-                       <img  className="img-fluid"  onClick={() => handlebusinessNavigate("business", business.id)}  src={(() => {
+                       <img  className="img-fluid"  style={{ cursor: "pointer" }}   onClick={() => handlebusinessNavigate("business", business.id)}  src={(() => {
                          try {
                            const fileName = business.file_name;
                      
@@ -345,7 +354,16 @@ try {
                       <p>No images available</p>
                     )}
                   </div>
+                
+                  <div className="inter_text d-flex  justify-content-between">
                   <h5>{business.title}</h5>
+                        <span className="interested">  {business.view} Interested  </span>
+                        </div>
+                  {business.subscription && business.subscription.length > 0 && business.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {business.subscription[0].type}
+                                  </div>
+                                )}
                   <div className="home_priceBoost">
                     <h6> Asking Price: <span>₹{business.asking_price}</span> </h6>
                     <span className="home_conBoost">{business.listing_type}</span>
@@ -354,9 +372,9 @@ try {
                       <span>{business.reported_turnover_to}</span> </h6>
                   <div className="home_callBoost">
                     <h6> <IoLocation /> {business.city} </h6>
-                    <h6>Call</h6>
+                    {/* <h6>Call</h6> */}
                   </div>
-                  <div className="btn_boost" style={{ cursor: "pointer" }} onClick={() => handlePaymentForBusiness(business.id)}> 
+                  <div className="btn_boost" style={{ cursor: "pointer", textAlign: "center" }} onClick={() => handlePaymentForBusiness(business.id)}> 
                   <button className="btn_boost">Pay now</button>
                   </div>
                 </div>
@@ -377,7 +395,7 @@ try {
                 <div className="listingDetailBoxBoost">
                   <div className="promotedTextWrapperBoost">
                     {property.file_name ? (
-                      <img className="img-fluid"  src={(() => {
+                      <img className="img-fluid" style={{ cursor: "pointer" }} onClick={() =>  handlepropertyNavigate("property", property.id) } src={(() => {
                           try {
                             const fileName = property.file_name;
                         
@@ -405,7 +423,15 @@ try {
                       <p>No images available</p>
                     )}
                   </div>
-                  <h5>{property.property_title}</h5>
+                  <div className="inter_text d-flex  justify-content-between">
+                        <h5>{property.property_title}</h5>
+                        <span className="interested">  {property.view} Interested  </span>
+                        </div>
+                  {property.subscription && property.subscription.length > 0 && property.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {property.subscription[0].type}
+                                  </div>
+                                )}
                   <div className="home_priceBoost">
                     <h6> Price: <span>₹{property.asking_price}</span> </h6>
                     <span className="home_conBoost">{property.listing_type}</span>
@@ -415,9 +441,9 @@ try {
                   </div>
                   <div className="home_callBoost">
                     <h6> <IoLocation /> {property.city} </h6>
-                    <h6>Call</h6>
+                    {/* <h6>Call</h6> */}
                   </div>
-                  <div className="btn_boost" style={{cursor:"pointer"}} onClick={() => handlePaymentForProperty(property.id)}>  <button className="btn_boost">Pay now</button>
+                  <div className="btn_boost" style={{cursor:"pointer", textAlign: "center"}} onClick={() => handlePaymentForProperty(property.id)}>  <button className="btn_boost">Pay now</button>
                    </div>
                  
                 </div>

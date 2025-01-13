@@ -390,7 +390,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
         // Navigate to the edit-business page with the API response
         if (response?.result) {
           navigate("/edit-property", {
-            state: { propertyDataData: response.property_detail },
+            state: { propertyData: response.property_detail }, // Correct the key
           });
         }
       } catch (error) {
@@ -624,10 +624,20 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                           )}
                             <button className="edit-button"  onClick={() => handleEditClick(business.id)} > Edit </button>
                         </div>
-                        <h5>{business.title}</h5>
+                        {business.subscription && business.subscription.length > 0 && business.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {business.subscription[0].type}
+                                  </div>
+                                )}
+                        <div className="inter_text d-flex  justify-content-between">
+                           <h5>{business.title}</h5>
+                        <span className="interested">  {business.view} Interested  </span>
+                        </div>
+                       
                         <div className="home_priceBoost">
                           <h6>  Asking Price: <span>₹{business.asking_price}</span>  </h6>
                           <span className="home_conBoost">  {business.listing_type}  </span>
+                         
                         </div>
                         <div className="home_priceBoost">
                           <h6>Reported Sale (yearly): <br></br> <span> {business.reported_turnover_from} - {business.reported_turnover_to}  </span> </h6>
@@ -662,6 +672,18 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             Boost{" "}
                           </button>
                         </div>
+                        <div className="d-flex justify-content-between">
+                          <div className="boost_text">
+                            <span> Lorem ipsum dolor </span>
+                            
+                          </div>
+                          <div className="boost_text">
+                            <span>Lorem ipsum dolor </span>
+                            
+                              </div>
+                        </div>
+                        
+
                         <div>
                           {/* Price Radio Buttons */}
                           {isModalOpenBusiness && (
@@ -792,8 +814,17 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             <p>No images available</p>
                           )}
                            <button className="edit-button"  onClick={() => handlePropertyEditClick(property.id)} > Edit </button>
+                           
                         </div>
+                        {property.subscription && property.subscription.length > 0 && property.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {property.subscription[0].type}
+                                  </div>
+                                )}
+                        <div className="inter_text d-flex  justify-content-between">
                         <h5>{property.property_title}</h5>
+                        <span className="interested">  {property.view} Interested  </span>
+                        </div>
                         <div className="home_priceBoost">
                           <h6>  Price: <span>₹{property.asking_price}</span> </h6>
                           <span className="home_conBoost"> {property.listing_type}  </span>
@@ -810,6 +841,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             <input type="checkbox"   checked={soldStatus[property.id]?.off || false} onChange={() =>  handleCheckboxChange(  property.id,  "off",  "property"   )   } disabled={soldStatus[property.id]?.on}  />  OFF </label> <br />
                         </div>
                         <div className="btn_boost_container">
+                          
                           <div className="sold_status">
                             {soldStatus[property.id]?.on && (
                               <button className="btn_boost">Sold</button>
@@ -817,9 +849,12 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             {soldStatus[property.id]?.off && (
                               <button className="btn_boost">Unsold</button>
                             )}
+                              
                           </div>
+                        
+                        
+
                           <div>
-                          
                             <button
                               className="pay_now_btn"
                               onClick={() =>
@@ -829,8 +864,12 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                               {" "}
                               Boost{" "}
                             </button>
+
+                       
+
                           </div>
                          
+                        
                           {isModalOpenProperty && (
                             <div className="modal_overlay">
                               <div className="modal_content">
@@ -916,7 +955,18 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                             </div>
                           )}
                         </div>
-
+                        <div className="d-flex justify-content-between">
+                          <div className="boost_text">
+                            <span> Lorem ipsum dolor </span>
+                            
+                          </div>
+                          <div className="boost_text">
+                            <span>Lorem ipsum dolor </span>
+                            
+                              </div>
+                        </div>
+                        
+                        
                       </div>
                     </div>
                   ))
@@ -953,7 +1003,12 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                           <div   className="wishlist-heart"  style={{   position: "absolute",  top: "10px",  right: "10px",  zIndex: 10,  }}   >
                             <FaHeart className="wishlist-icon" />  </div>
                           <img  className="img-fluid"  src={ property.property_sale?.file_name ? JSON.parse(property.property_sale.file_name)[0]  : "default-image.jpg" }  alt={property.property_sale?.property_title}  />
-                          <div className="title-location">  <h5>{property.property_sale?.property_title}</h5> 
+                          <div className="title-location"> 
+                          <div className="inter_text d-flex  justify-content-between">
+                          <h5>{property.property_sale?.property_title}</h5>
+                        <span className="interested">  {property.property_sale.view} Interested  </span>
+                        </div>
+                             
                           </div>
                          
                           <div className="home_price">
@@ -999,7 +1054,11 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                           </div>
                           <img  className="img-fluid"  src={  business.business_sale?.file_name ||   "default-image.jpg"} alt={business.business_sale?.title} />
                           <div className="title-location">
-                            <h5>{business.business_sale?.title}</h5>  <span className="interested">Interested</span>
+                          <div className="inter_text d-flex  justify-content-between">
+                          <h5>{business.business_sale?.title}</h5> 
+                        <span className="interested">  {business.business_sale.view} Interested  </span>
+                        </div>
+                       
                           </div>
                           <div className="home_price">
                             <h6>  Asking Price: ₹ <span>{business.business_sale.asking_price}</span> </h6>
