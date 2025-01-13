@@ -377,7 +377,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
       setCurrentBusinessPage((prevPage) => prevPage + 1);
     }
   };
-
+ 
     // const handlepropertyNavigate = (type, id) => {
    
     //   navigate("/single-page", { state: { type, id } });
@@ -602,7 +602,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
 
               <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
                 {businessSale.length > 0 ? (
-                 paginate(businessSale).map((business, index) => (
+                 businessSale.map((business, index) => (
                     <div className="col-lg-3 col-md-6 col-sm-6 listingDetailCOLBoost" key={index}>
                       <div className="listingDetailBoxBoost">
                         <div className="promotedTextWrapperBoost image-wrapper">
