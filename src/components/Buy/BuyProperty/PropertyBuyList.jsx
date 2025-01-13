@@ -895,7 +895,7 @@ function PropertyBuyList() {
                             <div className="listing-details">
                               <div className="title-location">
                                 <h5>{lists.title}</h5>
-                                <span className="interested">  {lists.view} Interested  </span>
+                                <span className="interested"  style={{textAlign:"right"}}>  {lists.view} Interested  </span>
                               </div>
                               <div className="home_price">
                                 <span className="buy_titles"> Asking Price: ₹ <span>{lists.asking_price}</span> </span> <span className="home_con">  {lists.listing_type} </span>
@@ -987,7 +987,7 @@ function PropertyBuyList() {
                             />
 
                             <div className="title-location">
-                              <h5>{listsProperty.property_title}</h5> <span className="interested"> {listsProperty.view} Interested </span>
+                              <h5>{listsProperty.property_title}</h5> <span className="interested"  style={{textAlign:"right"}}> {listsProperty.view} Interested </span>
                             </div>
                             <div className="home_price">
                               <span className="buy_titles"> Price: ₹ <span>{listsProperty.asking_price}</span> </span>

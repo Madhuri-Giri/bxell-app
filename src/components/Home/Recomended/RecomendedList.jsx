@@ -185,7 +185,11 @@ const handleSelectCountry = (country) => {
                             <div className="promotedText"> {list.subscription[0].type} </div>
                           )}
                       </div>
+                     
+                      <div className="inter_text d-flex justify-content-between">
                       <h5>{list.title}</h5>
+                    <span className="interested"  style={{textAlign:"right"}}>{list.view} Interested</span>
+                  </div>
                       <div className="home_price">
                         <h6> Asking Price: ₹ <span>{list.asking_price}</span></h6> <span className="home_con">{list.listing_type}</span>
                       </div>
@@ -223,7 +227,11 @@ const handleSelectCountry = (country) => {
                               console.error( "Error parsing or handling file_name:", error );
                                  return "default-image.jpg";  }  })()} alt={property.title || "business Image"} />
                       </div>
+                    
+                      <div className="inter_text d-flex justify-content-between">
                       <h5>{property.property_title}</h5>
+                    <span className="interested"  style={{textAlign:"right"}}>{property.view} Interested</span>
+                  </div>
                       <div className="home_price">
                         <h6> Price: ₹ <span>{property.asking_price}</span></h6> <span className="home_con">{property.listing_type}</span>
                       </div>

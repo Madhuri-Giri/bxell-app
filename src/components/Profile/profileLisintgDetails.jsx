@@ -631,7 +631,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                                 )}
                         <div className="inter_text d-flex  justify-content-between">
                            <h5>{business.title}</h5>
-                        <span className="interested">  {business.view} Interested  </span>
+                        <span className="interested"  style={{textAlign:"right"}}>  {business.view} Interested  </span>
                         </div>
                        
                         <div className="home_priceBoost">
@@ -823,7 +823,7 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                                 )}
                         <div className="inter_text d-flex  justify-content-between">
                         <h5>{property.property_title}</h5>
-                        <span className="interested">  {property.view} Interested  </span>
+                        <span className="interested"  style={{textAlign:"right"}}>  {property.view} Interested  </span>
                         </div>
                         <div className="home_priceBoost">
                           <h6>  Price: <span>₹{property.asking_price}</span> </h6>
@@ -1002,21 +1002,28 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                         <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
                           <div   className="wishlist-heart"  style={{   position: "absolute",  top: "10px",  right: "10px",  zIndex: 10,  }}   >
                             <FaHeart className="wishlist-icon" />  </div>
-                          <img  className="img-fluid"  src={ property.property_sale?.file_name ? JSON.parse(property.property_sale.file_name)[0]  : "default-image.jpg" }  alt={property.property_sale?.property_title}  />
+                          <img  className="img-fluid promotedTextWrapperBoost"  src={ property.property_sale?.file_name ? JSON.parse(property.property_sale.file_name)[0]  : "default-image.jpg" }  alt={property.property_sale?.property_title}  />
+                          {property.property_sale.subscription && property.property_sale.subscription.length > 0 && property.property_sale.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {property.property_sale.subscription[0].type}
+                                  </div>
+                                )}
                           <div className="title-location"> 
                           <div className="inter_text d-flex  justify-content-between">
                           <h5>{property.property_sale?.property_title}</h5>
-                        <span className="interested">  {property.property_sale.view} Interested  </span>
+                        <span className="interested"  style={{textAlign:"right"}}>  {property.property_sale.view} Interested  </span>
                         </div>
                              
                           </div>
                          
                           <div className="home_price">
                             <h6>  Asking Price: ₹{" "}  <span>{property.property_sale.asking_price}</span>  </h6>
+                            <span className="home_con"> {property.property_sale.listing_type}  </span>
                           </div>
                           <div>
                               <h6>Property Type : <strong>{property.property_sale.property_type}</strong></h6>
                           </div>
+                       
                           <div className="location-call">
                             <h6> <IoLocation /> {property.property_sale.city} </h6>
               <a  href={`tel:${property.property_sale.phone_number}`} className="call-btn" style={{ textDecoration: "none" }} > Call <FaPhoneAlt />  </a>
@@ -1052,17 +1059,51 @@ const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
                           <div  className="wishlist-heart"  style={{   position: "absolute",  top: "10px",  right: "10px",  zIndex: 10,  }}  >
                              <FaHeart className="wishlist-icon" />
                           </div>
-                          <img  className="img-fluid"  src={  business.business_sale?.file_name ||   "default-image.jpg"} alt={business.business_sale?.title} />
+                          {/* <img  className="img-fluid"  src={  business.business_sale?.file_name ||   "default-image.jpg"} alt={business.business_sale?.title} /> */}
+                          <img className="img-fluid" onClick={() =>  handlebusinessNavigate("business", business.id) }
+                              src={(() => {
+                                try {
+                                  const fileName =  business.business_sale?.file_name ;
+
+                                  // Parse the file_name if it's a JSON string
+                                  const files = typeof fileName === "string" &&  fileName.startsWith("[") ? JSON.parse(fileName)  : fileName;
+
+                                  if (typeof files === "string") {
+                                    // Single image case
+                                    return files.startsWith("http") ? files  : `${BASE_URL}/${files}`;
+                                  } else if (
+                                    Array.isArray(files) &&  files.length > 0
+                                  ) {
+                                    // Multiple images case
+                                    return files[0].startsWith("http") ? files[0]   : `${BASE_URL}/${files[0]}`;
+                                  } else {
+                                    // Default image as fallback
+                                    return "default-image.jpg";
+                                  }
+                                } catch (error) {
+                                  console.error( "Error parsing or handling file_name:", error );
+                                  return "default-image.jpg";
+                                }
+                              })()}
+                              alt={business.title || "business Image"}
+                            />
+                          {business.business_sale.subscription && business.business_sale.subscription.length > 0 && business.business_sale.subscription[0].status === "Valid" && (
+                                  <div className="promotedText">
+                                    {business.business_sale.subscription[0].type}
+                                  </div>
+                                )}
                           <div className="title-location">
                           <div className="inter_text d-flex  justify-content-between">
                           <h5>{business.business_sale?.title}</h5> 
-                        <span className="interested">  {business.business_sale.view} Interested  </span>
+                        <span className="interested"  style={{textAlign:"right"}}>  {business.business_sale.view} Interested  </span>
                         </div>
                        
                           </div>
                           <div className="home_price">
                             <h6>  Asking Price: ₹ <span>{business.business_sale.asking_price}</span> </h6>
+                            <span className="home_con"> {business.business_sale.listing_type}  </span>
                           </div>
+                     
                           <div className="home_priceBoost">
                             <h6>Reported Sale (yearly): <br></br>  <span>  {business.business_sale.reported_turnover_from} - {business.business_sale.reported_turnover_to}  </span> </h6>
                           </div>

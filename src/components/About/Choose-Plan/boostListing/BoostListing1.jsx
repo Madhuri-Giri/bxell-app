@@ -56,13 +56,65 @@ const BoostListing1 = () => {
 
    
     const handlepropertyNavigate = (type, id) => {
-   
       navigate("/single-page", { state: { type, id } });
     };
+
     const handlebusinessNavigate = (type, id) => {
-     
       navigate("/single-page", { state: { type, id } });
     };
+    
+    const [currentPageBusiness, setCurrentPageBusiness] = useState(1);
+const [itemsPerPageBusiness] = useState(4); // Number of items per page for businesses
+
+const [currentPageProperty, setCurrentPageProperty] = useState(1);
+const [itemsPerPageProperty] = useState(4); // Number of items per page for properties
+
+const handleBusinessPageChange = (pageNumber) => {
+  setCurrentPageBusiness(pageNumber);
+};
+
+const handlePropertyPageChange = (pageNumber) => {
+  setCurrentPageProperty(pageNumber);
+};
+
+// Total pages for each category
+const totalPagesBusiness = Math.ceil((businessSale?.length || 0) / itemsPerPageBusiness);
+const totalPagesProperty = Math.ceil((propertySale?.length || 0) / itemsPerPageProperty);
+
+const currentBusinessSale = businessSale.slice(
+  (currentPageBusiness - 1) * itemsPerPageBusiness,
+  currentPageBusiness * itemsPerPageBusiness
+);
+
+const currentPropertySale = propertySale.slice(
+  (currentPageProperty - 1) * itemsPerPageProperty,
+  currentPageProperty * itemsPerPageProperty
+);
+
+const handlePreviousPage = () => {
+  if (currentPageProperty > 1) {
+    handlePropertyPageChange(currentPageProperty - 1);
+  }
+};
+
+const handleNextPage = (totalPages) => {
+  if (currentPageProperty < totalPages) {
+    handlePropertyPageChange(currentPageProperty + 1);
+  }
+};
+
+const handleBusinessPreviousPage = () => {
+  if (currentPageBusiness > 1) {
+    handleBusinessPageChange(currentPageBusiness - 1);
+  }
+};
+
+const handleBusinessNextPage = (totalPages) => {
+  if (currentPageBusiness < totalPages) {
+    handleBusinessPageChange(currentPageBusiness + 1);
+  }
+};
+
   // ----------------------propert payment -------------------------------
   const fetchPaymentPropertyDetails = async (propertyId) => {
     try {
@@ -322,162 +374,218 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
             <h6>BUSINESS LISTINGS FOR YOU</h6>
           </div>
           <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
-            {businessSale && businessSale.length > 0 ? (
-              businessSale.map((business, index) => (
-                <div className="col-lg-3 listingDetailCOLBoost" key={index}>
-                  <div className="listingDetailBoxBoost">
-                    <div className="promotedTextWrapperBoost">
-                      {business.file_name ? (
-                        <img
-                        className="img-fluid"  style={{ cursor: "pointer" }} 
-                        onClick={() => handlebusinessNavigate("business", business.id)}
-                        src={(() => {
-                          try {
-                            const fileName = business.file_name;
-                      
-                            // Parse the file_name if it's a JSON string
-                            const files =
-                              typeof fileName === "string" && fileName.startsWith("[")
-                                ? JSON.parse(fileName)
-                                : fileName;
-                      
-                            if (typeof files === "string") {
-                              // Single image case
-                              return files.startsWith("http") ? files : `${BASE_URL}/${files}`;
-                            } else if (Array.isArray(files) && files.length > 0) {
-                              // Multiple images case
-                              return files[0].startsWith("http") ? files[0] : `${BASE_URL}/${files[0]}`;
-                            } else {
-                              // Default image as fallback
-                              return "default-image.jpg";
-                            }
-                          } catch (error) {
-                            console.error("Error parsing or handling file_name:", error);
-                            return "default-image.jpg"; // Fallback in case of error
-                          }
-                        })()}
-                        alt={business.title || "business Image"}
-                      />
-                      ) : (
-                        <p>No images available</p>
-                      )}
-                    </div>
-                    <div className="inter_text d-flex  justify-content-between">
-                  <h5>{business.title}</h5>
-                        <span className="interested">  {business.view} Interested  </span>
-                        </div>
-                    {business.subscription && business.subscription.length > 0 && business.subscription[0].status === "Valid" && (
-                                  <div className="promotedText">
-                                    {business.subscription[0].type}
-                                  </div>
-                                )}
+  {businessSale && businessSale.length > 0 ? (
+    <>
+      {currentBusinessSale.map((business, index) => (
+        <div className="col-lg-3 listingDetailCOLBoost" key={index}>
+          <div className="listingDetailBoxBoost">
+            <div className="promotedTextWrapperBoost">
+              {business.file_name ? (
+                <img
+                  className="img-fluid"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handlebusinessNavigate("business", business.id)}
+                  src={(() => {
+                    try {
+                      const fileName = business.file_name;
+                      const files =
+                        typeof fileName === "string" && fileName.startsWith("[")
+                          ? JSON.parse(fileName)
+                          : fileName;
 
-                    <div className="home_priceBoost">
-                      <h6>
-                        Asking Price: <span>₹{business.asking_price}</span>
-                      </h6>
-                      <span className="home_conBoost">{business.listing_type}</span>
-                    </div>
-                    <h6>Reported Sale (yearly) : <br></br> 
-                      ₹ <span>{business.reported_turnover_from} - </span>
-                      <span>{business.reported_turnover_to}</span>
-                    </h6>
-                    <div className="home_callBoost">
-                      <h6>
-                        <IoLocation /> {business.city}
-                      </h6>
-                      {/* <h6>Call</h6> */}
-                    </div>
-                    <div className="btn_boost" onClick={() => handlePaymentForBusiness(business.id)} style={{cursor:"pointer", textAlign: "center"}}> 
-                    <button className="btn_boost">Pay now</button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No business listings available.</p>
-            )}
+                      if (typeof files === "string") {
+                        return files.startsWith("http") ? files : `${BASE_URL}/${files}`;
+                      } else if (Array.isArray(files) && files.length > 0) {
+                        return files[0].startsWith("http") ? files[0] : `${BASE_URL}/${files[0]}`;
+                      } else {
+                        return "default-image.jpg";
+                      }
+                    } catch (error) {
+                      console.error("Error parsing or handling file_name:", error);
+                      return "default-image.jpg";
+                    }
+                  })()}
+                  alt={business.title || "Business Image"}
+                />
+              ) : (
+                <p>No images available</p>
+              )}
+            </div>
+            <div className="inter_text d-flex justify-content-between">
+              <h5>{business.title}</h5>
+              <span className="interested"  style={{textAlign:"right"}}>{business.view} Interested</span>
+            </div>
+            {business.subscription &&
+              business.subscription.length > 0 &&
+              business.subscription[0].status === "Valid" && (
+                <div className="promotedText">{business.subscription[0].type}</div>
+              )}
+            <div className="home_priceBoost">
+              <h6>
+                Asking Price: <span>₹{business.asking_price}</span>
+              </h6>
+              <span className="home_conBoost">{business.listing_type}</span>
+            </div>
+            <h6>
+              Reported Sale (yearly): <br />
+              ₹ <span>{business.reported_turnover_from}</span> -{" "}
+              <span>{business.reported_turnover_to}</span>
+            </h6>
+            <div className="home_callBoost">
+              <h6>
+                <IoLocation /> {business.city}
+              </h6>
+            </div>
+            <div
+              className="btn_boost"
+              onClick={() => handlePaymentForBusiness(business.id)}
+              style={{ cursor: "pointer", textAlign: "center" }}
+            >
+              <button className="btn_boost">Pay now</button>
+            </div>
           </div>
+        </div>
+      ))}
+  <div className="pagination-controls">
+        <button
+          onClick={handleBusinessPreviousPage}
+          className="page-button"
+          disabled={currentPageBusiness === 1}
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPagesBusiness }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handleBusinessPageChange(page)}
+            className={`page-button ${page === currentPageBusiness ? "active" : ""}`}
+          >
+            {page}
+          </button>
+        ))}
+        <button
+          onClick={() => handleBusinessNextPage(totalPagesBusiness)}
+          className="page-button"
+          disabled={currentPageBusiness === totalPagesBusiness}
+        >
+          Next
+        </button>
+      </div>
+    </>
+  ) : (
+    <p>No business listings available.</p>
+  )}
+</div>
+
           {/* Property Listings */}
           <div className="explorePropertyHed homeListingDetailBoost">
             <h6>PROPERTY LISTINGS FOR YOU</h6>
           </div>
           <div className="row listingDetailRow_1Boost listingDetailExploreRowBoost">
-            {propertySale && propertySale.length > 0 ? (
-              propertySale.map((property, index) => (
-                <div className="col-lg-3 listingDetailCOLBoost" key={index}>
-                  <div className="listingDetailBoxBoost">
-                    <div className="promotedTextWrapperBoost">
-                      {property.file_name ? (
-                        <img
-                          className="img-fluid"
-                          style={{ cursor: "pointer" }} onClick={() =>  handlepropertyNavigate("property", property.id) }
-                          src={(() => {
-                            try {
-                              const fileName = property.file_name;
-                          
-                              // Parse the file_name if it's a JSON string
-                              const files =
-                                typeof fileName === "string" && fileName.startsWith("[")
-                                  ? JSON.parse(fileName)
-                                  : fileName;
-                          
-                              if (typeof files === "string") {
-                                // Single image case
-                                return files.startsWith("http") ? files : `${BASE_URL}/${files}`;
-                              } else if (Array.isArray(files) && files.length > 0) {
-                                // Multiple images case
-                                return files[0].startsWith("http") ? files[0] : `${BASE_URL}/${files[0]}`;
-                              } else {
-                                // Default image as fallback
-                                return "default-image.jpg";
-                              }
-                            } catch (error) {
-                              console.error("Error parsing or handling file_name:", error);
-                              return "default-image.jpg"; // Fallback in case of error
-                            }
-                          })()}
-                          
-                        />
-                      ) : (
-                        <p>No images available</p>
-                      )}
-                    </div>
-                    <div className="inter_text d-flex  justify-content-between">
-                        <h5>{property.property_title}</h5>
-                        <span className="interested">  {property.view} Interested  </span>
-                        </div>
-                    {property.subscription && property.subscription.length > 0 && property.subscription[0].status === "Valid" && (
-                                  <div className="promotedText">
-                                    {property.subscription[0].type}
-                                  </div>
-                                )}
-                                 
-                    <div className="home_priceBoost">
-                      <h6>
-                        Price: <span>₹{property.asking_price}</span>
-                      </h6>
-                      <span className="home_conBoost">{property.listing_type}</span>
-                    </div>
-                    <div>
-                      <h6>Property Type : <strong>{property.property_type}</strong></h6>
-                    </div>
-                    <div className="home_callBoost">
-                      <h6>
-                        <IoLocation /> {property.city}
-                      </h6>
-                      {/* <h6>Call</h6> */}
-                    </div>
-                    <div className="btn_boost" onClick={() => handlePaymentForProperty(property.id)} style={{cursor:"pointer", textAlign: "center"}}> <button className="btn_boost"  >Pay now</button> </div>
-                   
-                  </div>
-               
-                </div>
-              ))
-            ) : (
-              <p>No property listings available.</p>
-            )}
+  {propertySale && propertySale.length > 0 ? (
+    <>
+      {currentPropertySale.map((property, index) => (
+        <div className="col-lg-3 listingDetailCOLBoost" key={index}>
+          <div className="listingDetailBoxBoost">
+            <div className="promotedTextWrapperBoost">
+              {property.file_name ? (
+                <img
+                  className="img-fluid"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handlepropertyNavigate("property", property.id)}
+                  src={(() => {
+                    try {
+                      const fileName = property.file_name;
+                      const files =
+                        typeof fileName === "string" && fileName.startsWith("[")
+                          ? JSON.parse(fileName)
+                          : fileName;
+
+                      if (typeof files === "string") {
+                        return files.startsWith("http") ? files : `${BASE_URL}/${files}`;
+                      } else if (Array.isArray(files) && files.length > 0) {
+                        return files[0].startsWith("http") ? files[0] : `${BASE_URL}/${files[0]}`;
+                      } else {
+                        return "default-image.jpg";
+                      }
+                    } catch (error) {
+                      console.error("Error parsing or handling file_name:", error);
+                      return "default-image.jpg";
+                    }
+                  })()}
+                />
+              ) : (
+                <p>No images available</p>
+              )}
+            </div>
+            <div className="inter_text d-flex justify-content-between">
+              <h5>{property.property_title}</h5>
+              <span className="interested"  style={{textAlign:"right"}}>{property.view} Interested</span>
+            </div>
+            {property.subscription &&
+              property.subscription.length > 0 &&
+              property.subscription[0].status === "Valid" && (
+                <div className="promotedText">{property.subscription[0].type}</div>
+              )}
+            <div className="home_priceBoost">
+              <h6>
+                Price: <span>₹{property.asking_price}</span>
+              </h6>
+              <span className="home_conBoost">{property.listing_type}</span>
+            </div>
+            <div>
+              <h6>
+                Property Type: <strong>{property.property_type}</strong>
+              </h6>
+            </div>
+            <div className="home_callBoost">
+              <h6>
+                <IoLocation /> {property.city}
+              </h6>
+            </div>
+            <div
+              className="btn_boost"
+              onClick={() => handlePaymentForProperty(property.id)}
+              style={{ cursor: "pointer", textAlign: "center" }}
+            >
+              <button className="btn_boost">Pay now</button>
+            </div>
           </div>
+        </div>
+      ))}
+      <div className="pagination-controls">
+        <button
+          onClick={handlePreviousPage}
+          className="page-button"
+          disabled={currentPageProperty === 1}
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPagesProperty }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePropertyPageChange(page)}
+            className={`page-button ${
+              page === currentPageProperty ? "active" : ""
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+        <button
+          onClick={() => handleNextPage(totalPagesProperty)}
+          className="page-button"
+          disabled={currentPageProperty === totalPagesProperty}
+        >
+          Next
+        </button>
+      </div>
+    </>
+  ) : (
+    <p>No property listings available.</p>
+  )}
+</div>
+
         </div>
       </section>
          <Footer/>

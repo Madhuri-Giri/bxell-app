@@ -149,6 +149,7 @@
     font-size: 10px;
     margin-top: -3px;
 }
+
 .promotedTextWrapperBoost {
     position: relative;
     display: flex;
@@ -164,6 +165,20 @@
     padding: 2px 8px;
     font-weight: bold;
     z-index: 10;
+}
+
+.promotedText {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #f4c542;
+  color: #fff;
+  padding: 2px 8px;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 6px;
+  z-index: 10;
+  text-transform: uppercase;
 }
 
 .promotedTextWrapperBoost h5 {
@@ -340,6 +355,7 @@
   .enquiry-table tr:hover {
     background-color: #f1f1f1;
   }
+  
   .tab-button{
     color: #008080;
     font-weight: bolder;

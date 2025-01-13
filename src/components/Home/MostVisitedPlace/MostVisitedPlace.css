@@ -260,15 +260,17 @@
   background: #00808014;
   cursor: pointer;
   margin-bottom: 10px;
- 
   text-align: center;
   width: 120px;
   flex-shrink: 0; /* Prevent shrinking of cards */
 }
-
 .chooseCityChilds h6 {
   font-size: 14px;
+  text-align: center;
+  word-break: break-word;
+  overflow-wrap: break-word; 
 }
+
 
 .chooseCityMain svg {
   font-size: 35px;
@@ -344,8 +346,9 @@
       display: block; 
       margin: 5px;
   }
-  .chooseCityChilds {
+
+  /* .chooseCityChilds {
       width: 100%; 
       
-  }
+  } */
 }
