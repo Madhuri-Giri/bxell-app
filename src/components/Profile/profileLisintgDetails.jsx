@@ -1103,7 +1103,7 @@ const handleBusinessNextPageFav = (totalPages) => {
                             <FaHeart className="wishlist-icon" />  </div>
                         
 
-                          <img className="img-fluid" onClick={() =>  handlepropertyNavigate("property", property.id) }
+                          <img className="img-fluid" onClick={() =>  handlepropertyNavigate("property", property.property_sale.id) }
                               src={(() => {
                                 try {
                                   const fileName =   property.property_sale?.file_name ;
@@ -1213,7 +1213,7 @@ const handleBusinessNextPageFav = (totalPages) => {
                              <FaHeart className="wishlist-icon" />
                           </div>
                           {/* <img  className="img-fluid"  src={  business.business_sale?.file_name ||   "default-image.jpg"} alt={business.business_sale?.title} /> */}
-                          <img className="img-fluid" onClick={() =>  handlebusinessNavigate("business", business.id) }
+                          <img className="img-fluid" onClick={() =>  handlebusinessNavigate("business", business.business_sale.id) }
                               src={(() => {
                                 try {
                                   const fileName =  business.business_sale?.file_name ;

@@ -558,7 +558,29 @@ function PropertyBuySinglePage() {
                             <div className="propertyBuyClsNameCOL">
                               <div className="propertyBuyClsNameBox">
                                 <div className="promotedTextWrapper">
-                                  <img className="img-fluid" alt={property.title || "property Image"}  />
+                                  {/* <img className="img-fluid" alt={property.title || "property Image"}  /> */}
+                                  <img  className="img-fluid" style={{ cursor: "pointer" }} onClick={() => handlepropertyNavigate( "property",
+                                        property.id  ) }
+                                    src={(() => {
+                                      try {
+                                        const fileName = property.file_name;
+                                        const files = typeof fileName === "string" && fileName.startsWith("[") ? JSON.parse(fileName) : fileName;
+
+                                        if (typeof files === "string") {
+                                          return files.startsWith("http")
+                                            ? files : `${BASE_URL}/${files}`;
+                                        } else if (
+                                          Array.isArray(files) &&  files.length > 0
+                                        ) {
+                                          return files[0].startsWith("http") ? files[0]  : `${BASE_URL}/${files[0]}`;
+                                        } else {
+                                          return "default-image.jpg";
+                                        }
+                                      } catch (error) {
+                                        console.error( "Error parsing or handling file_name:",  error );
+                                        return "default-image.jpg";
+                                      }
+                                    })()}  alt={property.title || "property Image"}  />
                                 </div>
                                 <h5>{property.property_title}</h5>
                                 <div className="home_price">
