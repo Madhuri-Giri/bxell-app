@@ -39,9 +39,7 @@ const BoostListing = () => {
             setBusinessIds(businessIds);  // Set state for all business IDs
             setPropertyIds(propertyIds);  // Set state for all property IDs
 
-        } else {
-            setError("No listings available.");
-        }
+        } 
     } catch (error) {
         setError("Failed to load listings.");
     }
@@ -471,7 +469,11 @@ try {
             </div>
           </>
         ) : (
-          <p>No business listings available.</p>
+        
+          <div className="data-not-found">
+          <h4>Data Not Found</h4>
+          <p>Loading Boost Business Listing...</p>
+        </div>
         )}
       </div>
       
@@ -580,7 +582,10 @@ try {
             </div>
           </>
         ) : (
-          <p>No property listings available.</p>
+          <div className="data-not-found">
+          <h4>Data Not Found</h4>
+          <p>Loading Boost Property Listing...</p>
+        </div>
         )}
       </div>
       

@@ -17,7 +17,7 @@ function RecomendedList() {
   const [searchTitle, setSearchTitle] = useState("");
   const [filterData, setFilterData] = useState(null);
   const [countries, setCountries] = useState([]);
-  const [selectedCountry, setSelectedCountry]= useState([]);
+  const [selectedCountry, setSelectedCountry]= useState(null);
 
     useEffect(() => {
       const getCountries = async () => {

@@ -96,7 +96,10 @@ function Blog() {
               </div>
             ))
           ) : (
-            <p>Loading blogs...</p>
+            <div className="data-not-found">
+              <h4>Data Not Found</h4>
+              <p>Loading Blogs......</p>
+            </div>
           )}
         </div>
 

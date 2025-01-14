@@ -63,3 +63,8 @@
     border-radius: 4px;
 }
 
+.data-not-found {
+    text-align: center;
+    color: #888;
+    margin-top: 20px;
+  }

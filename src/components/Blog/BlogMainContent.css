@@ -15,7 +15,11 @@
     /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
     overflow: hidden;
 }
-
+.data-not-found {
+    text-align: center;
+    color: #888;
+    margin-top: 20px;
+  }
 .blog-image img {
     width: 100%;
     display: block;

@@ -39,8 +39,6 @@ const BoostListing1 = () => {
               setPropertyIds(propertyIds);  // Set state for all property IDs
   
              
-          } else {
-              setError("No listings available.");
           }
       } catch (error) {
           setError("Failed to load listings.");
@@ -366,7 +364,7 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
         <div className="container">
           
           {/* Loading State */}
-          {loading && <p>Loading...</p>}
+          {/* {loading && <p>Loading...</p>} */}
           {/* Error State */}
           {error && <p>{error}</p>}
           {/* Business Listings */}
@@ -473,7 +471,10 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
       </div>
     </>
   ) : (
-    <p>No business listings available.</p>
+    <div className="data-not-found">
+          <h4>Data Not Found</h4>
+          <p>Loading Boost Business Listing...</p>
+        </div>
   )}
 </div>
 
@@ -582,7 +583,10 @@ const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
       </div>
     </>
   ) : (
-    <p>No property listings available.</p>
+    <div className="data-not-found">
+          <h4>Data Not Found</h4>
+          <p>Loading Boost Property Listing...</p>
+        </div>
   )}
 </div>
 

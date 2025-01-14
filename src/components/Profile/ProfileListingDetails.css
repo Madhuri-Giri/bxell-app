@@ -496,6 +496,19 @@
     display: block;
   }
   
+  .data-not-found {
+    text-align: center;
+    color: #888;
+    margin-top: 20px;
+  }
+  .no-listings {
+    color: red;
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
 @media(max-width:768px){
     .listing{
         font-size: 13px;
