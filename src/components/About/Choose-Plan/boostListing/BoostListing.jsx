@@ -373,7 +373,7 @@ try {
         {businessSale && businessSale.length > 0 ? (
           <>
             {currentBusinessSale.map((business, index) => (
-              <div className="col-lg-3 listingDetailCOLBoost" key={index}>
+              <div className="col-lg-3 col-md-6 listingDetailCOLBoost" key={index}>
                 <div className="listingDetailBoxBoost">
                   <div className="promotedTextWrapperBoost">
                     {business.file_name ? (
@@ -485,7 +485,7 @@ try {
         {propertySale && propertySale.length > 0 ? (
           <>
             {currentPropertySale.map((property, index) => (
-              <div className="col-lg-3 listingDetailCOLBoost" key={index}>
+              <div className="col-lg-3 col-md-6 listingDetailCOLBoost" key={index}>
                 <div className="listingDetailBoxBoost">
                   <div className="promotedTextWrapperBoost">
                     {property.file_name ? (

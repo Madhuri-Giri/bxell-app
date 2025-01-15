@@ -235,7 +235,7 @@ const Page3ROC1 = ({ formData, setFormData, errors }) => {
          <div className="col-lg-7 col-md-12 col-sm-12">
        <Form.Group className="businessListingFormsDiv" controlId="city">
          <Form.Label>TOWN/CITY</Form.Label>
-         <span className="vallidateRequiredStar">*</span>
+         {/* <span className="vallidateRequiredStar">*</span> */}
          <Form.Control
            as="select"
            name="city"

@@ -472,8 +472,6 @@ const handleBusinessNextPageFav = (totalPages) => {
   }
 };
 
-    
- 
   // ---------------Enquiry form api-------------------------
   useEffect(() => {
     const fetchData = async () => {
@@ -498,29 +496,83 @@ const handleBusinessNextPageFav = (totalPages) => {
   }, [user]);
 
 // --------------------Favourite API ------------------------------------
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user) {
-        console.error("User ID is not available. Please log in.");
-        return;
-      }
+useEffect(() => {
+  const fetchData = async () => {
+    if (!user) {
+      console.error("User ID is not available. Please log in.");
+      return;
+    }
 
-      try {
-        const propertyRes = await fetchPropertyFavoriteRes(user);
-        const businessRes = await fetchBusinessFavoriteRes(user);
+    try {
+      // Fetch the property and business data
+      const propertyRes = await fetchPropertyFavoriteRes(user);
+      const businessRes = await fetchBusinessFavoriteRes(user);
 
-        console.log("Property Data:", propertyRes);
-        console.log("Business Data:", businessRes);
+      console.log("Raw Property Data:", propertyRes);
+      console.log("Raw Business Data:", businessRes);
 
-        setPropertyData(propertyRes);
-        setBusinessData(businessRes);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+      // Filter to include only items with `status` as "Active" in `business_favorite_detail`
+      const filteredBusinessData = businessRes.filter(
+        (item) => item.status === "Active"
+      );
 
-    fetchData();
-  }, []);
+      const filteredPropertyData = propertyRes.filter(
+        (item) => item.status === "Active"
+      );
+
+      console.log("Filtered Business Data (Active):", filteredBusinessData);
+
+      // Update state with filtered data
+      setPropertyData(filteredPropertyData); // Assuming filtering is not needed for properties
+      setBusinessData(filteredBusinessData);
+     
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+
+const handleBusinessFavClick = async (businessId) => {
+  if (!user) {
+    console.error("User ID is not available. Please log in.");
+    return;
+  }
+
+  try {
+    const response = await fetchBusinessFav(businessId, user);
+    if (response.success) {
+      console.log("Business added to favorites:", response);
+      // Optionally, refresh data or update UI
+    } else {
+      console.error("Failed to add business to favorites:", response.message);
+    }
+  } catch (error) {
+    console.error("Error adding business to favorites:", error);
+  }
+};
+
+const handlePropertyFavClick = async (propertyId) => {
+  if (!user) {
+    console.error("User ID is not available. Please log in.");
+    return;
+  }
+
+  try {
+    const response = await fetchPropertyFav(propertyId, user);
+    if (response.success) {
+      console.log("Property added to favorites:", response);
+      // Optionally, refresh data or update UI
+    } else {
+      console.error("Failed to add property to favorites:", response.message);
+    }
+  } catch (error) {
+    console.error("Error adding property to favorites:", error);
+  }
+};
+
+
 
   // -------------------------Listing Detail---------------------
   useEffect(() => {
@@ -1049,7 +1101,7 @@ const handleBusinessNextPageFav = (totalPages) => {
                   // <p className="no-listings">No property listings available.</p>
                   <div className="data-not-found">
                   <h4>Data Not Found</h4>
-                  <p>No property listings available.</p>
+                  <p>Loading property listings...</p>
                 </div>
 
                 )}
@@ -1100,7 +1152,7 @@ const handleBusinessNextPageFav = (totalPages) => {
                       <div className="recommendationsClsNameBox">
                         <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
                           <div   className="wishlist-heart"  style={{   position: "absolute",  top: "10px",  right: "10px",  zIndex: 10,  }}   >
-                            <FaHeart className="wishlist-icon" />  </div>
+                            <FaHeart className="wishlist-icon"   onClick={() => handlePropertyFavClick(property.property_sale.id)} />  </div>
                         
 
                           <img className="img-fluid" onClick={() =>  handlepropertyNavigate("property", property.property_sale.id) }
@@ -1210,7 +1262,7 @@ const handleBusinessNextPageFav = (totalPages) => {
                       <div className="recommendationsClsNameBox">
                         <div  className="propertyBuyListingBox"  style={{ position: "relative" }} >
                           <div  className="wishlist-heart"  style={{   position: "absolute",  top: "10px",  right: "10px",  zIndex: 10,  }}  >
-                             <FaHeart className="wishlist-icon" />
+                             <FaHeart className="wishlist-icon"   onClick={() => handleBusinessFavClick(business.business_sale.id)}/>
                           </div>
                           {/* <img  className="img-fluid"  src={  business.business_sale?.file_name ||   "default-image.jpg"} alt={business.business_sale?.title} /> */}
                           <img className="img-fluid" onClick={() =>  handlebusinessNavigate("business", business.business_sale.id) }

@@ -42,8 +42,21 @@
 
 .footerAboutUs p {
     color: #707070;
-    line-height: 26px;
+   font-size: 16px;
 }
+
+.footerAboutUs h6{
+    color: #707070;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase ;
+}
+
+.footer_contact p{
+    color: #707070;
+    font-size: 16px;
+}
+
 .utf_subscribe_block {
     margin-bottom: 30px;
     color: white;
@@ -122,6 +135,7 @@
     text-align: center;
     margin: auto;
 }
+
 .footerAboutUs h1{
     color: #bdc3c7;
     font-family: Oswald, Arial;

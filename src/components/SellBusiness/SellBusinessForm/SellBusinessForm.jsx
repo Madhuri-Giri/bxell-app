@@ -303,96 +303,319 @@ const [selectedStateId, setSelectedStateId] = useState("");
 //   };
    
   // --------------  payment ------------
+  // const fetchPaymentDetails = async () => {
+  //   try {
+  //     if (!user || !formData.amount) {
+  //       throw new Error("Login ID, amount or Business ID is missing.");
+  //     }
+  
+  //     const payload = {
+  //       amount: formData.amount,
+  //       user_id: user,
+  //     };
+  
+  //     const response = await axios.post(
+  //       "https://bxell.com/bxell/admin/api/create-business-payment",
+  //       payload
+  //     );
+  
+  //     if (response.data.result === true && response.data.status === 200) {
+  //       setPaymentDetails(response.data.payment_details);
+  //       return response.data;
+  //     } else {
+  //       throw new Error(response.data.message || "Failed to fetch payment details");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching payment details:", error.message);
+  //     toast.error(error.message || "Failed to initiate payment. Please try again.");
+  //     return null;
+  //   }
+  // };
+  
+  // const handlePayment = async (e) => {
+  //   e.preventDefault();
+  
+  //   // Reset the error message
+  //   setAmountError("");
+  
+  //   if (!user) {
+  //     navigate("/login");
+  //     return;
+  //   }
+  
+  //   if (!formData.amount) {
+  //     setAmountError("Please select an amount to proceed.");
+  //     return; // Stop further execution
+  //   }
+  
+  //   if (formSubmitting) return; // Prevent multiple submissions
+  //   setFormSubmitting(true);
+  
+  //   try {
+  //     const paymentData = await fetchPaymentDetails();
+  //     if (!paymentData) {
+  //       setFormSubmitting(false);
+  //       return;
+  //     }
+  
+  //     const { razorpay_order_id, razorpay_key, payment_details } = paymentData;
+  
+  //     const options = {
+  //       key: razorpay_key,
+  //       amount: payment_details.amount * 100,
+  //       currency: "INR",
+  //       order_id: razorpay_order_id,
+  //       name: "SRN Infotech",
+  //       description: "Business Purchase",
+  //       image: "https://your-logo-url.com/logo.png",
+  //       handler: async function (response) {
+  //         toast.success("Payment successful!");
+  //         try {
+  //           const formSubmissionData = await handleSubmit(e, payment_details.id);
+  //           if (formSubmissionData) {
+  //             const isPaymentUpdated = await updateHandlePayment(
+  //               response.razorpay_payment_id,
+  //               payment_details.id
+  //             );
+  
+  //             if (isPaymentUpdated) {
+  //               toast.success("Payment update successful!");
+  //             }
+  //           }
+  //         } catch (error) {
+  //           console.error("Error during form submission or payment update:", error.message);
+  //           toast.error("Form submission failed or payment verification failed. Please try again.");
+  //         } finally {
+  //           setFormSubmitting(false);
+  //         }
+  //       },
+  
+  //       prefill: {
+  //         name: paymentData.user_details.name || "User Name",
+  //         email: paymentData.user_details.email || "user@example.com",
+  //         contact: paymentData.user_details.phone_number || "9999999999",
+  //       },
+  //       notes: {
+  //         address: "Some Address",
+  //       },
+  //       theme: {
+  //         color: "#3399cc",
+  //       },
+  //     };
+  
+  //     const rzp1 = new window.Razorpay(options);
+  
+  //     rzp1.on("payment.failed", function (response) {
+  //       setFormSubmitting(false);
+  //       toast.error(`Payment failed: ${response.error.description}`);
+  //     });
+  
+  //     rzp1.open();
+  //   } catch (error) {
+  //     console.error("Error during payment setup:", error.message);
+  //     toast.error("An error occurred during payment setup. Please try again.");
+  //     setFormSubmitting(false);
+  //   }
+  // };
+  
+  // const handleSubmit = async (e, paymentId) => {
+  //   e.preventDefault();
+  
+  //   // Validate the form before submission
+  //   if (!formData.amount) {
+  //     setErrors({ amount: "Amount is required" });
+  //     toast.error("Please fill in all required fields.");
+  //     return null;
+  //   }
+  
+  //   try {
+  //     const updatedFormData = {
+  //       ...formData,
+  //       payment_id: paymentId,
+  //     };
+  
+  //     const response = await submitSellBusinessForm(updatedFormData, user);
+  //     toast.success(response.message || "Form submitted successfully!");
+  //     setFormData({}); // Clear form data after submission
+  //     navigate("/");
+  
+  //     // Return successful form submission data
+  //     return response;
+  //   } catch (error) {
+  //     console.error("Error submitting form:", error.message);
+  //     const apiErrors = error.response?.data?.error || {};
+  //     setErrors(apiErrors);
+  //     toast.error("Failed to submit the form. Please try again.");
+  //     return null;
+  //   }
+  // };
+  
+  // const updateHandlePayment = async (razorpay_payment_id, Id) => {
+  //   try {
+  //     if (!razorpay_payment_id || !Id) {
+  //       throw new Error("Missing payment details");
+  //     }
+  
+  //     const payload = {
+  //       payment_id: razorpay_payment_id,
+  //       id: Id,
+  //     };
+  
+  //     const response = await fetch(
+  //       "https://bxell.com/bxell/admin/api/update-business-payment",
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(payload),
+  //       }
+  //     );
+  
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.message || "Failed to update payment details");
+  //     }
+  
+  //     const data = await response.json();
+  //     console.log("Payment status updated:", data);
+  //     return true;
+  //   } catch (error) {
+  //     console.error("Error updating payment:", error.message);
+  //     toast.error(error.message || "An error occurred during payment verification.");
+  //     return false;
+  //   }
+  // };
+
+
   const fetchPaymentDetails = async () => {
     try {
-      if (!user || !formData.amount) {
-        throw new Error("Login ID, amount or Business ID is missing.");
-      }
+      // Fetch business ID from the submitted form
+      const business_id = await submitSellBusinessForm(formData);
   
+      if (!user || !business_id || !formData.amount) {
+        throw new Error(
+          "Login ID, amount  or Business ID is missing."
+        );
+      }
+
       const payload = {
         amount: formData.amount,
         user_id: user,
+        business_id: business_id,
       };
-  
+
+      console.log("Sending payload:", payload);
+
+      // Call the API to fetch payment details
       const response = await axios.post(
         "https://bxell.com/bxell/admin/api/create-business-payment",
         payload
       );
-  
+
+      console.log("API Response:", response.data);
+
+      // Handle success cases
       if (response.data.result === true && response.data.status === 200) {
-        setPaymentDetails(response.data.payment_details);
-        return response.data;
+        setPaymentDetails(response.data.payment_details); // Update state with payment details
+        console.log("Payment details fetched:", response.data);
+        return response.data; // Return the successful response data
       } else {
-        throw new Error(response.data.message || "Failed to fetch payment details");
+        // Handle unexpected response
+        throw new Error(
+          response.data.message || "Failed to fetch payment details"
+        );
       }
     } catch (error) {
       console.error("Error fetching payment details:", error.message);
-      toast.error(error.message || "Failed to initiate payment. Please try again.");
+      if (error.response) {
+        const errorData = error.response.data;
+
+        // Process errors and update the error state
+        setErrors({
+          asking_price: errorData.error?.asking_price ? errorData.error.asking_price[0] : '',
+          city: errorData.error?.city ? errorData.error.city[0] : '',
+          country: errorData.error?.country ? errorData.error.country[0] : '',
+          current_status: errorData.error?.current_status ? errorData.error.current_status[0] : '',
+          phone_number: errorData.error?.phone_number ? errorData.error.phone_number[0] : '',
+          percentage_of_stake: errorData.error?.percentage_of_stake ? errorData.error.percentage_of_stake[0] : '',
+          reported_turnover_from: errorData.error?.reported_turnover_from ? errorData.error.reported_turnover_from[0] : '',
+          reported_turnover_to: errorData.error?.reported_turnover_to ? errorData.error.reported_turnover_to[0] : '',
+          state: errorData.error?.state ? errorData.error.state[0] : '',
+          you_are: errorData.error?.you_are ? errorData.error.you_are[0] : '',
+          file_name: errorData.error?.file_name ? errorData.error.file_name[0] : '',
+        });
+      }
+      // alert("Failed to initiate payment. Please try again.");
       return null;
     }
   };
-  
+
   const handlePayment = async (e) => {
     e.preventDefault();
   
-    // Reset the error message
-    setAmountError("");
-  
     if (!user) {
+      // Redirect to login if the user is not logged in
       navigate("/login");
       return;
     }
   
-    if (!formData.amount) {
-      setAmountError("Please select an amount to proceed.");
-      return; // Stop further execution
-    }
-  
-    if (formSubmitting) return; // Prevent multiple submissions
-    setFormSubmitting(true);
-  
     try {
-      const paymentData = await fetchPaymentDetails();
-      if (!paymentData) {
-        setFormSubmitting(false);
+      // Submit the form first
+      const response = await submitSellBusinessForm(formData, user);
+  
+      if (!response || response.error) {
+        alert(response.message || "Form submission failed. Please try again.");
         return;
       }
   
-      const { razorpay_order_id, razorpay_key, payment_details } = paymentData;
+      alert(response.message || "Form submitted successfully!");
   
+      // Proceed with payment if the form submission is successful
+      const paymentData = await fetchPaymentDetails();
+      if (!paymentData) {
+        alert("Failed to fetch payment details. Please try again.");
+        return;
+      }
+  
+      const razorpay_order_id = paymentData.payment_details?.razorpay_order_id;
+      const razorpay_key = paymentData.razorpay_key;
+      const payment_details = paymentData.payment_details;
+  
+      if (
+        !razorpay_order_id ||
+        !razorpay_key ||
+        !payment_details ||
+        !payment_details.amount
+      ) {
+        console.error("Incomplete payment data:", paymentData);
+        alert("Missing payment details. Please try again.");
+        return;
+      }
+  
+      // Set up Razorpay payment options
       const options = {
         key: razorpay_key,
-        amount: payment_details.amount * 100,
+        amount: payment_details.amount * 100, // Convert to paise
         currency: "INR",
         order_id: razorpay_order_id,
         name: "SRN Infotech",
         description: "Business Purchase",
         image: "https://your-logo-url.com/logo.png",
         handler: async function (response) {
-          toast.success("Payment successful!");
           try {
-            const formSubmissionData = await handleSubmit(e, payment_details.id);
-            if (formSubmissionData) {
-              const isPaymentUpdated = await updateHandlePayment(
-                response.razorpay_payment_id,
-                payment_details.id
-              );
-  
-              if (isPaymentUpdated) {
-                toast.success("Payment update successful!");
-              }
-            }
+            await updateHandlePayment(
+              response.razorpay_payment_id,
+              payment_details.id
+            );
           } catch (error) {
-            console.error("Error during form submission or payment update:", error.message);
-            toast.error("Form submission failed or payment verification failed. Please try again.");
-          } finally {
-            setFormSubmitting(false);
+            console.error("Error during payment processing:", error.message);
+            alert(
+              "An error occurred while updating the payment status. Please contact support."
+            );
           }
         },
-  
         prefill: {
           name: paymentData.user_details.name || "User Name",
-          email: paymentData.user_details.email || "user@example.com",
+          email: paymentData.user_details.email || "mailto:user@example.com",
           contact: paymentData.user_details.phone_number || "9999999999",
         },
         notes: {
@@ -406,47 +629,13 @@ const [selectedStateId, setSelectedStateId] = useState("");
       const rzp1 = new window.Razorpay(options);
   
       rzp1.on("payment.failed", function (response) {
-        setFormSubmitting(false);
-        toast.error(`Payment failed: ${response.error.description}`);
+        alert(`Payment failed: ${response.error.description}`);
       });
   
       rzp1.open();
     } catch (error) {
       console.error("Error during payment setup:", error.message);
-      toast.error("An error occurred during payment setup. Please try again.");
-      setFormSubmitting(false);
-    }
-  };
-  
-  const handleSubmit = async (e, paymentId) => {
-    e.preventDefault();
-  
-    // Validate the form before submission
-    if (!formData.amount) {
-      setErrors({ amount: "Amount is required" });
-      toast.error("Please fill in all required fields.");
-      return null;
-    }
-  
-    try {
-      const updatedFormData = {
-        ...formData,
-        payment_id: paymentId,
-      };
-  
-      const response = await submitSellBusinessForm(updatedFormData, user);
-      toast.success(response.message || "Form submitted successfully!");
-      setFormData({}); // Clear form data after submission
-      navigate("/");
-  
-      // Return successful form submission data
-      return response;
-    } catch (error) {
-      console.error("Error submitting form:", error.message);
-      const apiErrors = error.response?.data?.error || {};
-      setErrors(apiErrors);
-      toast.error("Failed to submit the form. Please try again.");
-      return null;
+      alert("An error occurred during payment setup. Please try again.");
     }
   };
   
@@ -456,32 +645,145 @@ const [selectedStateId, setSelectedStateId] = useState("");
         throw new Error("Missing payment details");
       }
   
+      const url = "https://bxell.com/bxell/admin/api/update-business-payment";
       const payload = {
         payment_id: razorpay_payment_id,
         id: Id,
       };
+      console.log("Updating payment with payload:", payload);
   
-      const response = await fetch(
-        "https://bxell.com/bxell/admin/api/update-business-payment",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
   
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update payment details");
+        const errorText = await response.text();
+        console.error("Failed to update payment details. Status:", response.status, "Response:", errorText);
+        toast.error("Failed to update payment details. Please try again.");
+        return;
       }
   
       const data = await response.json();
-      console.log("Payment status updated:", data);
-      return true;
+      console.log("Response Data:", data);
+  
+      const status = data?.success || data?.result || "Unknown";
+      console.log("Payment Status:", status);
+  
+      if (status === "Payment record update successfully") {
+        // Display toast notification for success
+        toast.success("Payment successful and verified!");
+        console.log("Payment completed successfully.");
+  
+        // Add delay before navigating
+        setTimeout(() => {
+          // Reset form and navigate to home page after successful payment
+          setFormData({
+            user_id: user,
+            property_title: "",
+            listing_type: "",
+            listed_by: "",
+            property_type: "",
+            country: "",
+            state: "",
+            city: "",
+            area: "",
+            length: "",
+            breadth: "",
+            area_measurment: "",
+            sq_ft: "",
+            asking_price: "",
+            advance_price: "",
+            amount: "299",
+            phone_number: "",
+            bedroom: "",
+            bathroom: "",
+            floor_no: "",
+            additional_detail: "",
+            project_status: "",
+            total_floor: "",
+            file_name: null,
+          });
+          navigate("/");
+        }, 5000); // 3-second delay before navigation
+        
+      } else if (status === "Pending") {
+        toast.warn("Payment successful, but verification is pending. Please contact support.");
+      } else if (status === "Failed") {
+        toast.error("Payment verification failed. Please contact support.");
+      } else {
+        toast.error("Unexpected payment status. Please contact support.");
+      }
     } catch (error) {
-      console.error("Error updating payment:", error.message);
-      toast.error(error.message || "An error occurred during payment verification.");
-      return false;
+      console.error("Error updating payment details:", error.message);
+      toast.error("An error occurred while updating the payment status. Please try again or contact support.");
+    }
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Check if image file is provided
+    if (!formData.file_name) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        file_name: "Image file is required",
+      }));
+      return;
+    }
+  
+    try {
+      const response = await submitSellBusinessForm(formData, user);
+      alert(response.message || "Form submitted successfully!");
+  
+      // Reset form data after successful submission
+      setFormData({
+         user_id: user ,
+        business_type: "",
+        title: "",
+        description: "",
+        percentage_of_stake: "",
+        country: "",
+        state: "",
+        city: "",
+        year_of_establishment: "",
+        ebitda_margin: "",
+        reported_turnover_from: "",
+        reported_turnover_to: "",
+        you_are: "",
+        business_link: "",
+        amount: 299,
+        asking_price: "",
+        phone_number: "",
+        no_of_employees: "",
+        current_status: "",
+        listing_type: "",
+        file_name: null,
+      });
+  
+      setErrors({});
+    } catch (error) {
+      // Handle API errors
+      if (error.response && error.response.data && error.response.data.error) {
+        const apiErrors = error.response.data.error;
+  
+        // Process API errors into a flat structure for the form
+        const processedErrors = Object.keys(apiErrors).reduce((acc, field) => {
+          acc[field] = apiErrors[field][0]; // Take the first error message from the array
+          return acc;
+        }, {});
+  
+        // Update the errors state with the processed errors
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ...processedErrors,
+        }));
+      } else {
+        alert("An unexpected error occurred. Please try again.");
+      }
     }
   };
   
@@ -656,7 +958,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
     <div className="col-lg-7 col-md-12 col-sm-12">
   <Form.Group className="businessListingFormsDiv" controlId="city">
     <Form.Label>TOWN/CITY</Form.Label>
-    <span className="vallidateRequiredStar">*</span>
+    {/* <span className="vallidateRequiredStar">*</span> */}
     <Form.Control
       as="select"
       name="city"
@@ -891,6 +1193,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                           <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group  className="businessListingFormsDiv"  controlId="file_name" >
                               <Form.Label>CHOOSE IMAGES</Form.Label>
+                              <span className="vallidateRequiredStar">*</span>
                               <Form.Control  type="file" name="file_name" multiple  onChange={handleChange}  accept="image/*" />
                               {errors.file_name && ( <p className="error-text">{errors.file_name}</p>   )}
                             </Form.Group>
@@ -931,12 +1234,16 @@ const [selectedStateId, setSelectedStateId] = useState("");
                         {step === steps.length - 1 && (
                           <>
                           {/* <Button  variant="primary"  onClick={handlePayment}  type="submit" > Pay Now </Button> */}
-                          <Button
+                          {/* <Button
         variant="primary"
         onClick={formData.amount === 49 ? () => handlePaymentForBusiness() : handlePayment}
       >
         Pay Now
-      </Button>
+      </Button> */}
+      <Button variant="primary" onClick={handlePayment} type="submit">
+  Pay Now
+</Button>
+
                           </>
                         )}
                       </div>

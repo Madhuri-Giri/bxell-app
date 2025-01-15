@@ -105,7 +105,7 @@ const BlogMainContent = () => {
             ) : (
               <div className="data-not-found">
               <h4>Data Not Found</h4>
-              <p>Loading Blogs......</p>
+              <p>Loading Blogs...</p>
             </div>
             )}
           </div>

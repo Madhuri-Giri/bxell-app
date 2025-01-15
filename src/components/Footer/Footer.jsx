@@ -38,11 +38,11 @@ function Footer() {
             <div className="col-12 col-md-8 col-lg-6 footerAboutUs footer_com">
               <img src={footerLogo} alt="Logo"  width="70"  height="40"  className="d-inline-block align-top" />
               <h1>BEST WAY TO SELL</h1>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Perspiciatis ipsa aliquid Lorem ipsum dolor, sit amet
-                consectetur adipisicing elit.
+              <p className="footer_contact">
+              Join thousands of users buying and selling businesses and properties with ease
               </p>
+              <h6 className="footer_c">Contact Us: </h6>
+              <p className="footer_contact">For support, email us at thebxell@gmail.com or call +91 9566702095</p>
             </div>
 
             <div className="col-12 col-md-4 col-lg-2 mt-2 footerUsefullLinksDiv footer_box">

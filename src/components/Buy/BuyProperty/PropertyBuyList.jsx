@@ -323,41 +323,7 @@ function PropertyBuyList() {
     setPropertyPrice(event.target.value);
   };
 
-  const handleBusinessFavorite = async (businessId) => {
-    if (!user_id) {
-      console.error("User ID is not available.");
-      return;
-    }
 
-    try {
-      const result = await fetchBusinessFav(businessId, user_id);
-      if (!result.success) {
-        console.error(result.message); // Handle error
-      } else {
-        console.log("Business favorite added successfully:", result);
-      }
-    } catch (error) {
-      console.error("Error handling business favorite:", error.message);
-    }
-  };
-
-  const handlePropertyFavorite = async (propertyId) => {
-    if (!user_id) {
-      console.error("User ID is not available.");
-      return;
-    }
-
-    try {
-      const result = await fetchPropertyFav(propertyId, user_id);
-      if (!result.success) {
-        console.error(result.message); // Handle error
-      } else {
-        console.log("Property favorite added successfully:", result);
-      }
-    } catch (error) {
-      console.error("Error handling property favorite:", error.message);
-    }
-  };
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -389,25 +355,40 @@ function PropertyBuyList() {
 
   const handleWishlistClick = async (id) => {
     try {
+      // Optimistically update the wishlist state
+      setWishlist((prevWishlist) => ({
+        ...prevWishlist,
+        [id]: !prevWishlist[id], // Toggle the heart state immediately
+      }));
+  
+      // Make the API call to toggle favorite
       let result;
       if (activeTab === "business") {
-        result = await fetchBusinessFav(id, user_id); // Toggle favorite for business
+        result = await fetchBusinessFav(id, user_id);
       } else if (activeTab === "property") {
-        result = await fetchPropertyFav(id, user_id); // Toggle favorite for property
+        result = await fetchPropertyFav(id, user_id);
       }
-
-      if (result.success) {
+  
+      // Handle API response
+      if (!result.success) {
+        // If API call fails, rollback the optimistic update
         setWishlist((prevWishlist) => ({
           ...prevWishlist,
-          [id]: !prevWishlist[id], // Toggle the heart state for the given id
+          [id]: prevWishlist[id], // Revert the state change
         }));
-      } else {
         console.error("Error toggling favorite:", result.message);
       }
     } catch (error) {
+      // Rollback the optimistic update in case of error
+      setWishlist((prevWishlist) => ({
+        ...prevWishlist,
+        [id]: prevWishlist[id], // Revert the state change
+      }));
       console.error("Error handling favorite toggle:", error.message);
     }
   };
+  
+  
 
   return (
     <>
@@ -850,20 +831,19 @@ function PropertyBuyList() {
                         <div className="recommendationsClsNameBox">
                           {/* Wishlist Heart */}
                           <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
-                            <div
+                          <div
                               className="wishlist-heart"
-                              style={{ position: "absolute",
+                              style={{  position: "absolute",
                                 // top: "10px",
-                                right: "10px", zIndex: 10,
-                              }}
-                              onClick={() => handleWishlistClick(lists.id)} // Pass the correct id (business_id or property_id)
-                            >
+                                right: "10px", zIndex: 10, }}
+                              onClick={() => handleWishlistClick(lists.id) } >
                               {wishlist[lists.id] ? (
                                 <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
                               ) : (
                                 <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
                               )}
                             </div>
+
 
                             <img className="img-fluid" onClick={() =>  handlebusinessNavigate("business", lists.id) }
                               src={(() => {

@@ -219,7 +219,7 @@ const handleCountryInputChange = (e) => {
          <div className="col-lg-7 col-md-12 col-sm-12">
        <Form.Group className="businessListingFormsDiv" controlId="city">
          <Form.Label>TOWN/CITY</Form.Label>
-         <span className="vallidateRequiredStar">*</span>
+         {/* <span className="vallidateRequiredStar">*</span> */}
          <Form.Control
            as="select"
            name="city"
@@ -315,7 +315,7 @@ const handleCountryInputChange = (e) => {
       )} */}
                         <div className="col-7">
         <Form.Group controlId="asking_price" className="businessListingFormsDiv" >
-        {formData.listing_type === "Selling" && (
+        {formData.listing_type !== "Renting" && (
             <>
               <Form.Label>
                 PRICE <span className="vallidateRequiredStar">*</span>
