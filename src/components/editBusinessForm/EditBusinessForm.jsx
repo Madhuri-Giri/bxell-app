@@ -73,11 +73,11 @@ const EditBusinessForm = () => {
 
   useEffect(() => {
     const parsedImages = businessData.file_name && businessData.file_name.startsWith("[")
-    ? JSON.parse(businessData.file_name)
-    : [businessData.file_name]; // Wrap in an array if it's not in JSON format already
-
-  setImagePreview(parsedImages);
-
+      ? JSON.parse(businessData.file_name)
+      : [businessData.file_name]; // Wrap in an array if it's not in JSON format already
+  
+    setImagePreview(parsedImages);
+  
     if (businessData) {
       console.log(businessData); // Check the data structure here
       setFormData({
@@ -101,8 +101,30 @@ const EditBusinessForm = () => {
         phone_number: businessData.phone_number || "",
         current_status: businessData.current_status || "",
       });
+  
+      // Set the selected country ID based on businessData
+      const selectedCountry = countries.find((country) => country.name === businessData.country);
+      if (selectedCountry) {
+        setSelectedCountryId(selectedCountry.id);
+  
+        // Fetch states for the selected country
+        fetchStateApiRes(selectedCountry.id).then((stateData) => {
+          setStates(stateData || []);
+          const selectedState = stateData.find((state) => state.name === businessData.state);
+          if (selectedState) {
+            setSelectedStateId(selectedState.id);
+            // console.log("pritesh",setSelectedStateId)
+  
+            // Fetch cities for the selected state
+            fetchCityApiRes(selectedState.id).then((cityData) => {
+              setCities(cityData || []);
+            });
+          }
+        });
+      }
     }
-  }, [businessData]);
+  }, [businessData, countries]);
+  
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -121,22 +143,26 @@ const EditBusinessForm = () => {
     }));
   };
 
-  useEffect(() => {
-    const getCountries = async () => {
-      try {
-        const data = await fetchCountryRes();
-        if (data && data.country) {
-          setCountries(data.country); // Populate the countries dropdown
-        } else {
-          console.error("Failed to fetch countries.");
-        }
-      } catch (error) {
-        console.error("Error fetching countries:", error);
-      }
-    };
 
-    getCountries();
-  }, []);
+// --------------------------COUNTRY API--------------------------------
+useEffect(() => {
+  const getCountries = async () => {
+    try {
+      const data = await fetchCountryRes();
+      if (data && data.country) {
+        setCountries(data.country); // Populate the countries dropdown
+      } else {
+        console.error("Failed to fetch countries.");
+      }
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+    }
+  };
+
+  getCountries();
+}, []);
+
+  // -----------------------------------------STATE API---------------------
 
   useEffect(() => {
     if (selectedCountryId) {
@@ -158,6 +184,8 @@ const EditBusinessForm = () => {
       setStates([]); // Clear states when no country is selected
     }
   }, [selectedCountryId]);
+
+  // -----------------------------CITY API-----------------------------------
 
   useEffect(() => {
     if (selectedStateId) {
@@ -325,88 +353,91 @@ const EditBusinessForm = () => {
                       )}
                       {step === 1 && (
                         <>
+                     <div className="col-lg-7 col-md-12 col-sm-12">
+                      <Form.Group className="businessListingFormsDiv" controlId="country">
+                        <Form.Label>COUNTRY</Form.Label>
+                        <span className="vallidateRequiredStar">*</span>
+                        <div className="country-box-container">
+                          {[
+                            ...countries.filter((country) => country.id === selectedCountryId),
+                            ...countries.filter((country) => country.id !== selectedCountryId),
+                          ].map((country) => (
+                            <div
+                              key={country.id}
+                              className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
+                              onClick={() => {
+                                setSelectedCountryId(country.id); // Update the selected country ID
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  country: country.name, // Update the country in form data
+                                  state: "", // Reset state selection
+                                }));
+                              }}
+                            >
+                              {country.name}
+                            </div>
+                          ))}
+                        </div>
+                        {errors.country && <div className="error-message">{errors.country}</div>}
+                      </Form.Group>
+                     </div>
+
+                     <div className="col-lg-7 col-md-12 col-sm-12">
+                      <Form.Group className="businessListingFormsDiv" controlId="state">
+                        <Form.Label>STATE</Form.Label>
+                        <span className="vallidateRequiredStar">*</span>
+                        <Form.Control
+                          as="select"
+                          value={formData.state}
+                          onChange={(e) => {
+                            const stateId = e.target.value;
+                            setSelectedStateId(stateId); // Update selected state ID
+                            setFormData((prev) => ({
+                              ...prev,
+                              state: stateId, // Update the state in form data
+                              city: "", // Reset city field
+                            }));
+
+                            // Fetch cities for the selected state
+                            fetchCityApiRes(stateId).then((cityData) => setCities(cityData || []));
+                          }}
+                        >
+                          <option value="">Select State</option>
+                          {states.map((state) => (
+                            <option key={state.id} value={state.id}>
+                              {state.name}
+                            </option>
+                          ))}
+                        </Form.Control>
+                        {errors.state && <div className="error-message">{errors.state}</div>}
+                      </Form.Group>
+                     </div>
+
                       <div className="col-lg-7 col-md-12 col-sm-12">
-                        <Form.Group className="businessListingFormsDiv" controlId="country">
-                          <Form.Label>COUNTRY</Form.Label>
-                          <span className="vallidateRequiredStar">*</span>
-                          <div className="country-box-container">
-                            {countries.map((country) => (
-                              <div
-                                key={country.id}
-                                className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
-                                onClick={() => {
-                                  setSelectedCountryId(country.id); // Update the selected country ID
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    country: country.name, // Update the country in form data
-                                    state: "", // Reset state selection
-                                  }));
-                                }}
-                              >
-                                {country.name}
-                              </div>
+                        <Form.Group className="businessListingFormsDiv" controlId="city">
+                          <Form.Label>TOWN/CITY</Form.Label>
+                          <Form.Control
+                            as="select"
+                            name="city"
+                            value={formData.city}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                city: e.target.value, // Update the city in formData
+                              }))
+                            }
+                            isInvalid={!!errors.city}
+                          >
+                            <option value="">Select City</option>
+                            {cities.map((city) => (
+                              <option key={city.id} value={city.name}>
+                                {city.name}
+                              </option>
                             ))}
-                          </div>
-                          {errors.country && <div className="error-message">{errors.country}</div>}
+                          </Form.Control>
+                          <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
                         </Form.Group>
                       </div>
-
-<div className="col-lg-7 col-md-12 col-sm-12">
-  <Form.Group className="businessListingFormsDiv" controlId="state">
-    <Form.Label>STATE</Form.Label>
-    <span className="vallidateRequiredStar">*</span>
-    <Form.Control
-      as="select"
-      value={formData.state}
-      onChange={(e) => {
-        const stateId = e.target.value;
-        setSelectedStateId(stateId); // Update selected state ID
-        setFormData((prev) => ({
-          ...prev,
-          state: stateId, // Update the state in form data
-          city: "", // Reset city field
-        }));
-      }}
-    >
-      <option value="">Select State</option>
-      {states.map((state) => (
-        <option key={state.id} value={state.id}>
-          {state.name}
-        </option>
-      ))}
-    </Form.Control>
-    {errors.state && <div className="error-message">{errors.state}</div>}
-  </Form.Group>
-</div>
-
-
-    <div className="col-lg-7 col-md-12 col-sm-12">
-  <Form.Group className="businessListingFormsDiv" controlId="city">
-    <Form.Label>TOWN/CITY</Form.Label>
-    {/* <span className="vallidateRequiredStar">*</span> */}
-    <Form.Control
-      as="select"
-      name="city"
-      value={formData.city}
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          city: e.target.value, // Update the city in formData
-        }))
-      }
-      isInvalid={!!errors.city}
-    >
-      <option value="">Select City</option>
-      {cities.map((city) => (
-        <option key={city.id} value={city.name}>
-          {city.name}
-        </option>
-      ))}
-    </Form.Control>
-    <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
-  </Form.Group>
-</div>
-
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group
@@ -612,28 +643,28 @@ const EditBusinessForm = () => {
                           </div>
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
-  <Form.Group className="businessListingFormsDiv" controlId="file_name">
-    <Form.Label>CHOOSE IMAGES</Form.Label>
-    <Form.Control
-      type="file"
-      name="file_name"
-      multiple
-      onChange={(e) => {
-        const files = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
-        setImagePreview(files); // Show new image previews
-      }}
-      accept="image/*"
-    />
-    {errors.file_name && <p className="error-text">{errors.file_name}</p>}
-  </Form.Group>
-</div>
+                            <Form.Group className="businessListingFormsDiv" controlId="file_name">
+                              <Form.Label>CHOOSE IMAGES</Form.Label>
+                              <Form.Control
+                                type="file"
+                                name="file_name"
+                                multiple
+                                onChange={(e) => {
+                                  const files = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+                                  setImagePreview(files); // Show new image previews
+                                }}
+                                accept="image/*"
+                              />
+                              {errors.file_name && <p className="error-text">{errors.file_name}</p>}
+                            </Form.Group>
+                          </div>
 
-{/* Render the image previews */}
-<div>
-  {imagePreview.map((url, index) => (
-    <img key={index} src={url} alt={`Image ${index}`} width="100" />
-  ))}
-</div>
+                          {/* Render the image previews */}
+                          <div>
+                            {imagePreview.map((url, index) => (
+                              <img key={index} src={url} alt={`Image ${index}`} width="100" />
+                            ))}
+                          </div>
 
 
                           <div className="col-lg-7 col-md-12 col-sm-12">
@@ -642,23 +673,23 @@ const EditBusinessForm = () => {
                               <span className="vallidateRequiredStar">*</span>
                               <div className="businessListingFormsRadioDivMAIN">
                               <Form.Check
-  type="radio"
-  label="Running"
-  name="current_status"
-  id="current_statusRunning"
-  value="Running"
-  checked={formData.current_status === "Running"}
-  onChange={handleChange}
-/>
-<Form.Check
-  type="radio"
-  label="Closed"
-  name="current_status"
-  id="current_statusClosed"
-  value="Closed"
-  checked={formData.current_status === "Closed"}
-  onChange={handleChange}
-/>
+                                type="radio"
+                                label="Running"
+                                name="current_status"
+                                id="current_statusRunning"
+                                value="Running"
+                                checked={formData.current_status === "Running"}
+                                onChange={handleChange}
+                              />
+                              <Form.Check
+                                type="radio"
+                                label="Closed"
+                                name="current_status"
+                                id="current_statusClosed"
+                                value="Closed"
+                                checked={formData.current_status === "Closed"}
+                                onChange={handleChange}
+                              />
                               </div>
                               {errors.current_status && ( <div className="invalid-feedback d-block"> {errors.current_status} </div> )}
                             </Form.Group>

@@ -160,88 +160,94 @@ const handleCountryInputChange = (e) => {
           </Form.Group>
       </div>
 
-        <div className="col-lg-7 col-md-12 col-sm-12">
-       <Form.Group className="businessListingFormsDiv" controlId="country">
-         <Form.Label>COUNTRY</Form.Label>
-         <span className="vallidateRequiredStar">*</span>
-         <div className="country-box-container">
-           {countries.map((country) => (
-             <div
-               key={country.id}
-               className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
-               onClick={() => {
-                 setSelectedCountryId(country.id); // Update the selected country ID
-                 setFormData((prev) => ({
-                   ...prev,
-                   country: country.name, // Update the country in form data
-                   state: "", // Reset state selection
-                 }));
-               }}
-             >
-               {country.name}
-             </div>
-           ))}
-         </div>
-         {errors.country && <div className="error-message">{errors.country}</div>}
-       </Form.Group>
-     </div>
-     
-         
-     <div className="col-lg-7 col-md-12 col-sm-12">
-       <Form.Group className="businessListingFormsDiv" controlId="state">
-         <Form.Label>STATE</Form.Label>
-         <span className="vallidateRequiredStar">*</span>
-         <Form.Control
-           as="select"
-           value={formData.state}
-           onChange={(e) => {
-             const stateId = e.target.value;
-             setSelectedStateId(stateId); // Update selected state ID
-             setFormData((prev) => ({
-               ...prev,
-               state: stateId, // Update the state in form data
-               city: "", // Reset city field
-             }));
-           }}
-         >
-           <option value="">Select State</option>
-           {states.map((state) => (
-             <option key={state.id} value={state.id}>
-               {state.name}
-             </option>
-           ))}
-         </Form.Control>
-         {errors.state && <div className="error-message">{errors.state}</div>}
-       </Form.Group>
-     </div>
-     
-     
-         <div className="col-lg-7 col-md-12 col-sm-12">
-       <Form.Group className="businessListingFormsDiv" controlId="city">
-         <Form.Label>TOWN/CITY</Form.Label>
-         {/* <span className="vallidateRequiredStar">*</span> */}
-         <Form.Control
-           as="select"
-           name="city"
-           value={formData.city}
-           onChange={(e) =>
-             setFormData((prev) => ({
-               ...prev,
-               city: e.target.value, // Update the city in formData
-             }))
-           }
-           isInvalid={!!errors.city}
-         >
-           <option value="">Select City</option>
-           {cities.map((city) => (
-             <option key={city.id} value={city.name}>
-               {city.name}
-             </option>
-           ))}
-         </Form.Control>
-         <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
-       </Form.Group>
-     </div>
+      <div className="col-lg-7 col-md-12 col-sm-12">
+                          <Form.Group className="businessListingFormsDiv" controlId="country">
+                            <Form.Label>COUNTRY</Form.Label>
+                            <span className="vallidateRequiredStar">*</span>
+                            <div className="country-box-container">
+                              {[
+                                ...countries.filter((country) => country.id === selectedCountryId),
+                                ...countries.filter((country) => country.id !== selectedCountryId),
+                              ].map((country) => (
+                                <div
+                                  key={country.id}
+                                  className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
+                                  onClick={() => {
+                                    setSelectedCountryId(country.id); // Update the selected country ID
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      country: country.name, // Update the country in form data
+                                      state: "", // Reset state selection
+                                    }));
+                                  }}
+                                >
+                                  {country.name}
+                                </div>
+                              ))}
+                            </div>
+                            {errors.country && <div className="error-message">{errors.country}</div>}
+                          </Form.Group>
+                         </div>
+    
+    
+                         <div className="col-lg-7 col-md-12 col-sm-12">
+                          <Form.Group className="businessListingFormsDiv" controlId="state">
+                            <Form.Label>STATE</Form.Label>
+                            <span className="vallidateRequiredStar">*</span>
+                            <Form.Control
+                              as="select"
+                              value={formData.state}
+                              onChange={(e) => {
+                                const stateId = e.target.value;
+                                setSelectedStateId(stateId); // Update selected state ID
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  state: stateId, // Update the state in form data
+                                  city: "", // Reset city field
+                                }));
+    
+                                // Fetch cities for the selected state
+                                fetchCityApiRes(stateId).then((cityData) => setCities(cityData || []));
+                              }}
+                            >
+                              <option value="">Select State</option>
+                              {states.map((state) => (
+                                <option key={state.id} value={state.id}>
+                                  {state.name}
+                                </option>
+                              ))}
+                            </Form.Control>
+                            {errors.state && <div className="error-message">{errors.state}</div>}
+                          </Form.Group>
+                         </div>
+    
+    
+    
+                          <div className="col-lg-7 col-md-12 col-sm-12">
+                            <Form.Group className="businessListingFormsDiv" controlId="city">
+                              <Form.Label>TOWN/CITY</Form.Label>
+                              <Form.Control
+                                as="select"
+                                name="city"
+                                value={formData.city}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    city: e.target.value, // Update the city in formData
+                                  }))
+                                }
+                                isInvalid={!!errors.city}
+                              >
+                                <option value="">Select City</option>
+                                {cities.map((city) => (
+                                  <option key={city.id} value={city.name}>
+                                    {city.name}
+                                  </option>
+                                ))}
+                              </Form.Control>
+                              <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+                            </Form.Group>
+                          </div>
 
       {/* <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="state">

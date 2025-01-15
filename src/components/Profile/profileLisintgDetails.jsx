@@ -542,6 +542,7 @@ const handleBusinessFavClick = async (businessId) => {
 
   try {
     const response = await fetchBusinessFav(businessId, user);
+    window.location.reload()
     if (response.success) {
       console.log("Business added to favorites:", response);
       // Optionally, refresh data or update UI
@@ -561,6 +562,7 @@ const handlePropertyFavClick = async (propertyId) => {
 
   try {
     const response = await fetchPropertyFav(propertyId, user);
+    window.location.reload()
     if (response.success) {
       console.log("Property added to favorites:", response);
       // Optionally, refresh data or update UI

@@ -509,7 +509,6 @@ function PropertyBuySinglePage() {
                       </Modal.Body>
                     </Modal>
 
-                  
                     <div className="mapLocationDiv">
       <div
         ref={smallMapRef}
@@ -542,7 +541,7 @@ function PropertyBuySinglePage() {
           </div>
         </div>
       )}
-    </div>
+                   </div>
                   </>
                 </div>
               )}
@@ -752,38 +751,38 @@ function PropertyBuySinglePage() {
                   </Modal>
 
                   <div className="mapLocationDiv">
-      <div
-        ref={smallMapRef}
-        style={{
-          width: "100%",
-          height: "450px",
-          visibility: showFullMap ? "hidden" : "visible", 
-          position: "relative",
-        }}
-      >
-        <div className="toggle-map-icon" onClick={toggleMapView}>
-          {showFullMap ? <span>Hide Map</span> : <span>Show Full Map</span>}
-        </div>
-      </div>
+                    <div
+                      ref={smallMapRef}
+                      style={{
+                        width: "100%",
+                        height: "450px",
+                        visibility: showFullMap ? "hidden" : "visible", 
+                        position: "relative",
+                      }}
+                    >
+                      <div className="toggle-map-icon" onClick={toggleMapView}>
+                        {showFullMap ? <span>Hide Map</span> : <span>Show Full Map</span>}
+                      </div>
+                    </div>
 
-      {showFullMap && (
-        <div className="map-overlay">
-          <div className="map-overlay-content">
-            <span className="map-overlay-close" onClick={toggleMapView}>
-              <i className="ri-close-line"></i>
-            </span>
-            <div
-              ref={fullMapRef}
-              style={{
-                width: "100%",
-                height: "600px",
-                position: "relative",
-              }}
-            />
-          </div>
-        </div>
-      )}
-    </div>
+                    {showFullMap && (
+                      <div className="map-overlay">
+                        <div className="map-overlay-content">
+                          <span className="map-overlay-close" onClick={toggleMapView}>
+                            <i className="ri-close-line"></i>
+                          </span>
+                          <div
+                            ref={fullMapRef}
+                            style={{
+                              width: "100%",
+                              height: "600px",
+                              position: "relative",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 

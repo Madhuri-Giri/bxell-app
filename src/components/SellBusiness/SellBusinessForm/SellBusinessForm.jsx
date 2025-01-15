@@ -488,63 +488,33 @@ const [selectedStateId, setSelectedStateId] = useState("");
 
   const fetchPaymentDetails = async () => {
     try {
-      // Fetch business ID from the submitted form
       const business_id = await submitSellBusinessForm(formData);
   
       if (!user || !business_id || !formData.amount) {
-        throw new Error(
-          "Login ID, amount  or Business ID is missing."
-        );
+        throw new Error("Login ID, amount, or Business ID is missing.");
       }
-
+  
       const payload = {
         amount: formData.amount,
         user_id: user,
         business_id: business_id,
       };
-
-      console.log("Sending payload:", payload);
-
-      // Call the API to fetch payment details
+  
       const response = await axios.post(
         "https://bxell.com/bxell/admin/api/create-business-payment",
         payload
       );
-
-      console.log("API Response:", response.data);
-
-      // Handle success cases
+  
       if (response.data.result === true && response.data.status === 200) {
-        setPaymentDetails(response.data.payment_details); // Update state with payment details
-        console.log("Payment details fetched:", response.data);
-        return response.data; // Return the successful response data
+        setPaymentDetails(response.data.payment_details);
+        // toast.success("Payment details fetched successfully!");
+        return response.data;
       } else {
-        // Handle unexpected response
-        throw new Error(
-          response.data.message || "Failed to fetch payment details"
-        );
+        throw new Error(response.data.message || "Failed to fetch payment details");
       }
     } catch (error) {
       console.error("Error fetching payment details:", error.message);
-      if (error.response) {
-        const errorData = error.response.data;
-
-        // Process errors and update the error state
-        setErrors({
-          asking_price: errorData.error?.asking_price ? errorData.error.asking_price[0] : '',
-          city: errorData.error?.city ? errorData.error.city[0] : '',
-          country: errorData.error?.country ? errorData.error.country[0] : '',
-          current_status: errorData.error?.current_status ? errorData.error.current_status[0] : '',
-          phone_number: errorData.error?.phone_number ? errorData.error.phone_number[0] : '',
-          percentage_of_stake: errorData.error?.percentage_of_stake ? errorData.error.percentage_of_stake[0] : '',
-          reported_turnover_from: errorData.error?.reported_turnover_from ? errorData.error.reported_turnover_from[0] : '',
-          reported_turnover_to: errorData.error?.reported_turnover_to ? errorData.error.reported_turnover_to[0] : '',
-          state: errorData.error?.state ? errorData.error.state[0] : '',
-          you_are: errorData.error?.you_are ? errorData.error.you_are[0] : '',
-          file_name: errorData.error?.file_name ? errorData.error.file_name[0] : '',
-        });
-      }
-      // alert("Failed to initiate payment. Please try again.");
+      toast.error("Failed to fetch payment details. Please try again.");
       return null;
     }
   };
@@ -553,26 +523,15 @@ const [selectedStateId, setSelectedStateId] = useState("");
     e.preventDefault();
   
     if (!user) {
-      // Redirect to login if the user is not logged in
       navigate("/login");
       return;
     }
   
     try {
-      // Submit the form first
-      const response = await submitSellBusinessForm(formData, user);
   
-      if (!response || response.error) {
-        alert(response.message || "Form submission failed. Please try again.");
-        return;
-      }
-  
-      alert(response.message || "Form submitted successfully!");
-  
-      // Proceed with payment if the form submission is successful
       const paymentData = await fetchPaymentDetails();
       if (!paymentData) {
-        alert("Failed to fetch payment details. Please try again.");
+        toast.error("Failed to fetch payment details. Please try again.");
         return;
       }
   
@@ -586,15 +545,13 @@ const [selectedStateId, setSelectedStateId] = useState("");
         !payment_details ||
         !payment_details.amount
       ) {
-        console.error("Incomplete payment data:", paymentData);
-        alert("Missing payment details. Please try again.");
+        toast.error("Missing payment details. Please try again.");
         return;
       }
   
-      // Set up Razorpay payment options
       const options = {
         key: razorpay_key,
-        amount: payment_details.amount * 100, // Convert to paise
+        amount: payment_details.amount * 100,
         currency: "INR",
         order_id: razorpay_order_id,
         name: "SRN Infotech",
@@ -607,8 +564,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
               payment_details.id
             );
           } catch (error) {
-            console.error("Error during payment processing:", error.message);
-            alert(
+            toast.error(
               "An error occurred while updating the payment status. Please contact support."
             );
           }
@@ -629,15 +585,16 @@ const [selectedStateId, setSelectedStateId] = useState("");
       const rzp1 = new window.Razorpay(options);
   
       rzp1.on("payment.failed", function (response) {
-        alert(`Payment failed: ${response.error.description}`);
+        toast.error(`Payment failed: ${response.error.description}`);
       });
   
       rzp1.open();
     } catch (error) {
       console.error("Error during payment setup:", error.message);
-      alert("An error occurred during payment setup. Please try again.");
+      toast.error("An unexpected error occurred. Please try again.");
     }
   };
+  
   
   const updateHandlePayment = async (razorpay_payment_id, Id) => {
     try {
@@ -736,8 +693,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }
   
     try {
-      const response = await submitSellBusinessForm(formData, user);
-      alert(response.message || "Form submitted successfully!");
+  
   
       // Reset form data after successful submission
       setFormData({
@@ -768,7 +724,8 @@ const [selectedStateId, setSelectedStateId] = useState("");
     } catch (error) {
       // Handle API errors
       if (error.response && error.response.data && error.response.data.error) {
-        const apiErrors = error.response.data.error;
+        const apiErrors = error.response?.data?.error || {};
+            setErrors(apiErrors);
   
         // Process API errors into a flat structure for the form
         const processedErrors = Object.keys(apiErrors).reduce((acc, field) => {
@@ -900,89 +857,85 @@ const [selectedStateId, setSelectedStateId] = useState("");
                             </Form.Group>
                           </div> */}
                          <div className="col-lg-7 col-md-12 col-sm-12">
-  <Form.Group className="businessListingFormsDiv" controlId="country">
-    <Form.Label>COUNTRY</Form.Label>
-    <span className="vallidateRequiredStar">*</span>
-    <div className="country-box-container">
-      {countries.map((country) => (
-        <div
-          key={country.id}
-          className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
-          onClick={() => {
-            setSelectedCountryId(country.id); // Update the selected country ID
-            setFormData((prev) => ({
-              ...prev,
-              country: country.name, // Update the country in form data
-              state: "", // Reset state selection
-            }));
-          }}
-        >
-          {country.name}
-        </div>
-      ))}
-    </div>
-    {errors.country && <div className="error-message">{errors.country}</div>}
-  </Form.Group>
-</div>
+                          <Form.Group className="businessListingFormsDiv" controlId="country">
+                            <Form.Label>COUNTRY</Form.Label>
+                            <span className="vallidateRequiredStar">*</span>
+                            <div className="country-box-container">
+                              {countries.map((country) => (
+                                <div
+                                  key={country.id}
+                                  className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
+                                  onClick={() => {
+                                    setSelectedCountryId(country.id); // Update the selected country ID
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      country: country.name, // Update the country in form data
+                                      state: "", // Reset state selection
+                                    }));
+                                  }}
+                                >
+                                  {country.name}
+                                </div>
+                              ))}
+                            </div>
+                            {errors.country && <div className="error-message">{errors.country}</div>}
+                          </Form.Group>
+                        </div>
 
-    
-<div className="col-lg-7 col-md-12 col-sm-12">
-  <Form.Group className="businessListingFormsDiv" controlId="state">
-    <Form.Label>STATE</Form.Label>
-    <span className="vallidateRequiredStar">*</span>
-    <Form.Control
-      as="select"
-      value={formData.state}
-      onChange={(e) => {
-        const stateId = e.target.value;
-        setSelectedStateId(stateId); // Update selected state ID
-        setFormData((prev) => ({
-          ...prev,
-          state: stateId, // Update the state in form data
-          city: "", // Reset city field
-        }));
-      }}
-    >
-      <option value="">Select State</option>
-      {states.map((state) => (
-        <option key={state.id} value={state.id}>
-          {state.name}
-        </option>
-      ))}
-    </Form.Control>
-    {errors.state && <div className="error-message">{errors.state}</div>}
-  </Form.Group>
-</div>
+                        <div className="col-lg-7 col-md-12 col-sm-12">
+                          <Form.Group className="businessListingFormsDiv" controlId="state">
+                            <Form.Label>STATE</Form.Label>
+                            <span className="vallidateRequiredStar">*</span>
+                            <Form.Control
+                              as="select"
+                              value={formData.state}
+                              onChange={(e) => {
+                                const stateId = e.target.value;
+                                setSelectedStateId(stateId); // Update selected state ID
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  state: stateId, // Update the state in form data
+                                  city: "", // Reset city field
+                                }));
+                              }}
+                            >
+                              <option value="">Select State</option>
+                              {states.map((state) => (
+                                <option key={state.id} value={state.id}>
+                                  {state.name}
+                                </option>
+                              ))}
+                            </Form.Control>
+                            {errors.state && <div className="error-message">{errors.state}</div>}
+                          </Form.Group>
+                        </div>
 
-
-    <div className="col-lg-7 col-md-12 col-sm-12">
-  <Form.Group className="businessListingFormsDiv" controlId="city">
-    <Form.Label>TOWN/CITY</Form.Label>
-    {/* <span className="vallidateRequiredStar">*</span> */}
-    <Form.Control
-      as="select"
-      name="city"
-      value={formData.city}
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          city: e.target.value, // Update the city in formData
-        }))
-      }
-      isInvalid={!!errors.city}
-    >
-      <option value="">Select City</option>
-      {cities.map((city) => (
-        <option key={city.id} value={city.name}>
-          {city.name}
-        </option>
-      ))}
-    </Form.Control>
-    <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
-  </Form.Group>
-</div>
-
-
+                            <div className="col-lg-7 col-md-12 col-sm-12">
+                          <Form.Group className="businessListingFormsDiv" controlId="city">
+                            <Form.Label>TOWN/CITY</Form.Label>
+                            {/* <span className="vallidateRequiredStar">*</span> */}
+                            <Form.Control
+                              as="select"
+                              name="city"
+                              value={formData.city}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  city: e.target.value, // Update the city in formData
+                                }))
+                              }
+                              isInvalid={!!errors.city}
+                            >
+                              <option value="">Select City</option>
+                              {cities.map((city) => (
+                                <option key={city.id} value={city.name}>
+                                  {city.name}
+                                </option>
+                              ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+                          </Form.Group>
+                        </div>
 
                           {/* <div className="col-7">
                             <Form.Group className="businessListingFormsDiv" controlId="state" >
@@ -1105,19 +1058,12 @@ const [selectedStateId, setSelectedStateId] = useState("");
                           </div> */}
                           <div className="col-lg-7 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="asking_price">
-        <Form.Label>PRICE</Form.Label>
-        <span className="vallidateRequiredStar">*</span>
-        <Form.Control
-          type="text"  // Changed type to text
-          name="asking_price"
-          value={formatNumberWithCommas(formData.asking_price)} // Format with commas
-          onChange={handlepriceChange} // Handle input change
-          placeholder="Enter Asking Price"
-          isInvalid={!!errors.asking_price}
-          className="no-spinner"
-        />
-        <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback>
-      </Form.Group>
+                        <Form.Label>PRICE</Form.Label>
+                        <span className="vallidateRequiredStar">*</span>
+                        <Form.Control
+                          type="text" name="asking_price"  value={formatNumberWithCommas(formData.asking_price)} onChange={handlepriceChange}  placeholder="Enter Asking Price" isInvalid={!!errors.asking_price} className="no-spinner" />
+                        <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback>
+                      </Form.Group>
                           </div>
 
                           <div className="col-7 additionalDetails">
@@ -1235,14 +1181,12 @@ const [selectedStateId, setSelectedStateId] = useState("");
                           <>
                           {/* <Button  variant="primary"  onClick={handlePayment}  type="submit" > Pay Now </Button> */}
                           {/* <Button
-        variant="primary"
-        onClick={formData.amount === 49 ? () => handlePaymentForBusiness() : handlePayment}
-      >
-        Pay Now
-      </Button> */}
-      <Button variant="primary" onClick={handlePayment} type="submit">
-  Pay Now
-</Button>
+                                  variant="primary"
+                                  onClick={formData.amount === 49 ? () => handlePaymentForBusiness() : handlePayment}
+                                >
+                                  Pay Now
+                                </Button> */}
+                           <Button variant="primary" onClick={handlePayment} type="submit"> Pay Now </Button>
 
                           </>
                         )}
@@ -1255,14 +1199,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                     {/* Radio button for Basic Listing */}
                     <div className="radio-item">
                       <label className="price-option">
-                        <input
-                          type="radio"
-                          name="listingType"
-                          value="299"
-                          className="radio-input"
-                          onChange={(e) => handleAmountChange(e)} // Handle amount change
-                          checked={formData.amount === 299} // Set checked based on formData.amount
-                        />
+                        <input type="radio" name="listingType"  value="299"  className="radio-input"  onChange={(e) => handleAmountChange(e)}  checked={formData.amount === 299}  />
                         <div className="price-details">
                           <span className="price">₹299</span>
                           <div className="content">

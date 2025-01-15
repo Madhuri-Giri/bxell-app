@@ -69,13 +69,13 @@ function MainBanner() {
           </div>
 
           <div className="vertical-box">
-            <a href="https://wa.me/<your_number>" target="_blank"  rel="noopener noreferrer" className="clickable-link" >
+            <a href="https://wa.me/+91 9566702095" target="_blank"  rel="noopener noreferrer" className="clickable-link" >
              <img src={whatsapp} alt="WhatsApp" />
               </a>
           </div>
 
           <div className="vertical-box">
-            <a href="tel:+123456789"  target="_blank" rel="noopener noreferrer" className="clickable-link" >
+            <a href="tel: +91 9566702095"  target="_blank" rel="noopener noreferrer" className="clickable-link" >
               <img src={phone} alt="Phone" />
             </a>
           </div>

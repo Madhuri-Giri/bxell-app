@@ -49,26 +49,28 @@ function Footer() {
               <h5>Useful Links</h5>
               <ul>
                 <li> <NavLink to="/"> <MdKeyboardDoubleArrowRight /> Home </NavLink> </li>
-                <li> <NavLink to="/"> <MdKeyboardDoubleArrowRight />  Listing </NavLink>  </li>
-                <li> <NavLink to="/"> <MdKeyboardDoubleArrowRight /> Blog </NavLink>  </li>
-                <li> <NavLink to="/"> <MdKeyboardDoubleArrowRight /> Contact </NavLink> </li>
+                <li> <NavLink to="/aboutUs"> <MdKeyboardDoubleArrowRight />  About Us </NavLink>  </li>
+                <li> <NavLink to="/blog-details"> <MdKeyboardDoubleArrowRight /> Blog </NavLink>  </li>
+                {/* <li> <NavLink to="/"> <MdKeyboardDoubleArrowRight /> Contact </NavLink> </li> */}
               </ul>
             </div>
 
             <div className="col-12 col-md-8 col-lg-2 mt-2 footerPagesDiv">
               <h5>Pages</h5>
               <ul>
-                <li> <NavLink to="/blog-details"> <MdKeyboardDoubleArrowRight /> Blog  </NavLink> </li>
-                <li> <NavLink to="/"> <MdKeyboardDoubleArrowRight /> How it works </NavLink> </li>
-                <li> <NavLink to="/"> <MdKeyboardDoubleArrowRight /> Our Partner </NavLink> </li>
+                <li> <NavLink to="/buy"> <MdKeyboardDoubleArrowRight /> Buy  </NavLink> </li>
+                <li> <NavLink to="/sell"> <MdKeyboardDoubleArrowRight /> Sell </NavLink> </li>
+                <li> <NavLink to="/register"> <MdKeyboardDoubleArrowRight /> Signin </NavLink> </li>
+                <li> <NavLink to="/register"> <MdKeyboardDoubleArrowRight /> Register </NavLink> </li>
               </ul>
             </div>
 
             <div className="col-12 col-md-4 col-lg-2 mt-2 footerHelpDiv">
               <h5>Help</h5>
               <ul>
-                <li> <NavLink to="/register"> <MdKeyboardDoubleArrowRight /> Sign In </NavLink> </li>
-                <li> <NavLink to="/register"> <MdKeyboardDoubleArrowRight /> Register </NavLink> </li>
+               
+              <li> <NavLink to="/boost-listing1"> <MdKeyboardDoubleArrowRight /> Boost Listing (Month)</NavLink> </li>
+                <li> <NavLink to="/boost-listing"> <MdKeyboardDoubleArrowRight /> Boost Listing (Week)</NavLink> </li>
                 <li> <NavLink to="/sell-business"> <MdKeyboardDoubleArrowRight /> Add Listing Business </NavLink> </li>
                 <li> <NavLink to="/sell-property"> <MdKeyboardDoubleArrowRight /> Add Listing Property </NavLink> </li> 
                 </ul>
