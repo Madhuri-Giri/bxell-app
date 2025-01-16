@@ -68,6 +68,57 @@ const EditBusinessForm = () => {
     file_name: null,
   });
   console.log("User ID:", formData.user_id);
+  useEffect(() => {
+    const getCountries = async () => {
+      try {
+        const data = await fetchCountryRes();
+        if (data && data.country) {
+          setCountries(data.country); // Populate the countries dropdown
+        } else {
+          console.error("Failed to fetch countries.");
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+  
+    getCountries();
+  }, []);
+  
+
+  useEffect(() => {
+    if (selectedCountryId) {
+      const getStates = async () => {
+        try {
+          const stateData = await fetchStateApiRes(selectedCountryId);
+          if (stateData) {
+            setStates(stateData); // Populate the states dropdown
+          } else {
+            console.error("No states found.");
+          }
+        } catch (error) {
+          console.error("Error fetching states:", error);
+        }
+      };
+  
+      getStates();
+    } else {
+      setStates([]); // Clear states when no country is selected
+    }
+  }, [selectedCountryId]);
+  
+  useEffect(() => {
+    if (selectedStateId) {
+      const getCities = async () => {
+        const cityData = await fetchCityApiRes(selectedStateId);
+        setCities(cityData || []); // Update cities based on the selected state
+      };
+      getCities();
+    } else {
+      setCities([]); // Reset city options when no state is selected
+    }
+  }, [selectedStateId]); 
+
   
   const [imagePreview, setImagePreview] = useState([]);
 
