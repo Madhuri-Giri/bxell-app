@@ -486,9 +486,9 @@ const [selectedStateId, setSelectedStateId] = useState("");
   // };
 
 
-  const fetchPaymentDetails = async () => {
+  const fetchPaymentDetails = async (formResponse) => {
     try {
-      const business_id = await submitSellBusinessForm(formData);
+      const business_id = formResponse;
   
       if (!user || !business_id || !formData.amount) {
         throw new Error("Login ID, amount, or Business ID is missing.");
@@ -528,8 +528,18 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }
   
     try {
-  
-      const paymentData = await fetchPaymentDetails();
+      // Submit the form first
+      const response = await submitSellBusinessForm(formData, user);
+      
+      
+      if (!response || response.error) {
+        toast.error("Form submission failed. Please try again.");
+        return;
+      }
+
+      toast.success("Form Submit Successfully!");
+
+      const paymentData = await fetchPaymentDetails(response);
       if (!paymentData) {
         toast.error("Failed to fetch payment details. Please try again.");
         return;
@@ -591,7 +601,23 @@ const [selectedStateId, setSelectedStateId] = useState("");
       rzp1.open();
     } catch (error) {
       console.error("Error during payment setup:", error.message);
-      toast.error("An unexpected error occurred. Please try again.");
+      // toast.error("An unexpected error occurred. Please try again.");
+      const errorData = error.response.data;
+
+        // Process errors and update the error state
+        setErrors({
+          asking_price: errorData.error?.asking_price ? errorData.error.asking_price[0] : '',
+          city: errorData.error?.city ? errorData.error.city[0] : '',
+          country: errorData.error?.country ? errorData.error.country[0] : '',
+          current_status: errorData.error?.current_status ? errorData.error.current_status[0] : '',
+          phone_number: errorData.error?.phone_number ? errorData.error.phone_number[0] : '',
+          percentage_of_stake: errorData.error?.percentage_of_stake ? errorData.error.percentage_of_stake[0] : '',
+          reported_turnover_from: errorData.error?.reported_turnover_from ? errorData.error.reported_turnover_from[0] : '',
+          reported_turnover_to: errorData.error?.reported_turnover_to ? errorData.error.reported_turnover_to[0] : '',
+          state: errorData.error?.state ? errorData.error.state[0] : '',
+          you_are: errorData.error?.you_are ? errorData.error.you_are[0] : '',
+          file_name: errorData.error?.file_name ? errorData.error.file_name[0] : '',
+        });
     }
   };
   

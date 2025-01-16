@@ -71,59 +71,65 @@ const EditBusinessForm = () => {
   
   const [imagePreview, setImagePreview] = useState([]);
 
-  useEffect(() => {
-    const parsedImages = businessData.file_name && businessData.file_name.startsWith("[")
-      ? JSON.parse(businessData.file_name)
-      : [businessData.file_name]; // Wrap in an array if it's not in JSON format already
-  
-    setImagePreview(parsedImages);
-  
-    if (businessData) {
-      console.log(businessData); // Check the data structure here
-      setFormData({
-        business_type: businessData.business_type || "",
-        listing_type: businessData.listing_type || "",
-        title: businessData.title || "",
-        country: businessData.country || "",
-        state: businessData.state || "",
-        city: businessData.city || "",
-        description: businessData.description || "",
-        percentage_of_stake: businessData.percentage_of_stake || "",
-        reported_turnover_from: businessData.reported_turnover_from || "",
-        reported_turnover_to: businessData.reported_turnover_to || "",
-        ebitda_margin: businessData.ebitda_margin || "",
-        asking_price: businessData.asking_price || "",
-        you_are: businessData.you_are || "",
-        year_of_establishment: businessData.year_of_establishment || "",
-        no_of_employees: businessData.no_of_employees || "",
-        file_name: businessData.file_name || "",
-        business_link: businessData.business_link || "",
-        phone_number: businessData.phone_number || "",
-        current_status: businessData.current_status || "",
+useEffect(() => {
+  if (businessData) {
+    setFormData({
+      business_type: businessData.business_type || "",
+      listing_type: businessData.listing_type || "",
+      title: businessData.title || "",
+      country: businessData.country || "",
+      state: businessData.state || "",
+      city: businessData.city || "",
+      description: businessData.description || "",
+      percentage_of_stake: businessData.percentage_of_stake || "",
+      reported_turnover_from: businessData.reported_turnover_from || "",
+      reported_turnover_to: businessData.reported_turnover_to || "",
+      ebitda_margin: businessData.ebitda_margin || "",
+      asking_price: businessData.asking_price || "",
+      you_are: businessData.you_are || "",
+      year_of_establishment: businessData.year_of_establishment || "",
+      no_of_employees: businessData.no_of_employees || "",
+      file_name: businessData.file_name || "",
+      business_link: businessData.business_link || "",
+      phone_number: businessData.phone_number || "",
+      current_status: businessData.current_status || "",
+    });
+
+    // Pre-select the country
+    const selectedCountry = countries.find(
+      (country) => country.name.trim().toLowerCase() === businessData.country.trim().toLowerCase()
+    );
+    if (selectedCountry) {
+      setSelectedCountryId(selectedCountry.id);
+
+      // Fetch states for the selected country
+      fetchStateApiRes(selectedCountry.id).then((stateData) => {
+        setStates(stateData || []);
+
+        // Pre-select the state
+        const selectedState = stateData.find(
+          (state) => state.name.trim().toLowerCase() === businessData.state.trim().toLowerCase()
+        );
+        if (selectedState) {
+          setSelectedStateId(selectedState.id);
+
+          // Update formData with the prefilled state
+          setFormData((prev) => ({
+            ...prev,
+            state: selectedState.id, // Set the state ID
+          }));
+
+          // Fetch cities for the selected state
+          fetchCityApiRes(selectedState.id).then((cityData) => {
+            setCities(cityData || []);
+          });
+        }
       });
-  
-      // Set the selected country ID based on businessData
-      const selectedCountry = countries.find((country) => country.name === businessData.country);
-      if (selectedCountry) {
-        setSelectedCountryId(selectedCountry.id);
-  
-        // Fetch states for the selected country
-        fetchStateApiRes(selectedCountry.id).then((stateData) => {
-          setStates(stateData || []);
-          const selectedState = stateData.find((state) => state.name === businessData.state);
-          if (selectedState) {
-            setSelectedStateId(selectedState.id);
-            // console.log("pritesh",setSelectedStateId)
-  
-            // Fetch cities for the selected state
-            fetchCityApiRes(selectedState.id).then((cityData) => {
-              setCities(cityData || []);
-            });
-          }
-        });
-      }
     }
-  }, [businessData, countries]);
+  }
+}, [businessData, countries]);
+
+  
   
 
   // Handle form input changes
@@ -144,60 +150,7 @@ const EditBusinessForm = () => {
   };
 
 
-// --------------------------COUNTRY API--------------------------------
-useEffect(() => {
-  const getCountries = async () => {
-    try {
-      const data = await fetchCountryRes();
-      if (data && data.country) {
-        setCountries(data.country); // Populate the countries dropdown
-      } else {
-        console.error("Failed to fetch countries.");
-      }
-    } catch (error) {
-      console.error("Error fetching countries:", error);
-    }
-  };
 
-  getCountries();
-}, []);
-
-  // -----------------------------------------STATE API---------------------
-
-  useEffect(() => {
-    if (selectedCountryId) {
-      const getStates = async () => {
-        try {
-          const stateData = await fetchStateApiRes(selectedCountryId);
-          if (stateData) {
-            setStates(stateData); // Populate the states dropdown
-          } else {
-            console.error("No states found.");
-          }
-        } catch (error) {
-          console.error("Error fetching states:", error);
-        }
-      };
-
-      getStates();
-    } else {
-      setStates([]); // Clear states when no country is selected
-    }
-  }, [selectedCountryId]);
-
-  // -----------------------------CITY API-----------------------------------
-
-  useEffect(() => {
-    if (selectedStateId) {
-      const getCities = async () => {
-        const cityData = await fetchCityApiRes(selectedStateId);
-        setCities(cityData || []); // Update cities based on the selected state
-      };
-      getCities();
-    } else {
-      setCities([]); // Reset city options when no state is selected
-    }
-  }, [selectedStateId]);
 
   // Updated handleChange function
  
