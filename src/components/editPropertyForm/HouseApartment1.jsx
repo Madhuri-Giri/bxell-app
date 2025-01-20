@@ -11,6 +11,9 @@ const HouseApartment1 = ({ formData, setFormData, errors }) => {
     }));
   };
 
+  console.log(formData)
+  console.log(formData.car_parking)
+  console.log(formData.floor_no)
   return (
     <>
       {/* Bedroom Selection */}

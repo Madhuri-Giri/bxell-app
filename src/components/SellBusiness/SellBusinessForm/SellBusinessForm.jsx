@@ -160,37 +160,40 @@ const [selectedStateId, setSelectedStateId] = useState("");
   const handleBack = () => {
     setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
+
+
   const formatNumberWithCommas = (number) => {
-    // If there's a number, format it with commas
     if (!number) return number;
     
-    let [integerPart, decimalPart] = number.split('.');
+    // Handle numbers with decimals
+    let [integerPart, decimalPart] = number.toString().split('.');
     let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     
     return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
   };
 
    // Handle the price input change
-  const handlepriceChange = (e) => {
-      const { name, value } = e.target;
-
-      // Ensure only positive numbers are allowed
-      if (
-        name === "asking_price" ||
-        name === "reported_turnover_from" ||
-        name === "reported_turnover_to" ||
-        name === "phone_number"
-      ) {
-        // Remove non-numeric characters except the dot
-        let rawValue = value.replace(/[^0-9.]/g, '');
-
-        // Update the raw value in the state (no commas yet)
-        setFormData((prevState) => ({
-          ...prevState,
-          [name]: rawValue,
-        }));
-      }
+   const handlepriceChange = (e) => {
+    const { name, value } = e.target;
+  
+    // Remove non-numeric characters
+    let rawValue = value.replace(/[^0-9]/g, ''); // Only digits allowed for phone numbers
+  
+    // Apply formatting based on the field name
+    if (name === "asking_price" || name === "reported_turnover_from" || name === "reported_turnover_to") {
+      // Format numbers with commas for specific fields
+      rawValue = formatNumberWithCommas(rawValue);
+    }
+  
+    // Update the formData state
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: rawValue,
+    }));
   };
+  
+
+
   const handleAmountChange = (e) => {
     const selectedAmount = e.target.value;
     setFormData(prevFormData => ({
@@ -882,7 +885,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                               {errors.country && <div className="error-message">{errors.country}</div>}
                             </Form.Group>
                           </div> */}
-                         <div className="col-lg-7 col-md-12 col-sm-12">
+                        <div className="col-lg-7 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="country">
                             <Form.Label>COUNTRY</Form.Label>
                             <span className="vallidateRequiredStar">*</span>
@@ -936,7 +939,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                           </Form.Group>
                         </div>
 
-                            <div className="col-lg-7 col-md-12 col-sm-12">
+                        <div className="col-lg-7 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="city">
                             <Form.Label>TOWN/CITY</Form.Label>
                             {/* <span className="vallidateRequiredStar">*</span> */}
@@ -1087,7 +1090,14 @@ const [selectedStateId, setSelectedStateId] = useState("");
                         <Form.Label>PRICE</Form.Label>
                         <span className="vallidateRequiredStar">*</span>
                         <Form.Control
-                          type="text" name="asking_price"  value={formatNumberWithCommas(formData.asking_price)} onChange={handlepriceChange}  placeholder="Enter Asking Price" isInvalid={!!errors.asking_price} className="no-spinner" />
+                          type="text"
+                          name="asking_price"
+                          value={formData.asking_price} // Display value with commas
+                          onChange={handlepriceChange}
+                          placeholder="Enter Asking Price"
+                          isInvalid={!!errors.asking_price}
+                          className="no-spinner"
+                        />
                         <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback>
                       </Form.Group>
                           </div>
