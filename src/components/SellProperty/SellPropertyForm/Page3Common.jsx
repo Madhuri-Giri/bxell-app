@@ -112,33 +112,33 @@ const handleCountryInputChange = (e) => {
   };
 
   const formatNumberWithCommas = (number) => {
-    // If there's a number, format it with commas
     if (!number) return number;
     
-    let [integerPart, decimalPart] = number.split('.');
+    // Handle numbers with decimals
+    let [integerPart, decimalPart] = number.toString().split('.');
     let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     
     return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
   };
 
    // Handle the price input change
-  const handlepriceChange = (e) => {
-      const { name, value } = e.target;
-
-      // Ensure only positive numbers are allowed
-      if (
-        name === "asking_price" ||
-        name === "advance_price"
-      ) {
-        // Remove non-numeric characters except the dot
-        let rawValue = value.replace(/[^0-9.]/g, '');
-
-        // Update the raw value in the state (no commas yet)
-        setFormData((prevState) => ({
-          ...prevState,
-          [name]: rawValue,
-        }));
-      }
+   const handlepriceChange = (e) => {
+    const { name, value } = e.target;
+  
+    // Remove non-numeric characters
+    let rawValue = value.replace(/[^0-9]/g, ''); // Only digits allowed for phone numbers
+  
+    // Apply formatting based on the field name
+    if (name === "asking_price" || name === "advance_price" ) {
+      // Format numbers with commas for specific fields
+      rawValue = formatNumberWithCommas(rawValue);
+    }
+  
+    // Update the formData state
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: rawValue,
+    }));
   };
   return (
     <>

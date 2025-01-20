@@ -4,67 +4,83 @@ import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellPropertyForm.css";
 import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../API/apiServices";
 
-const Page3ROC1 = ({ formData, setFormData, errors }) => {
+const Page3ROC1 = ({ formData,
+  setFormData,
+  errors,
+  selectedCountry,
+  setSelectedCountry,
+  selectedState, }) => {
 
-   const [countries, setCountries] = useState([]);
-          
-          const [states, setStates] = useState([]);
-          const [selectedCountryId, setSelectedCountryId] = useState("");
-        
-          const [cities, setCities] = useState([]); // For city options
-        const [selectedStateId, setSelectedStateId] = useState("");
-      
-        
-          useEffect(() => {
-            const getCountries = async () => {
-              try {
-                const data = await fetchCountryRes();
-                if (data && data.country) {
-                  setCountries(data.country); // Populate the countries dropdown
-                } else {
-                  console.error("Failed to fetch countries.");
-                }
-              } catch (error) {
-                console.error("Error fetching countries:", error);
-              }
-            };
-          
-            getCountries();
-          }, []);
-          
-        
-          useEffect(() => {
-            if (selectedCountryId) {
-              const getStates = async () => {
-                try {
-                  const stateData = await fetchStateApiRes(selectedCountryId);
-                  if (stateData) {
-                    setStates(stateData); // Populate the states dropdown
-                  } else {
-                    console.error("No states found.");
-                  }
-                } catch (error) {
-                  console.error("Error fetching states:", error);
-                }
-              };
-          
-              getStates();
-            } else {
-              setStates([]); // Clear states when no country is selected
-            }
-          }, [selectedCountryId]);
-          
-          useEffect(() => {
-            if (selectedStateId) {
-              const getCities = async () => {
-                const cityData = await fetchCityApiRes(selectedStateId);
-                setCities(cityData || []); // Update cities based on the selected state
-              };
-              getCities();
-            } else {
-              setCities([]); // Reset city options when no state is selected
-            }
-          }, [selectedStateId]); 
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedStateId, setSelectedStateId] = useState("");
+  const [selectedCountryId, setSelectedCountryId] = useState(""); // Track the selected country
+
+  // Fetch countries on mount
+  useEffect(() => {
+    const getCountries = async () => {
+      try {
+        const data = await fetchCountryRes(); // Fetch your countries API here
+        if (data && data.country) {
+          setCountries(data.country);
+          // Set the selected country from props if exists
+          if (selectedCountry?.id) {
+            setSelectedCountryId(selectedCountry.id);
+            setFormData((prev) => ({
+              ...prev,
+              country: selectedCountry.name,
+            }));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+
+    getCountries();
+  }, [selectedCountry, setFormData]);
+
+  // Fetch states based on selected country
+  useEffect(() => {
+    if (selectedCountryId) {
+      const getStates = async () => {
+        try {
+          const stateData = await fetchStateApiRes(selectedCountryId); // Fetch state data API
+          setStates(stateData || []);
+        } catch (error) {
+          console.error("Error fetching states:", error);
+        }
+      };
+
+      getStates();
+    } else {
+      setStates([]); // Reset states if no country selected
+    }
+  }, [selectedCountryId]);
+
+  console.log("selectedState", selectedState);
+
+  // Fetch cities based on selected state
+  useEffect(() => {
+    const getCities = async () => {
+      if (!selectedStateId && !selectedState?.id) {
+        console.error("State ID is missing. Cannot fetch cities.");
+        setCities([]);
+        return;
+      }
+  
+      try {
+        const stateIdToUse = selectedStateId || selectedState.id;
+        const cityData = await fetchCityApiRes(stateIdToUse);
+        setCities(cityData);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+  
+    getCities();
+  }, [selectedStateId, selectedState]);
 
   // const [errors, setErrors] = useState({});
 
@@ -91,33 +107,33 @@ const Page3ROC1 = ({ formData, setFormData, errors }) => {
   };
 
   const formatNumberWithCommas = (number) => {
-    // If there's a number, format it with commas
     if (!number) return number;
     
-    let [integerPart, decimalPart] = number.split('.');
+    // Handle numbers with decimals
+    let [integerPart, decimalPart] = number.toString().split('.');
     let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     
     return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
   };
 
    // Handle the price input change
-  const handlepriceChange = (e) => {
-      const { name, value } = e.target;
-
-      // Ensure only positive numbers are allowed
-      if (
-        name === "asking_price" ||
-        name === "advance_price" 
-      ) {
-        // Remove non-numeric characters except the dot
-        let rawValue = value.replace(/[^0-9.]/g, '');
-
-        // Update the raw value in the state (no commas yet)
-        setFormData((prevState) => ({
-          ...prevState,
-          [name]: rawValue,
-        }));
-      }
+   const handlepriceChange = (e) => {
+    const { name, value } = e.target;
+  
+    // Remove non-numeric characters
+    let rawValue = value.replace(/[^0-9]/g, ''); // Only digits allowed for phone numbers
+  
+    // Apply formatting based on the field name
+    if (name === "asking_price" || name === "advance_price" ) {
+      // Format numbers with commas for specific fields
+      rawValue = formatNumberWithCommas(rawValue);
+    }
+  
+    // Update the formData state
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: rawValue,
+    }));
   };
 
   return (
@@ -176,88 +192,96 @@ const Page3ROC1 = ({ formData, setFormData, errors }) => {
     )}
   </Form.Group>
 </div> */}
-  <div className="col-lg-7 col-md-12 col-sm-12">
-       <Form.Group className="businessListingFormsDiv" controlId="country">
-         <Form.Label>COUNTRY</Form.Label>
-         <span className="vallidateRequiredStar">*</span>
-         <div className="country-box-container">
-           {countries.map((country) => (
-             <div
-               key={country.id}
-               className={`country-box ${selectedCountryId === country.id ? "selected" : ""}`}
-               onClick={() => {
-                 setSelectedCountryId(country.id); // Update the selected country ID
-                 setFormData((prev) => ({
-                   ...prev,
-                   country: country.name, // Update the country in form data
-                   state: "", // Reset state selection
-                 }));
-               }}
-             >
-               {country.name}
-             </div>
-           ))}
-         </div>
-         {errors.country && <div className="error-message">{errors.country}</div>}
-       </Form.Group>
-     </div>
-     
-         
-     <div className="col-lg-7 col-md-12 col-sm-12">
-       <Form.Group className="businessListingFormsDiv" controlId="state">
-         <Form.Label>STATE</Form.Label>
-         <span className="vallidateRequiredStar">*</span>
-         <Form.Control
-           as="select"
-           value={formData.state}
-           onChange={(e) => {
-             const stateId = e.target.value;
-             setSelectedStateId(stateId); // Update selected state ID
-             setFormData((prev) => ({
-               ...prev,
-               state: stateId, // Update the state in form data
-               city: "", // Reset city field
-             }));
-           }}
-         >
-           <option value="">Select State</option>
-           {states.map((state) => (
-             <option key={state.id} value={state.id}>
-               {state.name}
-             </option>
-           ))}
-         </Form.Control>
-         {errors.state && <div className="error-message">{errors.state}</div>}
-       </Form.Group>
-     </div>
-     
-     
-         <div className="col-lg-7 col-md-12 col-sm-12">
-       <Form.Group className="businessListingFormsDiv" controlId="city">
-         <Form.Label>TOWN/CITY</Form.Label>
-         {/* <span className="vallidateRequiredStar">*</span> */}
-         <Form.Control
-           as="select"
-           name="city"
-           value={formData.city}
-           onChange={(e) =>
-             setFormData((prev) => ({
-               ...prev,
-               city: e.target.value, // Update the city in formData
-             }))
-           }
-           isInvalid={!!errors.city}
-         >
-           <option value="">Select City</option>
-           {cities.map((city) => (
-             <option key={city.id} value={city.name}>
-               {city.name}
-             </option>
-           ))}
-         </Form.Control>
-         <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
-       </Form.Group>
-     </div>
+
+
+      <div className="col-lg-7 col-md-12 col-sm-12">
+        <Form.Group className="businessListingFormsDiv" controlId="country">
+          <Form.Label>COUNTRY</Form.Label>
+          <span className="vallidateRequiredStar">*</span>
+          <div className="country-box-container">
+            {countries.map((country) => (
+              <div
+                key={country.id}
+                className={`country-box ${
+                  selectedCountry?.id === country.id ? "selected" : ""
+                }`}
+                onClick={() => {
+                  setSelectedCountry(country); // Update selected country object
+                  setFormData((prev) => ({
+                    ...prev,
+                    country: country.name,
+                    state: "", // Reset state on country change
+                    city:"",
+                  }));
+                }}
+              >
+                {country.name}
+              </div>
+            ))}
+          </div>
+          {errors.country && (
+            <div className="error-message">{errors.country}</div>
+          )}
+        </Form.Group>
+      </div>
+
+      {/* State Selection */}
+      <div className="col-lg-7 col-md-12 col-sm-12">
+        <Form.Group className="businessListingFormsDiv" controlId="state">
+          <Form.Label>STATE</Form.Label>
+          <span className="vallidateRequiredStar">*</span>
+
+          <Form.Control
+            as="select"
+            value={formData.state}
+            onChange={(e) => {
+              const stateId = e.target.value;
+              setSelectedStateId(stateId);
+              setFormData((prev) => ({
+                ...prev,
+                state: stateId,
+                city: "", // Reset city field when state changes
+              }));
+            }}
+          >
+            <option value="">Select State</option>
+            {states.map((state) => (
+              <option key={state.id} value={state.id}>
+                {state.name}
+              </option>
+            ))}
+          </Form.Control>
+          {errors.state && <div className="error-message">{errors.state}</div>}
+        </Form.Group>
+      </div>
+
+      {/* City Selection */}
+      <div className="col-lg-7 col-md-12 col-sm-12">
+        <Form.Group className="businessListingFormsDiv" controlId="city">
+          <Form.Label>TOWN/CITY</Form.Label>
+          <Form.Control
+            as="select"
+            value={formData.city}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                city: e.target.value, // Update city field in formData
+              }))
+            }
+            isInvalid={!!errors.city}
+          >
+            <option value="">Select City</option>
+            {cities.map((city) => (
+              <option key={city.id} value={city.name}>
+                {city.name}
+              </option>
+            ))}
+          </Form.Control>
+          <Form.Control.Feedback type="invalid">
+            {errors.city}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </div>
 
       {/* <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="state">

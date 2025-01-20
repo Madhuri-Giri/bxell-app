@@ -67,7 +67,11 @@ const EditBusinessForm = () => {
     listing_type: "",
     file_name: null,
   });
+
+
   console.log("User ID:", formData.user_id);
+
+  
   useEffect(() => {
     const getCountries = async () => {
       try {
@@ -192,16 +196,35 @@ useEffect(() => {
     }));
   };
 
-  const handlepriceChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value.replace(/\D/g, ""), // Allow only numeric values
-    }));
+  const formatNumberWithCommas = (number) => {
+    if (!number) return number;
+    
+    // Handle numbers with decimals
+    let [integerPart, decimalPart] = number.toString().split('.');
+    let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+    return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
   };
 
-
-
+   // Handle the price input change
+   const handlepriceChange = (e) => {
+    const { name, value } = e.target;
+  
+    // Remove non-numeric characters
+    let rawValue = value.replace(/[^0-9]/g, ''); // Only digits allowed for phone numbers
+  
+    // Apply formatting based on the field name
+    if (name === "asking_price" || name === "reported_turnover_from" || name === "reported_turnover_to") {
+      // Format numbers with commas for specific fields
+      rawValue = formatNumberWithCommas(rawValue);
+    }
+  
+    // Update the formData state
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: rawValue,
+    }));
+  };
 
   // Updated handleChange function
  
@@ -500,7 +523,7 @@ useEffect(() => {
                               <div className="d-flex gap-3">
                                 <div className="turnover_range">
                                   <Form.Control
-                                    type="number"
+                                    type="text"
                                     name="reported_turnover_from"
                                     value={formData.reported_turnover_from}
                                     onChange={handlepriceChange}
@@ -516,7 +539,7 @@ useEffect(() => {
                                 <span>TO</span>
                                 <div className="flex-column">
                                   <Form.Control
-                                    type="number"
+                                    type="text"
                                     name="reported_turnover_to"
                                     value={formData.reported_turnover_to}
                                     onChange={handlepriceChange}
@@ -559,7 +582,7 @@ useEffect(() => {
                             <Form.Group className="businessListingFormsDiv" controlId="asking_price"  >
                               <Form.Label>PRICE</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Control type="number" name="asking_price" value={formData.asking_price}  onChange={handlepriceChange} placeholder="Enter Asking Price" isInvalid={!!errors.asking_price} className="no-spinner" />
+                              <Form.Control type="text" name="asking_price" value={formData.asking_price}  onChange={handlepriceChange} placeholder="Enter Asking Price" isInvalid={!!errors.asking_price} className="no-spinner" />
                               <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback>
                             </Form.Group>
                           </div>
