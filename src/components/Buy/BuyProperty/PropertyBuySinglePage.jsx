@@ -14,7 +14,7 @@ import News from "../../Home/MainBanner/news/News";
 import Slider from "react-slick";
 import ReactStars from "react-rating-stars-component";
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-
+import { toast } from "react-toastify";
 function PropertyBuySinglePage() {
   
   const location = useLocation();
@@ -198,24 +198,38 @@ function PropertyBuySinglePage() {
     }));
   };
 
+  useEffect(() => {
+    if (type === "property" && property) {
+      setFormData((prevData) => ({
+        ...prevData,
+        listing_title: property.property_title, // Automatically fill listing_title with property_title
+      }));
+    } else if (type === "business" && business) {
+      setFormData((prevData) => ({
+        ...prevData,
+        listing_title: business.title, // Automatically fill listing_title with business_title
+      }));
+    }
+  }, [type, property, business]);
+  
   const handlePropertyEnquirySubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.user_id || !id) {
       alert("User ID or Business ID is missing.");
       return;
     }
-
+  
     try {
       const response = await submitpropertyEnquiryForm({
         user_id: formData.user_id,
         property_id: id,
         name: formData.name,
         email: formData.email,
-        listing_title: formData.listing_title,
+        listing_title: formData.listing_title, // This will auto-fill
         enquiry_message: formData.enquiry_message,
       });
-
+  
       if (response.status === 200) {
         alert(response.message);
         setShowModal(false);
@@ -226,25 +240,25 @@ function PropertyBuySinglePage() {
       console.error("Error:", error);
     }
   };
-
+  
   const handleBusinessEnquirySubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.user_id || !id) {
       alert("User ID or Business ID is missing.");
       return;
     }
-
+  
     try {
       const response = await submitbusinessEnquiryForm({
         user_id: formData.user_id,
         business_id: id,
         name: formData.name,
         email: formData.email,
-        listing_title: formData.listing_title,
+        listing_title: formData.listing_title, // This will auto-fill
         enquiry_message: formData.enquiry_message,
       });
-
+  
       if (response.status === 200) {
         alert(response.message);
         setShowModal(false);
@@ -285,7 +299,7 @@ function PropertyBuySinglePage() {
     // Store the rating in localStorage
     localStorage.setItem(`${type}-${id}-rating`, newRating); // Use unique key for property/business
     if (!user) {
-      alert("Please log in to submit a rating.");
+     toast.error("Please log in to submit a rating.");
       return;
     }
     try {
@@ -294,7 +308,7 @@ function PropertyBuySinglePage() {
       } else if (type === "business") {
         await fetchBusinessRating(id, newRating, user); // Pass the business ID and rating
       }
-      alert("Thank you for rating!");
+      toast.success("Thank you for rating!");
     } catch (error) {
       console.error("Error submitting rating:", error);
     }
@@ -422,48 +436,87 @@ function PropertyBuySinglePage() {
                           </div>
                          
                           <div>
-                            <div className="propertyInfoTableContainer">
-                              <table className="propertyInfoTable ">
-                                <thead className=" table_heading">
-                                  <tr>
-                                    <th colSpan="3">Proposal</th>
-                                  </tr>
-                                </thead>
-
-                                <tbody>
-                                  <tr>
-                                    <td> Listing Type: <br /> <span className="green-text"> {property.listing_type} </span> </td>
-                                    <td>  Property Type: <br />  <span className="green-text"> {property.property_type} </span> </td>
-                                    <td>  Bathroom: <br /> <span className="green-text"> {property.bathroom} </span> </td>
-                                  </tr>
-
-                                  <tr>
-                                    <td> Business Status: <br /> <span className="green-text"> {property.project_status} </span> </td>
-                                    <td> Furnishing: <br />  <span className="green-text"> {property.furnishing} </span> </td>
-                                    <td> Carpet Area: <br /> <span className="green-text">{property.sq_ft}  </span> </td>
-                                  </tr>
-
-                                  <tr>
-                                    <td> Listed By: <br /> ₹  <span className="green-text"> {property.listed_by}  </span>  </td>
-                                    <td> Project Status: <br /> <span className="green-text"> {property.project_status} </span> </td>
-
-                                    <td> Documents Uploaded: <br /> <span className="green-text">
-                                        {(() => {
-                                          try {
-                                            const files = JSON.parse( property.file_name  );
-                                            return Array.isArray(files) ? files.length : 0;
-                                          } catch (error) {
-                                            console.error( "Error parsing file_name:", error );
-                                            return 0;
-                                          }
-                                        })()}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
+              {/* Conditional Rendering for Land or Other Property Types */}
+              {property.property_type === "Land" ? (
+                // Land Property Table
+                <div className="propertyInfoTableContainer">
+                  <table className="propertyInfoTable ">
+                    <thead className=" table_heading">
+                      <tr>
+                        <th colSpan="3">Land Proposal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td> Listing Type: <br /> <span className="green-text"> {property.listing_type || "N/A"} </span> </td>
+                        <td> Property Type: <br /> <span className="green-text"> {property.property_type || "N/A"} </span> </td>
+                        <td> Area Measurement: <br /> <span className="green-text"> {property.area_measurment || "N/A"} </span> </td> 
+                      </tr>
+                      <tr>
+                        <td> Area: <br /> <span className="green-text"> {property.area || "N/A"} </span> </td> 
+                        <td> Length: <br />  <span className="green-text"> {property.length || "N/A"} </span> </td> 
+                        <td> Breadth: <br /> <span className="green-text">{property.breadth || "N/A"}  </span> </td> 
+                      </tr>
+                      <tr>
+                        <td> Listed By: <br />  <span className="green-text"> {property.listed_by || "N/A"}  </span>  </td>
+                        <td> Project Status: <br /> <span className="green-text"> {property.project_status || "N/A"} </span> </td>
+                        <td> Documents Uploaded: <br /> <span className="green-text">
+                          {(() => {
+                            try {
+                              const files = JSON.parse( property.file_name );
+                              return Array.isArray(files) ? files.length : 0;
+                            } catch (error) {
+                              console.error( "Error parsing file_name:", error );
+                              return 0;
+                            }
+                          })()}
+                        </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                // Residential/Other Property Table (for Home, Apartment, Office, etc.)
+                <div className="propertyInfoTableContainer">
+                  <table className="propertyInfoTable ">
+                    <thead className=" table_heading">
+                      <tr>
+                        <th colSpan="3">Property Proposal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td> Listing Type: <br /> <span className="green-text"> {property.listing_type || "N/A"} </span> </td>
+                        <td> Property Type: <br /> <span className="green-text"> {property.property_type || "N/A"} </span> </td>
+                        <td> Bathroom: <br /> <span className="green-text"> {property.bathroom || "N/A"} </span> </td>
+                      </tr>
+                      <tr>
+                        <td> Property Status: <br /> <span className="green-text"> {property.project_status || "N/A"} </span> </td>
+                        <td> Furnishing: <br />  <span className="green-text"> {property.furnishing || "N/A"} </span> </td>
+                        <td> Carpet Area: <br /> <span className="green-text">{property.sq_ft || "N/A"}  </span> </td>
+                      </tr>
+                      <tr>
+                        <td> Listed By: <br />   <span className="green-text"> {property.listed_by || "N/A"}  </span>  </td>
+                        <td> Project Status: <br /> <span className="green-text"> {property.project_status || "N/A"} </span> </td>
+                        <td> Documents Uploaded: <br /> <span className="green-text">
+                          {(() => {
+                            try {
+                              const files = JSON.parse( property.file_name );
+                              return Array.isArray(files) ? files.length : 0;
+                            } catch (error) {
+                              console.error( "Error parsing file_name:", error );
+                              return 0;
+                            }
+                          })()}
+                        </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
                         </div>
                       </div>
                     </div>

@@ -15,6 +15,8 @@ import { useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
 
 const EditBusinessForm = () => {
 
@@ -68,10 +70,8 @@ const EditBusinessForm = () => {
     file_name: null,
   });
 
-
   console.log("User ID:", formData.user_id);
 
-  
   useEffect(() => {
     const getCountries = async () => {
       try {
@@ -128,6 +128,24 @@ const EditBusinessForm = () => {
 
 useEffect(() => {
   if (businessData) {
+
+    let parsedImages = [];
+    try {
+      // Check if file_name is a JSON string
+      parsedImages =
+        typeof businessData.file_name === "string" &&
+        businessData.file_name.trim().startsWith("[")
+          ? JSON.parse(businessData.file_name)
+          : Array.isArray(businessData.file_name)
+          ? businessData.file_name
+          : [businessData.file_name]; // Treat it as a single file name
+    } catch (error) {
+      console.error("Error parsing file_name:", error);
+      parsedImages = [];
+    }
+
+    setImagePreview(parsedImages);
+
     setFormData({
       business_type: businessData.business_type || "",
       listing_type: businessData.listing_type || "",
@@ -183,9 +201,6 @@ useEffect(() => {
     }
   }
 }, [businessData, countries]);
-
-  
-  
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -265,33 +280,41 @@ useEffect(() => {
   // --------------  payment ------------
   const UpdateForm = async (e) => {
     e.preventDefault();
-
+  
     // Prepare FormData object
     const formDataObject = new FormData();
     Object.keys(formData).forEach((key) => {
-      formDataObject.append(key, formData[key]);
+      if (key === "file_name" && Array.isArray(formData[key])) {
+        // Append each file individually for file_name
+        formData[key].forEach((file) => {
+          formDataObject.append("file_name[]", file); // Use appropriate key for multiple files
+        });
+      } else {
+        formDataObject.append(key, formData[key]);
+      }
     });
-
-    // Append business_id to FormData (use the `businessData.id` or `businessData.business_id`)
-    formDataObject.append("business_id", businessData.id);  // Ensure this is correct field name, `id` or `business_id`
-
+  
+    formDataObject.append("business_id", businessData.id); // Append business_id
+  
     try {
-      // Make the API call using the fetchEditBusinessForm function
+      // Make the API call
       const response = await fetchEditBusinessForm(formDataObject);
-
-      // Handle response from the API
+      console.log("update edit ", response);
+  
       if (response) {
-        toast.success("Business form updated successfully!");  // Show success toast
-        navigate("/");  // Navigate to the home page
+        toast.success("Business form updated successfully!");
+        navigate("/");
       }
     } catch (error) {
       setErrors(error.message);
-      toast.error("Error updating the business form!");  // Show error toast
+      toast.error("Error updating the business form!");
     }
   };
+  
 
   return (
     <>
+    <Header />
       <section className="businessListingFormMAinSec">
         <div className="container">
           <div className="row businessListingFormMAinRow">
@@ -482,8 +505,8 @@ useEffect(() => {
                                 isInvalid={!!errors.description}
                               />
                               <Form.Control.Feedback type="invalid">
-                                {" "}
-                                {errors.description}{" "}
+                            
+                                {errors.description}
                               </Form.Control.Feedback>
                             </Form.Group>
                           </div>
@@ -506,8 +529,8 @@ useEffect(() => {
                                   isInvalid={!!errors.percentage_of_stake}
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                  {" "}
-                                  {errors.percentage_of_stake}{" "}
+                              
+                                  {errors.percentage_of_stake}
                                 </Form.Control.Feedback>
                               </Form.Group>
                             </div>
@@ -533,7 +556,7 @@ useEffect(() => {
                                   />
                                   <Form.Control.Feedback type="invalid">
                                 
-                                    {errors.reported_turnover_from}{" "}
+                                    {errors.reported_turnover_from}
                                   </Form.Control.Feedback>
                                 </div>
                                 <span>TO</span>
@@ -673,15 +696,22 @@ useEffect(() => {
                             <Form.Group className="businessListingFormsDiv" controlId="file_name">
                               <Form.Label>CHOOSE IMAGES</Form.Label>
                               <Form.Control
-                                type="file"
-                                name="file_name"
-                                multiple
-                                onChange={(e) => {
-                                  const files = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
-                                  setImagePreview(files); // Show new image previews
-                                }}
-                                accept="image/*"
-                              />
+  type="file"
+  name="file_name"
+  multiple
+  onChange={(e) => {
+    const files = Array.from(e.target.files); // Get the actual files
+    setFormData((prev) => ({
+      ...prev,
+      file_name: files, // Store the files for submission
+    }));
+
+    const filePreviews = files.map((file) => URL.createObjectURL(file));
+    setImagePreview(filePreviews); // Show new image previews
+  }}
+  accept="image/*"
+/>
+
                               {errors.file_name && <p className="error-text">{errors.file_name}</p>}
                             </Form.Group>
                           </div>
@@ -751,6 +781,7 @@ useEffect(() => {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 }

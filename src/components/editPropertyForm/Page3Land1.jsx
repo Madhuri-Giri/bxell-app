@@ -3,7 +3,7 @@ import "./SellPropertyForm.css";
 import { Form } from "react-bootstrap";
 import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../API/apiServices";
 
-  const Page3Land1 = ({   formData,
+  const Page3Land1 = ({   formData, imagePreview, setImagePreview,
     setFormData,
     errors,
     selectedCountry,
@@ -168,19 +168,36 @@ import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../API/a
         </Form.Group>
       </div>
 
-      <div className="col-7">
-        <Form.Group className="businessListingFormsDiv" controlId="file_name">
-          <Form.Label>CHOOSE IMAGES</Form.Label>
-          <Form.Control
-            type="file"
-            name="file_name"
-            multiple // Allow multiple files
-            accept="image/*" // Only allow image files
-            onChange={handleChange}
-          />
-        
-        </Form.Group>
-      </div>
+    
+                              <div className="col-lg-7 col-md-12 col-sm-12">
+                                <Form.Group className="businessListingFormsDiv" controlId="file_name">
+                                  <Form.Label>CHOOSE IMAGES</Form.Label>
+                                  <Form.Control
+                                      type="file"
+                                      name="file_name"
+                                      multiple 
+                                      onChange={(e) => {
+                                        const files = Array.from(e.target.files); // Get the actual files
+                                        setFormData((prev) => ({
+                                          ...prev,
+                                          file_name: files, // Store the files for submission
+                                        }));
+                                    
+                                        const filePreviews = files.map((file) => URL.createObjectURL(file));
+                                        setImagePreview(filePreviews); // Show new image previews
+                                      }}
+                                      accept="image/*"
+                                    />
+    
+                                  {errors.file_name && <p className="error-text">{errors.file_name}</p>}
+                                </Form.Group>
+                              </div>
+                               {/* Render the image previews */}
+                          <div>
+                            {imagePreview.map((url, index) => (
+                              <img key={index} src={url} alt={`Image ${index}`} width="100" />
+                            ))}
+                          </div>
 
       <div className="col-lg-7 col-md-12 col-sm-12">
         <Form.Group className="businessListingFormsDiv" controlId="country">

@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
 
 const EditPropertyForm = () => {
   const location = useLocation()
@@ -126,6 +128,23 @@ const EditPropertyForm = () => {
     if (propertyData) {
       console.log("propertyData", propertyData);
 
+      let parsedImages = [];
+      try {
+        // Check if file_name is a JSON string
+        parsedImages =
+          typeof propertyData.file_name === "string" &&
+          propertyData.file_name.trim().startsWith("[")
+            ? JSON.parse(propertyData.file_name)
+            : Array.isArray(propertyData.file_name)
+            ? propertyData.file_name
+            : [propertyData.file_name]; // Treat it as a single file name
+      } catch (error) {
+        console.error("Error parsing file_name:", error);
+        parsedImages = [];
+      }
+  
+      setImagePreview(parsedImages);
+
       // Set formData
       setFormData({
         property_type: propertyData.property_type || "",
@@ -195,10 +214,7 @@ const EditPropertyForm = () => {
       }
 
       // Handle image preview if file_name is a valid JSON string or array
-      const parsedImages = propertyData.file_name && propertyData.file_name.startsWith("[")
-        ? JSON.parse(propertyData.file_name)
-        : [propertyData.file_name];
-      setImagePreview(parsedImages);
+  
     }
   }, [propertyData,countries]);
 
@@ -207,32 +223,39 @@ const EditPropertyForm = () => {
     console.log('Updated formData:', formData);
   }, [formData]);
 
-  const UpdateForm = async (e) => {
-    e.preventDefault();
-
-    // Prepare FormData object
-    const formDataObject = new FormData();
-    Object.keys(formData).forEach((key) => {
-      formDataObject.append(key, formData[key]);
-    });
-
-
-    formDataObject.append("property_id", propertyData.id);
-
-    try {
-
-      const response = await fetchEditPropertyForm(formDataObject);
-
-      // Handle response from the API
-      if (response) {
-        toast.success("property form updated successfully!");
-        navigate("/");  // Navigate to the home page
-      }
-    } catch (error) {
-      setErrors(error.message);
-      toast.error("Error updating the property form!");  // Show error toast
-    }
-  };
+   // --------------  payment ------------
+   const UpdateForm = async (e) => {
+     e.preventDefault();
+   
+     // Prepare FormData object
+     const formDataObject = new FormData();
+     Object.keys(formData).forEach((key) => {
+       if (key === "file_name" && Array.isArray(formData[key])) {
+         // Append each file individually for file_name
+         formData[key].forEach((file) => {
+           formDataObject.append("file_name[]", file); // Use appropriate key for multiple files
+         });
+       } else {
+         formDataObject.append(key, formData[key]);
+       }
+     });
+   
+     formDataObject.append("property_id", propertyData.id); // Append business_id
+   
+     try {
+       // Make the API call
+       const response = await fetchEditPropertyForm(formDataObject);
+       console.log("update edit ", response);
+   
+       if (response) {
+         toast.success("property form updated successfully!");
+         navigate("/");
+       }
+     } catch (error) {
+       setErrors(error.message);
+       toast.error("Error updating the property form!");
+     }
+   };
 
 
   const handlePropertyTypeChange = (type) => {
@@ -311,7 +334,10 @@ const EditPropertyForm = () => {
   };
 
   return (
-    <section className="businessListingFormMAinSec">
+
+    <>
+    <Header/>
+      <section className="businessListingFormMAinSec">
       <div className="container">
         <div className="row businessListingFormMAinRow">
           <div className="col-10 property_width">
@@ -408,7 +434,10 @@ const EditPropertyForm = () => {
                             setSelectedCountry={setSelectedCountry}
                             setCities={setCities}
                             selectedState={selectedState}
+                            imagePreview={imagePreview}
+                            setImagePreview={setImagePreview}
                             handleChange={handleChange}
+                            
                             errors={errors}
                           />
                         )}
@@ -422,6 +451,8 @@ const EditPropertyForm = () => {
                             setCities={setCities}
                             selectedState={selectedState}
                             handleChange={handleChange}
+                            imagePreview={imagePreview}
+                            setImagePreview={setImagePreview}
                             errors={errors}
                           />
                         )}
@@ -436,6 +467,8 @@ const EditPropertyForm = () => {
                             setSelectedCountry={setSelectedCountry}
                             setCities={setCities}
                             selectedState={selectedState}
+                            imagePreview={imagePreview}
+                            setImagePreview={setImagePreview}
                             handleChange={handleChange}
                             errors={errors}
                           />
@@ -466,6 +499,8 @@ const EditPropertyForm = () => {
                             setCities={setCities}
                             selectedState={selectedState}
                             handleChange={handleChange}
+                            imagePreview={imagePreview}
+                            setImagePreview={setImagePreview}
                             errors={errors}
                           />
                         )}
@@ -479,6 +514,8 @@ const EditPropertyForm = () => {
                             setCities={setCities}
                             selectedState={selectedState}
                             handleChange={handleChange}
+                            imagePreview={imagePreview}
+                            setImagePreview={setImagePreview}
                             errors={errors}
                           />
                         )}
@@ -492,6 +529,8 @@ const EditPropertyForm = () => {
                             setCities={setCities}
                             selectedState={selectedState}
                             handleChange={handleChange}
+                            imagePreview={imagePreview}
+                            setImagePreview={setImagePreview}
                             errors={errors}
                           />
                         )}
@@ -518,6 +557,9 @@ const EditPropertyForm = () => {
         </div>
       </div>
     </section>
+    <Footer />
+    </>
+  
   )
 }
 

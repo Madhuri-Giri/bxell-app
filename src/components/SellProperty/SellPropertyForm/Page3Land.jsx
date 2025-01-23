@@ -145,6 +145,7 @@ import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../AP
       <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="file_name">
           <Form.Label>CHOOSE IMAGES</Form.Label>
+          <span className="vallidateRequiredStar">*</span>
           <Form.Control
             type="file"
             name="file_name"
@@ -152,7 +153,7 @@ import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../AP
             accept="image/*" // Only allow image files
             onChange={handleChange}
           />
-        
+            {errors?.file_name && (  <small className="text-danger">{errors.file_name}</small>  )}
         </Form.Group>
       </div>
 

@@ -133,8 +133,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }
   };
 
- 
-
   const handleNext = () => {
     // Check if all required fields are filled
     const errors = {};
@@ -192,8 +190,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }));
   };
   
-
-
   const handleAmountChange = (e) => {
     const selectedAmount = e.target.value;
     setFormData(prevFormData => ({
@@ -531,6 +527,18 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }
   
     try {
+
+      // const response = await submitSellBusinessForm(formData, user);
+  
+      // if (!response || response.error) {
+      //   toast.error(response.message || "Form submission failed. Please try again.");
+      //   return;
+      // }
+  
+      // toast.success(response.message || "Form submitted successfully!");
+  
+     
+
       // Submit the form first
       const response = await submitSellBusinessForm(formData, user);
       
@@ -543,6 +551,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
       toast.success("Form Submit Successfully!");
 
       const paymentData = await fetchPaymentDetails(response);
+
       if (!paymentData) {
         toast.error("Failed to fetch payment details. Please try again.");
         return;
@@ -1167,8 +1176,8 @@ const [selectedStateId, setSelectedStateId] = useState("");
                           <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv"  controlId="business_link" >
                               <Form.Label>BUSINESS WEBSITE LINK</Form.Label>
-                              <Form.Control type="text"  name="business_link"  value={formData.business_link} onChange={handleChange}  placeholder="Paste your website link here" isInvalid={!!errors.business_link}  />
-                              <Form.Control.Feedback type="invalid"> {errors.business_link}</Form.Control.Feedback>
+                              <Form.Control type="text"  name="business_link"  value={formData.business_link} onChange={handleChange} required placeholder="Paste your website link here" isInvalid={!!errors.business_link}  />
+                              {/* <Form.Control.Feedback type="invalid"> {errors.business_link}</Form.Control.Feedback> */}
                             </Form.Group>
                           </div>
 
@@ -1176,8 +1185,8 @@ const [selectedStateId, setSelectedStateId] = useState("");
                             <Form.Group  className="businessListingFormsDiv"  controlId="file_name" >
                               <Form.Label>CHOOSE IMAGES</Form.Label>
                               <span className="vallidateRequiredStar">*</span>
-                              <Form.Control  type="file" name="file_name" multiple  onChange={handleChange}  accept="image/*" />
-                              {errors.file_name && ( <p className="error-text">{errors.file_name}</p>   )}
+                              <Form.Control  type="file" name="file_name" multiple  onChange={handleChange} required accept="image/*" />
+                              {errors?.file_name && (  <small className="invalid-feedback d-block">{errors.file_name}</small>  )}
                             </Form.Group>
                           </div>
 

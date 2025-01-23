@@ -4,7 +4,7 @@ import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellPropertyForm.css";
 import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../API/apiServices";
 
-const Page3Common = ({ formData, setFormData,errors  }) => {
+const Page3Common = ({ formData, setFormData,errors, setErrors  }) => {
 
    const [countries, setCountries] = useState([]);
     
@@ -155,8 +155,9 @@ const handleCountryInputChange = (e) => {
       <div className="col-7">
         <Form.Group className="businessListingFormsDiv" controlId="file_name">
           <Form.Label>CHOOSE IMAGES</Form.Label>
+          <span className="vallidateRequiredStar">*</span>
           <Form.Control type="file" name="file_name" multiple accept="image/*" onChange={handleInputChange} />
-    
+          {errors?.file_name && (  <small className="text-danger">{errors.file_name}</small>  )}
           </Form.Group>
       </div>
 
