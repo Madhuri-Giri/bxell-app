@@ -703,6 +703,7 @@ const handleSubmit = async (e) => {
                           {step > 0 && (
                             <Button variant="secondary" onClick={handleBack} type="button"  className="me-2" > Back </Button>
                           )}
+                  
                           <Button variant="primary" type="submit" onClick={handlePayment} > Pay Now  </Button>
                         </div>
                       </>

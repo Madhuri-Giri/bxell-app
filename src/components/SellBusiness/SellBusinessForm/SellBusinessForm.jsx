@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 import { Button, Form } from "react-bootstrap";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellBusinessForm.css"; // Import the CSS file
@@ -10,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import React, { useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { IoLocation } from "react-icons/io5";
 
 function SellBusinessForm() {
   const navigate = useNavigate();
@@ -23,12 +23,10 @@ function SellBusinessForm() {
   const [amountError, setAmountError] = useState(""); 
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [countries, setCountries] = useState([]);
-  
   const [states, setStates] = useState([]);
   const [selectedCountryId, setSelectedCountryId] = useState("");
-
   const [cities, setCities] = useState([]); // For city options
-const [selectedStateId, setSelectedStateId] = useState("");
+  const [selectedStateId, setSelectedStateId] = useState("");
 
   const [formData, setFormData] = useState({
     user_id: user ,
@@ -72,7 +70,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
     getCountries();
   }, []);
   
-
   useEffect(() => {
     if (selectedCountryId) {
       const getStates = async () => {
@@ -159,7 +156,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
     setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
 
-
   const formatNumberWithCommas = (number) => {
     if (!number) return number;
     
@@ -197,293 +193,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
       amount: parseInt(selectedAmount), // Set the selected amount in formData
     }));
   };
-// ------------------------boost payment--------------------------------------
-// const fetchPaymentBusinessDetails = async () => {
-//   try {
-//     if (!user || !formData.amount) {
-//       throw new Error("Login ID");
-//     }
-
-//     const payload = {
-//       amount: 49,
-//       user_id: user,
-//       form_boost: "Form Boost",
-//       boost_name: "week",
-//     };
-
-//     const response = await axios.post(
-//       "https://bxell.com/bxell/admin/api/create-business-boost-payment",
-//       payload
-//     );
-
-//     if (response.data.result === true && response.data.status === 200) {
-//       return response.data;
-//     } else {
-//       throw new Error(response.data.message || "Failed to fetch payment details.");
-//     }
-//   } catch (error) {
-//     console.error("Error fetching payment details:", error.message);
-//     alert("Failed to initiate payment. Please try again.");
-//     return null;
-//   }
-// };
-
-// const handlePaymentForBusiness = async () => {
-//   const paymentData = await fetchPaymentBusinessDetails();
-
-//   if (!user) {
-//     navigate("/login");
-//     return;
-//   }
-
-//   if (paymentData) {
-//     const { payment_details, user_details, razorpay_key } = paymentData;
-//     const { razorpay_order_id, amount } = payment_details;
-
-//     const options = {
-//       key: razorpay_key,
-//       amount: amount * 100,
-//       currency: "INR",
-//       order_id: razorpay_order_id,
-//       name: "SRN Infotech",
-//       description: "Boost Listing",
-//       image: "https://your-logo-url.com/logo.png",
-//       handler: async function (response) {
-//         try {
-//           await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
-//         } catch (error) {
-//           alert("Error updating payment status. Please contact support.");
-//         }
-//       },
-//       prefill: {
-//         name: user_details?.name || "User Name",
-//         email: user_details?.email || "user@example.com",
-//         contact: user_details?.phone_number || "9999999999",
-//       },
-//       theme: { color: "#3399cc" },
-//     };
-
-//     const rzp1 = new window.Razorpay(options);
-//     rzp1.on("payment.failed", function (response) {
-//       alert(`Payment failed: ${response.error.description}`);
-//     });
-//     rzp1.open();
-//   }
-// };
-
-// const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
-
-//   try {
-//     const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
-//     const payload = { payment_id: razorpay_payment_id, id };
-  
-//     console.log("Updating property payment status with payload:", payload);
-  
-//     const response = await axios.post(url, payload);
-  
-//     console.log("API Response for payment status update:", response.data);
-  
-//     // Check success conditions based on the actual API response structure
-//     if (response.data?.result === true && response.data?.status === 200) {
-//       toast.success("Payment successful and verified!"); // Show success message
-  
-//       // Navigate to the home page after a delay
-//       setTimeout(() => {
-//         navigate("/"); // Adjust the route based on your routing setup
-//       }, 3000); // Navigate after 3 seconds
-//     } else {
-//       toast.error("Payment verification failed. Please contact support."); // Show error message
-//       console.error("Payment verification failed response:", response.data);
-//     }
-//   } catch (error) {
-//     console.error("Error updating payment status:", error.message);
-//     toast.error("Failed to update payment status. Please try again."); // Show error message
-//   }
-//   };
-   
-  // --------------  payment ------------
-  // const fetchPaymentDetails = async () => {
-  //   try {
-  //     if (!user || !formData.amount) {
-  //       throw new Error("Login ID, amount or Business ID is missing.");
-  //     }
-  
-  //     const payload = {
-  //       amount: formData.amount,
-  //       user_id: user,
-  //     };
-  
-  //     const response = await axios.post(
-  //       "https://bxell.com/bxell/admin/api/create-business-payment",
-  //       payload
-  //     );
-  
-  //     if (response.data.result === true && response.data.status === 200) {
-  //       setPaymentDetails(response.data.payment_details);
-  //       return response.data;
-  //     } else {
-  //       throw new Error(response.data.message || "Failed to fetch payment details");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching payment details:", error.message);
-  //     toast.error(error.message || "Failed to initiate payment. Please try again.");
-  //     return null;
-  //   }
-  // };
-  
-  // const handlePayment = async (e) => {
-  //   e.preventDefault();
-  
-  //   // Reset the error message
-  //   setAmountError("");
-  
-  //   if (!user) {
-  //     navigate("/login");
-  //     return;
-  //   }
-  
-  //   if (!formData.amount) {
-  //     setAmountError("Please select an amount to proceed.");
-  //     return; // Stop further execution
-  //   }
-  
-  //   if (formSubmitting) return; // Prevent multiple submissions
-  //   setFormSubmitting(true);
-  
-  //   try {
-  //     const paymentData = await fetchPaymentDetails();
-  //     if (!paymentData) {
-  //       setFormSubmitting(false);
-  //       return;
-  //     }
-  
-  //     const { razorpay_order_id, razorpay_key, payment_details } = paymentData;
-  
-  //     const options = {
-  //       key: razorpay_key,
-  //       amount: payment_details.amount * 100,
-  //       currency: "INR",
-  //       order_id: razorpay_order_id,
-  //       name: "SRN Infotech",
-  //       description: "Business Purchase",
-  //       image: "https://your-logo-url.com/logo.png",
-  //       handler: async function (response) {
-  //         toast.success("Payment successful!");
-  //         try {
-  //           const formSubmissionData = await handleSubmit(e, payment_details.id);
-  //           if (formSubmissionData) {
-  //             const isPaymentUpdated = await updateHandlePayment(
-  //               response.razorpay_payment_id,
-  //               payment_details.id
-  //             );
-  
-  //             if (isPaymentUpdated) {
-  //               toast.success("Payment update successful!");
-  //             }
-  //           }
-  //         } catch (error) {
-  //           console.error("Error during form submission or payment update:", error.message);
-  //           toast.error("Form submission failed or payment verification failed. Please try again.");
-  //         } finally {
-  //           setFormSubmitting(false);
-  //         }
-  //       },
-  
-  //       prefill: {
-  //         name: paymentData.user_details.name || "User Name",
-  //         email: paymentData.user_details.email || "user@example.com",
-  //         contact: paymentData.user_details.phone_number || "9999999999",
-  //       },
-  //       notes: {
-  //         address: "Some Address",
-  //       },
-  //       theme: {
-  //         color: "#3399cc",
-  //       },
-  //     };
-  
-  //     const rzp1 = new window.Razorpay(options);
-  
-  //     rzp1.on("payment.failed", function (response) {
-  //       setFormSubmitting(false);
-  //       toast.error(`Payment failed: ${response.error.description}`);
-  //     });
-  
-  //     rzp1.open();
-  //   } catch (error) {
-  //     console.error("Error during payment setup:", error.message);
-  //     toast.error("An error occurred during payment setup. Please try again.");
-  //     setFormSubmitting(false);
-  //   }
-  // };
-  
-  // const handleSubmit = async (e, paymentId) => {
-  //   e.preventDefault();
-  
-  //   // Validate the form before submission
-  //   if (!formData.amount) {
-  //     setErrors({ amount: "Amount is required" });
-  //     toast.error("Please fill in all required fields.");
-  //     return null;
-  //   }
-  
-  //   try {
-  //     const updatedFormData = {
-  //       ...formData,
-  //       payment_id: paymentId,
-  //     };
-  
-  //     const response = await submitSellBusinessForm(updatedFormData, user);
-  //     toast.success(response.message || "Form submitted successfully!");
-  //     setFormData({}); // Clear form data after submission
-  //     navigate("/");
-  
-  //     // Return successful form submission data
-  //     return response;
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error.message);
-  //     const apiErrors = error.response?.data?.error || {};
-  //     setErrors(apiErrors);
-  //     toast.error("Failed to submit the form. Please try again.");
-  //     return null;
-  //   }
-  // };
-  
-  // const updateHandlePayment = async (razorpay_payment_id, Id) => {
-  //   try {
-  //     if (!razorpay_payment_id || !Id) {
-  //       throw new Error("Missing payment details");
-  //     }
-  
-  //     const payload = {
-  //       payment_id: razorpay_payment_id,
-  //       id: Id,
-  //     };
-  
-  //     const response = await fetch(
-  //       "https://bxell.com/bxell/admin/api/update-business-payment",
-  //       {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify(payload),
-  //       }
-  //     );
-  
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.message || "Failed to update payment details");
-  //     }
-  
-  //     const data = await response.json();
-  //     console.log("Payment status updated:", data);
-  //     return true;
-  //   } catch (error) {
-  //     console.error("Error updating payment:", error.message);
-  //     toast.error(error.message || "An error occurred during payment verification.");
-  //     return false;
-  //   }
-  // };
-
 
   const fetchPaymentDetails = async (formResponse) => {
     try {
@@ -527,18 +236,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }
   
     try {
-
-      // const response = await submitSellBusinessForm(formData, user);
-  
-      // if (!response || response.error) {
-      //   toast.error(response.message || "Form submission failed. Please try again.");
-      //   return;
-      // }
-  
-      // toast.success(response.message || "Form submitted successfully!");
-  
-     
-
       // Submit the form first
       const response = await submitSellBusinessForm(formData, user);
       
@@ -632,8 +329,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
         });
     }
   };
-  
-  
+   
   const updateHandlePayment = async (razorpay_payment_id, Id) => {
     try {
       if (!razorpay_payment_id || !Id) {
@@ -731,8 +427,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
     }
   
     try {
-  
-  
       // Reset form data after successful submission
       setFormData({
          user_id: user ,
@@ -873,27 +567,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                     )}
                       {step === 1 && (
                         <>
-                          {/* <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group className="businessListingFormsDiv" controlId="country">
-                              <Form.Label>COUNTRY</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <div className="country-box-container">
-                                {["INDIA", "USA", "UK"].map((country) => (
-                                  <div key={country} className={`country-box ${formData.country === country ? "selected" : ""}`}
-                                    onClick={() =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        country: country,
-                                      }))
-                                    }
-                                  >
-                                    {country}
-                                  </div>
-                                ))}
-                              </div>
-                              {errors.country && <div className="error-message">{errors.country}</div>}
-                            </Form.Group>
-                          </div> */}
+                        
                         <div className="col-lg-7 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="country">
                             <Form.Label>COUNTRY</Form.Label>
@@ -975,36 +649,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
                           </Form.Group>
                         </div>
 
-                          {/* <div className="col-7">
-                            <Form.Group className="businessListingFormsDiv" controlId="state" >
-                              <Form.Label>STATE</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <Form.Select  name="state"  value={formData.state} onChange={handleChange} isInvalid={!!errors.state} >
-                                <option value="">Select State</option>
-                                <option value="Maharashtra">Maharashtra</option>
-                                <option value="Karnataka">Karnataka</option>
-                                <option value="Kerala">Kerala</option>
-                                <option value="Punjab">Punjab</option>
-                              </Form.Select>
-                              <Form.Control.Feedback type="invalid"> {errors.state} </Form.Control.Feedback>
-                            </Form.Group>
-                          </div> */}
-
-                          {/* <div className="col-7">
-                            <Form.Group className="businessListingFormsDiv" controlId="city"  >
-                              <Form.Label>TOWn/CITY</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <Form.Select  name="city" value={formData.city}  onChange={handleChange}  isInvalid={!!errors.city}  >
-                                <option value="">Select City</option>
-                                <option value="Mumbai">Mumbai</option>
-                                <option value="Bengaluru">Bengaluru</option>
-                                <option value="Delhi">Delhi</option>
-                                <option value="Hyderabad">Hyderabad</option>
-                              </Form.Select>
-                              <Form.Control.Feedback type="invalid"> {errors.city} </Form.Control.Feedback>
-                            </Form.Group>
-                          </div> */}
-
                           <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="description" >
                               <Form.Label>DESCRIPTION</Form.Label>
@@ -1025,26 +669,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
                             </div>
                           )}
 
-                          {/* <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group className="businessListingFormsDiv" controlId="reportedTurnover" >
-                              <Form.Label>TURNOVER RANGE (Yearly)</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <div className="d-flex gap-3">
-                                <div className="turnover_range">
-                                  <Form.Control type="number" name="reported_turnover_from" value={formData.reported_turnover_from} onChange={handlepriceChange}  placeholder="Eg: 1,00,000"  isInvalid={!!errors.reported_turnover_from}  className="no-spinner"  />
-                                  <Form.Control.Feedback type="invalid"> {errors.reported_turnover_from} </Form.Control.Feedback>
-                                </div>
-                                <span>TO</span>
-                                <div className="flex-column">
-                                <Form.Control  type="number"  name="reported_turnover_to"  value={formData.reported_turnover_to}  onChange={handlepriceChange}  placeholder="Eg: 1,50,000"  isInvalid={!!errors.reported_turnover_to} className="no-spinner"  />
-                                <Form.Control.Feedback type="invalid"> {errors.reported_turnover_to} </Form.Control.Feedback>
-                                </div>
-                              </div>
-                              <div>
-                                
-                              </div>
-                            </Form.Group>
-                          </div> */}
                           <div className="col-lg-7 col-md-12 col-sm-12">
                             <Form.Group className="businessListingFormsDiv" controlId="reportedTurnover" >
                               <Form.Label>TURNOVER RANGE (Yearly)</Form.Label>
@@ -1087,13 +711,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
                             </Form.Group>
                           </div>
 
-                          {/* <div className="col-lg-7 col-md-12 col-sm-12">
-                            <Form.Group className="businessListingFormsDiv"  controlId="asking_price" >
-                              <Form.Label>PRICE</Form.Label>
-                              <span className="vallidateRequiredStar">*</span>
-                              <Form.Control type="number"  name="asking_price" value={formData.asking_price} onChange={handlepriceChange} placeholder="Enter Asking Price"  isInvalid={!!errors.asking_price} className="no-spinner" />
-                              <Form.Control.Feedback type="invalid"> {errors.asking_price} </Form.Control.Feedback></Form.Group>
-                          </div> */}
                           <div className="col-lg-7 col-md-12 col-sm-12">
                           <Form.Group className="businessListingFormsDiv" controlId="asking_price">
                         <Form.Label>PRICE</Form.Label>
@@ -1212,9 +829,49 @@ const [selectedStateId, setSelectedStateId] = useState("");
                               <Form.Control.Feedback type="invalid"> {errors.phone_number}</Form.Control.Feedback>
                             </Form.Group>
                           </div>
+                           <div className="col-2 preview-container">
+                          {/* Live Preview Box */}
+                          <h1>LIVE PREVIEW</h1>
+
+                                         <div className="preview-box">
+                          <div className="preview-image">
+                            <img 
+                              src={ formData.file_name ? URL.createObjectURL(formData.file_name) :  "default-image-url.jpg"} 
+                              alt="Business Preview" 
+                            
+                            />
+                          </div>
+                          <div className="preview-title">
+                            <h5>{formData.title || "Business Title"}</h5>
+                          </div>
+                          <div className="preview-details">
+                        <span>
+                          {formData.asking_price ? (
+                            <>
+                              <span className="price-label">Asking Price: ₹ </span>
+                              <span className="value_pre">{formData.asking_price}</span>
+                            </>
+                          ) : (
+                            "Price"
+                          )}
+                        </span>
+                        <span className="type_business">{formData.listing_type || "Business Type"}</span>
+                      </div>
+
+                          <div className="preview-turnover">
+                          <h6>{formData.reported_turnover_from && formData.reported_turnover_to ? 
+                            <span><span className="turnover-label">Reported Sale (yearly): ₹ </span><span className="value_pre">{formData.reported_turnover_from} - {formData.reported_turnover_to}</span></span> : 
+                            <span className="turnover-label">Reported Turnover</span>}</h6>
+                        </div>
+                          <div className="preview-location-call" >
+                            <span><IoLocation/> {formData.city || "City"}</span>
+                            <span className="call-button">{formData.phone_number || "Call"}</span>
+                          </div>
+                        </div>
+                        </div>
                         </>
                       )}
-
+              
                       <div className="col-12 businesListingSubmitButton">
                         {step > 0 && (
                           <Button variant="secondary" onClick={handleBack} type="button"> Back  </Button>
@@ -1224,13 +881,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                         )}
                         {step === steps.length - 1 && (
                           <>
-                          {/* <Button  variant="primary"  onClick={handlePayment}  type="submit" > Pay Now </Button> */}
-                          {/* <Button
-                                  variant="primary"
-                                  onClick={formData.amount === 49 ? () => handlePaymentForBusiness() : handlePayment}
-                                >
-                                  Pay Now
-                                </Button> */}
+                      
                            <Button variant="primary" onClick={handlePayment} type="submit"> Pay Now </Button>
 
                           </>
@@ -1239,6 +890,7 @@ const [selectedStateId, setSelectedStateId] = useState("");
                       {step === steps.length - 1 && (
 
                         <> 
+                       
                            <div className="price_radio">
                            {amountError && <p style={{ color: "red", margin: "0px", padding: "0px" }}>{amountError}</p>}
                     {/* Radio button for Basic Listing */}
@@ -1255,26 +907,6 @@ const [selectedStateId, setSelectedStateId] = useState("");
                       </label>
                     </div>
 
-                    {/* Radio button for Basic Boost Listing */}
-                    {/* <div className="radio-item">
-                      <label className="price-option">
-                        <input
-                          type="radio"
-                          name="listingType"
-                          value="49"
-                          className="radio-input"
-                          onChange={(e) => handleAmountChange(e)} 
-                          checked={formData.amount === 49}
-                        />
-                        <div className="price-details">
-                          <span className="price">₹49</span>
-                          <div className="content">
-                            <h3>Basic Boost Listing (for 1 week)</h3>
-                            <p>Promotion Listing to Attract More Buyers</p>
-                          </div>
-                        </div>
-                      </label>
-                    </div> */}
                   </div>
                   </>
                    

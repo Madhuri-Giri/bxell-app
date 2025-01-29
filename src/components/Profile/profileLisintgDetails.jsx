@@ -1133,7 +1133,7 @@ function ProfileListingDetails() {
                                 <span className="d-flex justify-content-end align-items-end">
                                                   <ReactStars
                                                     count={5}
-                                                    value={property.rating}
+                                                    value={property.property_sale.rating}
                                                     activeColor="#ffd700"
                                                     edit={false}
                                                   />
@@ -1319,7 +1319,7 @@ function ProfileListingDetails() {
                               <span className="d-flex justify-content-end align-items-end">
                                                   <ReactStars
                                                     count={5}
-                                                    value={business.rating}
+                                                    value={business.business_sale.rating}
                                                     activeColor="#ffd700"
                                                     edit={false}
                                                   />

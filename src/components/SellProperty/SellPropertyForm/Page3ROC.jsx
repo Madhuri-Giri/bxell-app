@@ -3,6 +3,7 @@ import { Button, Form } from "react-bootstrap";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import "./SellPropertyForm.css";
 import {  fetchCountryRes, fetchStateApiRes, fetchCityApiRes } from "../../../API/apiServices";
+import { IoLocation } from "react-icons/io5";
 
 const Page3ROC = ({ formData, setFormData, errors, setErrors }) => {
 
@@ -484,6 +485,44 @@ const Page3ROC = ({ formData, setFormData, errors, setErrors }) => {
                 )}
               </Form.Group>
         </div>
+        <div className="col-2 preview-container-property">
+                          {/* Live Preview Box */}
+                          <h1>LIVE PREVIEW</h1>
+                                         <div className="preview-box-property">
+                          <div className="preview-image-property">
+                            <img 
+                              src={ formData.file_name ? URL.createObjectURL(formData.file_name) :  "default-image-url.jpg"} 
+                              alt="Business Preview" 
+                            
+                            />
+                          </div>
+                          <div className="preview-title-property">
+                            <h5>{formData.property_title || "property Title"}</h5>
+                          </div>
+                          <div className="preview-details-property">
+                        <span>
+                          {formData.asking_price ? (
+                            <>
+                              <span className="price-label-property">Asking Price: ₹ </span>
+                              <span className="value_pre">{formData.asking_price}</span>
+                            </>
+                          ) : (
+                            "Price"
+                          )}
+                        </span>
+                        <span className="type_business">{formData.listing_type || "Business Type"}</span>
+                      </div>
+
+                          <div className="preview-turnover-property">
+                          <span className="price-label-property"> Property type: </span>
+                        <span>{formData.property_type}</span>
+                        </div>
+                          <div className="preview-location-call-property" >
+                            <span><IoLocation/>{formData.city || "City"}</span>
+                            <span className="call-button">{formData.phone_number || "Call"}</span>
+                          </div>
+                        </div>
+       </div>
     </>
   );
 };
