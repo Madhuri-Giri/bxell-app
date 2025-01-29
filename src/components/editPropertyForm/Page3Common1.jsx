@@ -14,7 +14,7 @@ const Page3Common1 = ({
   errors,
   selectedCountry,
   setSelectedCountry,
-  selectedState,
+  selectedState,  imagePreview, setImagePreview,
 }) => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
@@ -184,18 +184,35 @@ const Page3Common1 = ({
         </Form.Group>
       </div>
 
-      <div className="col-7">
-        <Form.Group className="businessListingFormsDiv" controlId="file_name">
-          <Form.Label>CHOOSE IMAGES</Form.Label>
-          <Form.Control
-            type="file"
-            name="file_name"
-            multiple
-            accept="image/*"
-            onChange={handleInputChange}
-          />
-        </Form.Group>
-      </div>
+      <div className="col-lg-7 col-md-12 col-sm-12">
+                                <Form.Group className="businessListingFormsDiv" controlId="file_name">
+                                  <Form.Label>CHOOSE IMAGES</Form.Label>
+                                  <Form.Control
+      type="file"
+      name="file_name"
+      multiple
+      onChange={(e) => {
+        const files = Array.from(e.target.files); // Get the actual files
+        setFormData((prev) => ({
+          ...prev,
+          file_name: files, // Store the files for submission
+        }));
+    
+        const filePreviews = files.map((file) => URL.createObjectURL(file));
+        setImagePreview(filePreviews); // Show new image previews
+      }}
+      accept="image/*"
+    />
+    
+                                  {errors.file_name && <p className="error-text">{errors.file_name}</p>}
+                                </Form.Group>
+                              </div>
+                               {/* Render the image previews */}
+                          <div>
+                            {imagePreview.map((url, index) => (
+                              <img key={index} src={url} alt={`Image ${index}`} width="100" />
+                            ))}
+                          </div>
 
       <div className="col-lg-7 col-md-12 col-sm-12">
         <Form.Group className="businessListingFormsDiv" controlId="country">

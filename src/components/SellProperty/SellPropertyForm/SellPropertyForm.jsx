@@ -317,10 +317,10 @@ function SellPropertyForm() {
   //   }
   // };
   
-    const fetchPaymentDetails = async () => {
+    const fetchPaymentDetails = async (formResponse) => {
     try {
       // Send the form data to get the property ID and user ID
-      const property_id = await submitSellPropertyForm(formData);
+      const property_id = formResponse;
       // const userId = localStorage.getItem("userLoginId");
   
       if (!user || !property_id || !formData.amount) {
@@ -355,30 +355,6 @@ function SellPropertyForm() {
       if (error.response) {
         console.error("Error response data:", error.response.data);
     
-        const errorData = error.response.data;
-    
-        // Process errors and update the error state
-        setErrors({
-            property_title: errorData.error?.property_title ? errorData.error.property_title[0] : '',
-            listing_type: errorData.error?.listing_type ? errorData.error.listing_type[0] : '',
-            property_type: errorData.error?.property_type ? errorData.error.property_type[0] : '',
-            bedroom: errorData.error?.bedroom ? errorData.error.bedroom[0] : '',
-            bathroom: errorData.error?.bathroom ? errorData.error.bathroom[0] : '',
-            furnishing: errorData.error?.furnishing ? errorData.error.furnishing[0] : '',
-            car_parking: errorData.error?.car_parking ? errorData.error.car_parking[0] : '',
-            project_status: errorData.error?.project_status ? errorData.error.project_status[0] : '',
-            listed_by: errorData.error?.listed_by ? errorData.error.listed_by[0] : '',
-            country: errorData.error?.country ? errorData.error.country[0] : '',
-            state: errorData.error?.state ? errorData.error.state[0] : '',
-            sq_ft: errorData.error?.sq_ft ? errorData.error.sq_ft[0] : '',
-            area_measurment: errorData.error?.area_measurment ? errorData.error.area_measurment[0] : '',
-            area: errorData.error?.area ? errorData.error.area[0] : '',
-            asking_price: errorData.error?.asking_price ? errorData.error.asking_price[0] : '',
-            advance_price: errorData.error?.advance_price ? errorData.error.advance_price[0] : '',
-            phone_number: errorData.error.phone_number ? errorData.error.phone_number[0] : "",
-            city: errorData.error.city ? errorData.error.city[0] : "",
-            // Add additional fields here if required
-        });
     }
     
       return null;
@@ -395,9 +371,19 @@ function SellPropertyForm() {
     }
 
     try {
+
+         const response = await submitSellPropertyForm(formData, user);
+            
+            if (!response || response.error) {
+              toast.error("Form submission failed. Please try again.");
+              return;
+            }
+      
+            toast.success("Form Submit Successfully!");
+
       // await handleSubmit(e); 
       // Fetch payment details
-      const paymentData = await fetchPaymentDetails();
+      const paymentData = await fetchPaymentDetails(response);
       if (!paymentData) return;
   
       const { razorpay_order_id, razorpay_key, payment_details } = paymentData;
@@ -440,15 +426,42 @@ function SellPropertyForm() {
   
       // Handle payment failure
       rzp1.on("payment.failed", function (response) {
-        alert(`Payment failed: ${response.error.description}`);
+           toast.error(`Payment failed: ${response.error.description}`);
       });
   
       // Open Razorpay payment modal
       rzp1.open();
     } catch (error) {
       console.error("Error during payment setup:", error.message);
-      alert("An error occurred during payment setup. Please try again.");
+        // toast.error("An error occurred during payment setup. Please try again.");
+      
+      const errorData = error.response.data;
+    
+      // Process errors and update the error state
+      setErrors({
+          property_title: errorData.error?.property_title ? errorData.error.property_title[0] : '',
+          listing_type: errorData.error?.listing_type ? errorData.error.listing_type[0] : '',
+          property_type: errorData.error?.property_type ? errorData.error.property_type[0] : '',
+          bedroom: errorData.error?.bedroom ? errorData.error.bedroom[0] : '',
+          bathroom: errorData.error?.bathroom ? errorData.error.bathroom[0] : '',
+          furnishing: errorData.error?.furnishing ? errorData.error.furnishing[0] : '',
+          car_parking: errorData.error?.car_parking ? errorData.error.car_parking[0] : '',
+          project_status: errorData.error?.project_status ? errorData.error.project_status[0] : '',
+          listed_by: errorData.error?.listed_by ? errorData.error.listed_by[0] : '',
+          country: errorData.error?.country ? errorData.error.country[0] : '',
+          state: errorData.error?.state ? errorData.error.state[0] : '',
+          sq_ft: errorData.error?.sq_ft ? errorData.error.sq_ft[0] : '',
+          area_measurment: errorData.error?.area_measurment ? errorData.error.area_measurment[0] : '',
+          area: errorData.error?.area ? errorData.error.area[0] : '',
+          asking_price: errorData.error?.asking_price ? errorData.error.asking_price[0] : '',
+          advance_price: errorData.error?.advance_price ? errorData.error.advance_price[0] : '',
+          phone_number: errorData.error.phone_number ? errorData.error.phone_number[0] : "",
+          city: errorData.error.city ? errorData.error.city[0] : "",
+          file_name:  errorData.error.file_name ? errorData.error.file_name[0] : "",
+          // Add additional fields here if required
+      });
     }
+
   };
   
 // -------------- Update payment ------------
@@ -535,67 +548,54 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
   }
 };
                                                 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data before submission:", formData); // Log data before submission
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  console.log("Form Data before submission:", formData); // Log data before submission
 
-    try {
-      const response = await submitSellPropertyForm(formData);
-      console.log("API Response:", response);
+  try {
+   
 
-      // Show SweetAlert success message
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Form submitted successfully!",
-        confirmButtonText: "OK",
-      });
+    // Reset form data to initial state
+    setFormData({
+      user_id: user,
+      property_title: "",
+      listing_type: "",
+      listed_by: "",
+      property_type: "",
+      country: "",
+      state: "",
+      city: "",
+      area: "",
+      length: "",
+      breadth: "",
+      area_measurment: "",
+      sq_ft: "",
+      asking_price: "",
+      advance_price: "",
+      amount: "299",
+      phone_number: "",
+      bedroom: "",
+      bathroom: "",
+      floor_no: "",
+      additional_detail: "",
+      project_status: "",
+      total_floor: "",
+      file_name: null,
+    });
+  } catch (error) {
+    console.error("Error response:", error.response?.data || error.message);
 
-      // Reset form data to initial state
-      setFormData({
-        user_id: user,
-        property_title: "",
-        listing_type: "",
-        listed_by: "",
-        property_type: "",
-        country: "",
-        state: "",
-        city: "",
-        area: "",
-        length: "",
-        breadth: "",
-        area_measurment: "",
-        sq_ft: "",
-        asking_price: "",
-        advance_price: "",
-        amount: "299",
-        phone_number: "",
-        bedroom: "",
-        bathroom: "",
-        floor_no: "",
-        additional_detail: "",
-        project_status: "",
-        total_floor: "",
-        file_name: null,
-      });
-    } catch (error) {
-      console.error("Error response:", error.response?.data || error.message);
-      if (error.response?.data?.error) {
-        setErrors(error.response.data.error); // Set errors from the API response
-      } else {
-        // Show SweetAlert error message
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Error submitting the form. Please try again later.",
-          confirmButtonText: "OK",
-        });
-      }
+    // Show toast error notification
+    if (error.response?.data?.error) {
+      setErrors(error.response.data.error); // Set errors from the API response
+    } else {
+      toast.error("Error submitting the form. Please try again later.");
     }
-  };
-  
+  }
+};
 
   return (
+    
     <section className="businessListingFormMAinSec">
       <div className="container">
         <div className="row businessListingFormMAinRow">
@@ -667,15 +667,15 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
                     {step === 1 && (
                       <>
                         {property_type === "Land" && (
-                          <Land formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors}  />
+                          <Land formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} setErrors={setErrors} />
                         )}
 
                         {["House", "Apartment"].includes(property_type) && (
-                          <HouseApartment formData={formData}  setFormData={setFormData} handleChange={handleChange} errors={errors}  />
+                          <HouseApartment formData={formData}  setFormData={setFormData} handleChange={handleChange} errors={errors} setErrors={setErrors}  />
                         )}
 
                         {[ "Retail Space", "Office Space",  "Complex/Entire Property", ].includes(property_type) && (
-                          <RentalOfficeComplex  formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} />
+                          <RentalOfficeComplex  formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} setErrors={setErrors}/>
                         )}
 
                         <div className="col-12 propertyListingSubmitButton">
@@ -690,19 +690,20 @@ const updateHandlePayment = async (razorpay_payment_id, Id) => {
                     {step === 2 && (
                       <>
                         {property_type === "Land" && (
-                          <Page3Land formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} />
+                          <Page3Land formData={formData} setFormData={setFormData} handleChange={handleChange} setErrors={setErrors} errors={errors} />
                         )}
                         {["House", "Apartment"].includes(property_type) && (
-                          <Page3Common formData={formData} setFormData={setFormData} handleChange={handleChange}  errors={errors} />
+                          <Page3Common formData={formData} setFormData={setFormData} handleChange={handleChange}  errors={errors} setErrors={setErrors} />
                         )}
                         {["Retail Space", "Office Space", "Complex/Entire Property",  ].includes(property_type) && (
-                          <Page3ROC formData={formData} setFormData={setFormData} handleChange={handleChange}  errors={errors} />
+                          <Page3ROC formData={formData} setFormData={setFormData} handleChange={handleChange}  errors={errors} setErrors={setErrors} />
                         )}
 
                         <div className="col-12 propertyListingSubmitButton">
                           {step > 0 && (
                             <Button variant="secondary" onClick={handleBack} type="button"  className="me-2" > Back </Button>
                           )}
+                  
                           <Button variant="primary" type="submit" onClick={handlePayment} > Pay Now  </Button>
                         </div>
                       </>

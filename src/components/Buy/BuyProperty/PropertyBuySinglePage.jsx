@@ -5,7 +5,7 @@ import Footer from "../../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import ScrollToTop from "../../ScrollToTop/ScrollToTop";
 import { useSelector } from "react-redux";
-import { fetchPropertyRes, fetchBusinessRes, fetchViewBusinessRes, fetchViewPropertyRes, fetchPropertyRating, fetchBusinessRating, submitbusinessEnquiryForm, submitpropertyEnquiryForm } from "../../../API/apiServices";
+import { fetchPropertyRes, fetchBusinessRes, fetchViewBusinessRes, fetchViewPropertyRes, fetchPropertyRating, fetchBusinessRating, submitbusinessEnquiryForm, submitpropertyEnquiryForm, fetchPropertyFavoriteRes, fetchBusinessFavoriteRes, fetchBusinessFav, fetchPropertyFav  } from "../../../API/apiServices";
 import { useLocation } from "react-router-dom";
 import "./PropertyBuySinglePage.css";
 import { IoShareSocial, IoMail, IoCall, IoLocation } from "react-icons/io5";
@@ -14,6 +14,8 @@ import News from "../../Home/MainBanner/news/News";
 import Slider from "react-slick";
 import ReactStars from "react-rating-stars-component";
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { toast } from "react-toastify";
+import { FaCircleUser } from "react-icons/fa6";
 
 function PropertyBuySinglePage() {
   
@@ -27,7 +29,8 @@ function PropertyBuySinglePage() {
   const [homeProperty, setHomeProperty] = useState([]);
   const [homeBusiness, setHomeBusiness] = useState([]);
   const user = useSelector((state) => state.auth.user);
-
+    const user_id = useSelector((state) => state.auth.user);
+  const [wishlist, setWishlist] = useState({}); 
   const [coordinates, setCoordinates] = useState(null);
   const [showFullMap, setShowFullMap] = useState(false);
   const smallMapRef = useRef(null);
@@ -198,58 +201,72 @@ function PropertyBuySinglePage() {
     }));
   };
 
+  useEffect(() => {
+    if (type === "property" && property) {
+      setFormData((prevData) => ({
+        ...prevData,
+        listing_title: property.property_title, // Automatically fill listing_title with property_title
+      }));
+    } else if (type === "business" && business) {
+      setFormData((prevData) => ({
+        ...prevData,
+        listing_title: business.title, // Automatically fill listing_title with business_title
+      }));
+    }
+  }, [type, property, business]);
+  
   const handlePropertyEnquirySubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.user_id || !id) {
-      alert("User ID or Business ID is missing.");
+      toast.error("User ID or Business ID is missing.");
       return;
     }
-
+  
     try {
       const response = await submitpropertyEnquiryForm({
         user_id: formData.user_id,
         property_id: id,
         name: formData.name,
         email: formData.email,
-        listing_title: formData.listing_title,
+        listing_title: formData.listing_title, // This will auto-fill
         enquiry_message: formData.enquiry_message,
       });
-
+  
       if (response.status === 200) {
-        alert(response.message);
+        toast.success(response.message);
         setShowModal(false);
       } else {
-        alert("Error submitting form.");
+        toast.error("Error submitting form.");
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
+  
   const handleBusinessEnquirySubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.user_id || !id) {
-      alert("User ID or Business ID is missing.");
+      toast.error("User ID or Business ID is missing.");
       return;
     }
-
+  
     try {
       const response = await submitbusinessEnquiryForm({
         user_id: formData.user_id,
         business_id: id,
         name: formData.name,
         email: formData.email,
-        listing_title: formData.listing_title,
+        listing_title: formData.listing_title, // This will auto-fill
         enquiry_message: formData.enquiry_message,
       });
-
+  
       if (response.status === 200) {
-        alert(response.message);
+        toast.success(response.message);
         setShowModal(false);
       } else {
-        alert("Error submitting form.");
+        toast.error("Error submitting form.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -281,20 +298,32 @@ function PropertyBuySinglePage() {
 
   // Function to handle rating submission
   const handleRatingChange = async (newRating) => {
+    const storageKey = `${type}-${id}-rating`;
+  
+    // Check if a rating already exists in localStorage
+    if (localStorage.getItem(storageKey)) {
+      toast.error("You have already submitted a rating for this listing."); // Inform the user they've already rated
+      return; // Prevent further execution
+    }
+  
+    // Store the rating in localStorage only the first time
+    localStorage.setItem(storageKey, newRating);
+  
     setUserRating(newRating);
-    // Store the rating in localStorage
-    localStorage.setItem(`${type}-${id}-rating`, newRating); // Use unique key for property/business
+  
     if (!user) {
-      alert("Please log in to submit a rating.");
+      toast.error("Please log in to submit a rating.");
       return;
     }
+  
     try {
       if (type === "property") {
         await fetchPropertyRating(id, newRating, user); // Pass the property ID and rating
+        toast.success("Thank you for rating!");
       } else if (type === "business") {
         await fetchBusinessRating(id, newRating, user); // Pass the business ID and rating
+        toast.success("Thank you for rating!");
       }
-      alert("Thank you for rating!");
     } catch (error) {
       console.error("Error submitting rating:", error);
     }
@@ -357,10 +386,70 @@ function PropertyBuySinglePage() {
     fetchBusiness();
   }, []);
 
+
+  
+    useEffect(() => {
+      const fetchFavorites = async () => {
+        if (!user_id) {
+          console.error("User ID is not available.");
+          return;
+        }
+  
+        try {
+          const favoritesData = await Promise.all([
+            fetchPropertyFavoriteRes(user_id),
+            fetchBusinessFavoriteRes(user_id),
+          ]);
+  
+          const favorites = {};
+          [...favoritesData[0], ...favoritesData[1]].forEach((item) => {
+            favorites[item.property_id || item.business_id] = item.status === "Active";
+          });
+  
+          setWishlist(favorites);
+        } catch (error) {
+          console.error("Error fetching favorites:", error);
+        }
+      };
+  
+      fetchFavorites();
+    }, [user_id]);
+  
+    const handleWishlistClick = async (id) => {
+      try {
+        setWishlist((prevWishlist) => ({
+          ...prevWishlist,
+          [id]: !prevWishlist[id],
+        }));
+  
+        let result;
+        if (homeBusiness.some((item) => item.id === id)) {
+          result = await fetchBusinessFav(id, user_id);
+        } else if (homeProperty.some((item) => item.id === id)) {
+          result = await fetchPropertyFav(id, user_id);
+        }
+  
+        if (!result.success) {
+          setWishlist((prevWishlist) => ({
+            ...prevWishlist,
+            [id]: prevWishlist[id],
+          }));
+          console.error("Error toggling favorite:", result.message);
+        }
+      } catch (error) {
+        setWishlist((prevWishlist) => ({
+          ...prevWishlist,
+          [id]: prevWishlist[id],
+        }));
+        console.error("Error handling favorite toggle:", error.message);
+      }
+    };
+
   return (
     <>
       <Header />
       <News />
+
       <section>
         <div className="space_r_l">
           <div className="container">
@@ -372,7 +461,27 @@ function PropertyBuySinglePage() {
                     <div className="single_box mb-4">
                       <div className="row">
                         <div className="col-lg-6 col-sm-12">
-                          <h1>{property.property_title}</h1>
+                          <div className="row">
+                            <div className="col-lg-10 col-md-10 col-sm-10 col-10">
+                              <h1>{property.property_title}</h1>
+                            </div>
+                            <div className="col-lg-2 col-sm-2 col-md-2 col-2">
+                              <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
+                                <div
+                                  className="wishlist-heart"
+                                  style={{  position: "absolute",
+                                   
+                                    right: "-10px", zIndex: 10, }}
+                                  onClick={() => handleWishlistClick(property.id) } >
+                                  {wishlist[property.id] ? (
+                                    <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
+                                  ) : (
+                                    <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                           <div className="boldBorder"></div>
                           <div className="prop_type">
                             <h6>Property Type : <span>{property.property_type}</span> </h6>
@@ -422,48 +531,87 @@ function PropertyBuySinglePage() {
                           </div>
                          
                           <div>
-                            <div className="propertyInfoTableContainer">
-                              <table className="propertyInfoTable ">
-                                <thead className=" table_heading">
-                                  <tr>
-                                    <th colSpan="3">Proposal</th>
-                                  </tr>
-                                </thead>
-
-                                <tbody>
-                                  <tr>
-                                    <td> Listing Type: <br /> <span className="green-text"> {property.listing_type} </span> </td>
-                                    <td>  Property Type: <br />  <span className="green-text"> {property.property_type} </span> </td>
-                                    <td>  Bathroom: <br /> <span className="green-text"> {property.bathroom} </span> </td>
-                                  </tr>
-
-                                  <tr>
-                                    <td> Business Status: <br /> <span className="green-text"> {property.project_status} </span> </td>
-                                    <td> Furnishing: <br />  <span className="green-text"> {property.furnishing} </span> </td>
-                                    <td> Carpet Area: <br /> <span className="green-text">{property.sq_ft}  </span> </td>
-                                  </tr>
-
-                                  <tr>
-                                    <td> Listed By: <br /> ₹  <span className="green-text"> {property.listed_by}  </span>  </td>
-                                    <td> Project Status: <br /> <span className="green-text"> {property.project_status} </span> </td>
-
-                                    <td> Documents Uploaded: <br /> <span className="green-text">
-                                        {(() => {
-                                          try {
-                                            const files = JSON.parse( property.file_name  );
-                                            return Array.isArray(files) ? files.length : 0;
-                                          } catch (error) {
-                                            console.error( "Error parsing file_name:", error );
-                                            return 0;
-                                          }
-                                        })()}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
+              {/* Conditional Rendering for Land or Other Property Types */}
+              {property.property_type === "Land" ? (
+                // Land Property Table
+                <div className="propertyInfoTableContainer">
+                  <table className="propertyInfoTable ">
+                    <thead className=" table_heading">
+                      <tr>
+                        <th colSpan="3">Land Proposal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td> Listing Type: <br /> <span className="green-text"> {property.listing_type || "N/A"} </span> </td>
+                        <td> Property Type: <br /> <span className="green-text"> {property.property_type || "N/A"} </span> </td>
+                        <td> Area Measurement: <br /> <span className="green-text"> {property.area_measurment || "N/A"} </span> </td> 
+                      </tr>
+                      <tr>
+                        <td> Area: <br /> <span className="green-text"> {property.area || "N/A"} </span> </td> 
+                        <td> Length: <br />  <span className="green-text"> {property.length || "N/A"} </span> </td> 
+                        <td> Breadth: <br /> <span className="green-text">{property.breadth || "N/A"}  </span> </td> 
+                      </tr>
+                      <tr>
+                        <td> Listed By: <br />  <span className="green-text"> {property.listed_by || "N/A"}  </span>  </td>
+                        <td> Country: <br /> <span className="green-text"> {property.country || "N/A"} </span> </td>
+                        <td> Documents Uploaded: <br /> <span className="green-text">
+                          {(() => {
+                            try {
+                              const files = JSON.parse( property.file_name );
+                              return Array.isArray(files) ? files.length : 0;
+                            } catch (error) {
+                              console.error( "Error parsing file_name:", error );
+                              return 0;
+                            }
+                          })()}
+                        </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                // Residential/Other Property Table (for Home, Apartment, Office, etc.)
+                <div className="propertyInfoTableContainer">
+                  <table className="propertyInfoTable ">
+                    <thead className=" table_heading">
+                      <tr>
+                        <th colSpan="3">Property Proposal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td> Listing Type: <br /> <span className="green-text"> {property.listing_type || "N/A"} </span> </td>
+                        <td> Property Type: <br /> <span className="green-text"> {property.property_type || "N/A"} </span> </td>
+                        <td> Bathroom: <br /> <span className="green-text"> {property.bathroom || "N/A"} </span> </td>
+                      </tr>
+                      <tr>
+                        <td> Property Status: <br /> <span className="green-text"> {property.project_status || "N/A"} </span> </td>
+                        <td> Furnishing: <br />  <span className="green-text"> {property.furnishing || "N/A"} </span> </td>
+                        <td> Carpet Area: <br /> <span className="green-text">{property.sq_ft || "N/A"}  </span> </td>
+                      </tr>
+                      <tr>
+                        <td> Listed By: <br />   <span className="green-text"> {property.listed_by || "N/A"}  </span>  </td>
+                        <td> Project Status: <br /> <span className="green-text"> {property.project_status || "N/A"} </span> </td>
+                        <td> Documents Uploaded: <br /> <span className="green-text">
+                          {(() => {
+                            try {
+                              const files = JSON.parse( property.file_name );
+                              return Array.isArray(files) ? files.length : 0;
+                            } catch (error) {
+                              console.error( "Error parsing file_name:", error );
+                              return 0;
+                            }
+                          })()}
+                        </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
                         </div>
                       </div>
                     </div>
@@ -549,6 +697,17 @@ function PropertyBuySinglePage() {
                 {/* Scrollable Container for Property Listings */}
                 {type === "property" && homeProperty.length > 0 && (
                   <>
+                     <div  className="listed_box">
+                    <h2>LISTED BY</h2>
+                    <FaCircleUser className="listed_user"  size={33}   style={{ cursor: "pointer" }} />
+                    <div className="listed_call">
+                    
+                    <span> <IoCall className="listed_user"/> Call  </span>
+                    </div>
+                    <div className="listed_by_box">
+                      <span className="veri_user">verified user</span>
+                      <span> <IoLocation /> {property?.city || "City not available"} </span></div>
+                    </div>
                     <div className="buy_back">
                       <h2>SIMILAR LISTINGS</h2>
                       {homeProperty.map((property, index) => (
@@ -581,6 +740,9 @@ function PropertyBuySinglePage() {
                                       }
                                     })()}  alt={property.title || "property Image"}  />
                                 </div>
+
+                   
+
                                 <h5>{property.property_title}</h5>
                                 <div className="home_price">
                                   <h6> Price: ₹ <span className="ask_price_side"> {property.asking_price}
@@ -613,7 +775,26 @@ function PropertyBuySinglePage() {
                     <>
                       <div className="row">
                         <div className="col-lg-6 col-sm-12">
-                          <h1>{business.title}</h1>
+                          <div className="row">
+                            <div className="col-lg-10 col-sm-10 col-md-10 col-10">
+                              <h1>{business.title}</h1>
+                            </div>
+                            <div className="col-lg-2 col-sm-2 col-md-2 col-2">
+                                <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
+                                  <div
+                                    className="wishlist-heart"
+                                    style={{  position: "absolute",
+                                      right: "10px", zIndex: 10, }}
+                                    onClick={() => handleWishlistClick(business.id) } >
+                                    {wishlist[business.id] ? (
+                                      <FaHeart className="wishlist-icon" /> // Filled heart for "Active"
+                                    ) : (
+                                      <FaRegHeart className="wishlist-icon" /> // Outline heart for "DeActive"
+                                    )}
+                                  </div>
+                                </div>
+                            </div>
+                          </div>
                           <div className="boldBorder"></div>
                           <div className="prop_type">
                             <h6> Business Type : <span>{business.business_type}</span>  </h6>
@@ -673,18 +854,18 @@ function PropertyBuySinglePage() {
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td>  REPORTED TURNOVER (YEARLY): <br /> ₹ <span className="green-text"> {business.reported_turnover_from} -
-                                        {business.reported_turnover_to} </span> </td>
-                                    <td> PROFITABILITY(EBITDA MARGIN) : <br /> <span className="green-text"> {business.ebitda_margin} </span> </td>
+                                    <td>  REPORTED TURNOVER (YEARLY): <br /> ₹ <span className="green-text"> {business.reported_turnover_from || "N/A"} -
+                                        {business.reported_turnover_to } </span> </td>
+                                    <td> PROFITABILITY(EBITDA MARGIN) : <br /> <span className="green-text"> {business.ebitda_margin || "N/A"} </span> </td>
                                   </tr>
 
                                   <tr>    
-                                    <td> BUSINESS STATUS: <br /> <span className="green-text"> {business.current_status} </span>
+                                    <td> BUSINESS STATUS: <br /> <span className="green-text"> {business.current_status || "N/A"} </span>
                                     </td>
-                                    <td>  NUMBER OF EMPLOYEES: <br /> <span className="green-text"> {business.no_of_employees} </span> </td>
+                                    <td>  NUMBER OF EMPLOYEES: <br /> <span className="green-text"> {business.no_of_employees || "N/A"} </span> </td>
                                   </tr>
                                   <tr>
-                                     <td> YEAR OF ESTABLISHMENT: <br /> <span className="green-text"> {business.year_of_establishment} </span> </td>
+                                     <td> YEAR OF ESTABLISHMENT: <br /> <span className="green-text"> {business.year_of_establishment || "N/A"} </span> </td>
                                     <td>
                                       DOCUMENTS UPLOADED: <br />
                                       <span className="green-text">
@@ -789,6 +970,17 @@ function PropertyBuySinglePage() {
               <div className="col-3 property-listings-scroll ">
                 {type === "business" && (
                   <>
+                     <div  className="listed_box">
+                    <h2>LISTED BY</h2>
+                    <FaCircleUser className="listed_user"  size={33}   style={{ cursor: "pointer" }} />
+                    <div className="listed_call">
+                    
+                    <span> <IoCall className="listed_user"/> Call  </span>
+                    </div>
+                    <div className="listed_by_box">
+                      <span className="veri_user">verified user</span>
+                      <span> <IoLocation /> {business?.city || "City not available"} </span></div>
+                    </div>
                     <div className="buy_back">
                       <h2>SIMILAR LISTINGS</h2>
                       {/* Move this outside the map */}
@@ -847,6 +1039,7 @@ function PropertyBuySinglePage() {
           </div>
         </div>
       </section>
+      
       <Footer />
       <ScrollToTop />
     </>

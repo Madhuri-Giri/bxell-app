@@ -22,7 +22,13 @@ function MostVisitedPlace() {
               ...response.data.property_filter_fields.city,
             ]),
           ]; // Use Set to remove duplicates
-          setCities(combinedCities);
+
+          // Filter out cities with more than 15 characters and take the first 10
+          const filteredCities = combinedCities.filter(
+            (city) => city.length <= 25
+          ).slice(0, 40);
+
+          setCities(filteredCities);
         }
       })
       .catch((error) => {
@@ -59,18 +65,7 @@ function MostVisitedPlace() {
                   {cities.map((city, index) => (
                     <div
                       className="chooseCityChilds"
-                      key={`original-${index}`}
-                      onClick={() => handleCityClick(city)}
-                    >
-                      <FaCity />
-                      <h6>{city}</h6>
-                    </div>
-                  ))}
-                  {/* Duplicate the list for seamless circular animation */}
-                  {cities.map((city, index) => (
-                    <div
-                      className="chooseCityChilds"
-                      key={`duplicate-${index}`}
+                      key={`city-${index}`}
                       onClick={() => handleCityClick(city)}
                     >
                       <FaCity />
@@ -83,7 +78,7 @@ function MostVisitedPlace() {
               // Show "Data Not Found" if no cities are available
               <div className="data-not-found">
                 <h4>Data Not Found</h4>
-                <p>Loading Cities...</p>
+                <p>No cities available to display.</p>
               </div>
             )}
           </div>

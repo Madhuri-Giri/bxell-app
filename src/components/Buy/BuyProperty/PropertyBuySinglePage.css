@@ -19,6 +19,39 @@
   font-size: larger;
 }
 
+.listed_box{
+  box-shadow: 0px 4px 10px rgba(63, 60, 60, 0.3); 
+  padding: 20px; 
+  border-radius: 10px; 
+  background-color: white; 
+  z-index: 1;
+  margin-bottom: 10px;
+}
+
+.listed_box h2{
+  color: gray;
+  font-size: 24px;
+  text-align: center;
+}
+.listed_call{
+  color: gray;
+  padding-bottom: 5px; 
+}
+.listed_by_box {
+  display: flex;
+  justify-content: space-between;
+  color: gray;
+}
+.veri_user{
+  background-color: #fafa73;
+ padding: 0 5px;
+  border-radius: 5px;
+}
+
+.listed_user{
+  color: #008080;
+}
+
 .buy_back{
   box-shadow: 0px 4px 10px rgba(63, 60, 60, 0.3); /* Add subtle shadow */
   padding: 20px; /* Add some padding to the box */
@@ -242,6 +275,7 @@
   cursor: pointer;
   z-index: 10;
   margin-left: 10px;
+  right: 40px;
 }
 
 .propertyBuyClsNameSec .wishlist-icon {

@@ -6,6 +6,7 @@ import { IoLocation } from "react-icons/io5";
 import { FaHeart, FaPhoneAlt, FaRegHeart } from "react-icons/fa"; // Added icons
 import { useNavigate, useLocation } from "react-router-dom";
 import { fetchPropertyRes, fetchBusinessRes, fetchViewPropertyRes, fetchViewBusinessRes, fetchFilterRes, fetchBusinessFav, fetchPropertyFav, fetchPropertyFavoriteRes, fetchBusinessFavoriteRes } from "../../../API/apiServices";
+import ReactStars from "react-rating-stars-component";
 
 function PropertyBuyList() {
   const navigate = useNavigate();
@@ -815,7 +816,7 @@ function PropertyBuyList() {
             <div className="col-lg-9 col-sm-8 filter_search">
               {activeTab === "business" && (
                 <div className="row propertyBuyListingRow_1 propertyBuyListingExploreRow recommendationsClsName_1">
-                  {/* Search Bar Section */}
+                 
                   <div className="search-bar-section">
                     <input  type="text" className="form-control search-input"   placeholder="Search by title..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}  />
                     <button className="btn search-button" onClick={handleSearch}  >   Search  </button>
@@ -829,7 +830,7 @@ function PropertyBuyList() {
                     paginatedBusiness.map((lists, index) => (
                       <div  className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL" key={index} >
                         <div className="recommendationsClsNameBox">
-                          {/* Wishlist Heart */}
+                    
                           <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
                           <div
                               className="wishlist-heart"
@@ -873,6 +874,14 @@ function PropertyBuyList() {
                               alt={lists.title || "business Image"}
                             />
                             <div className="listing-details">
+                            <span className="d-flex justify-content-end align-items-end">
+                          <ReactStars
+                            count={5}
+                            value={lists.rating}
+                            activeColor="#ffd700"
+                            edit={false}
+                          />
+                        </span>
                               <div className="title-location">
                                 <h5>{lists.title}</h5>
                                 <span className="interested"  style={{textAlign:"right"}}>  {lists.view} Interested  </span>
@@ -906,7 +915,7 @@ function PropertyBuyList() {
                     </div>
                   )}
 
-                  {/* Pagination Controls */}
+               
                   {paginatedBusiness.length > 0 && (
                     <div className="pagination-controls">
                       <button  onClick={handlePreviousPage} className="page-button" disabled={currentPage === 1}  >   Previous  </button>
@@ -924,7 +933,7 @@ function PropertyBuyList() {
 
               {activeTab === "property" && (
                 <div className="row propertyBuyListingRow_1">
-                  {/* Search Bar Section */}
+                
                   <div className="search-bar-section">
                     <input  type="text" className="form-control search-input" placeholder="Search by title..."  value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     <button className="btn search-button"  onClick={handleSearch}> Search  </button>
@@ -938,7 +947,7 @@ function PropertyBuyList() {
                     paginatedProperty.map((listsProperty, index) => (
                       <div  className="col-lg-4 col-md-6 col-sm-12 recommendationsClsNameCOL"  key={index} >
                         <div className="recommendationsClsNameBox recommendationsClsName_1">
-                          {/* Wishlist Heart */}
+                     
                           <div className="propertyBuyListingBox" style={{ position: "relative" }}  >
                             <div
                               className="wishlist-heart"
@@ -957,15 +966,22 @@ function PropertyBuyList() {
                               src={(() => {
                                 try {
                                   const fileNames = JSON.parse( listsProperty.file_name );
-                                  return Array.isArray(fileNames) && fileNames.length > 0  ? fileNames[0] : "default-image.jpg";
+                                  return Array.isArray(fileNames) && fileNames.length > 0  ? fileNames[0] : "property";
                                 } catch (error) {
                                   console.error( "Error parsing file_name:", error );
-                                  return ( listsProperty.file_name ||  "default-image.jpg" );
+                                  return ( listsProperty.file_name ||  "property image" );
                                 }
                               })()}
                               alt={listsProperty.property_title}
                             />
-
+                          <span className="d-flex justify-content-end align-items-end">
+                          <ReactStars
+                            count={5}
+                            value={listsProperty.rating}
+                            activeColor="#ffd700"
+                            edit={false}
+                          />
+                        </span>
                             <div className="title-location">
                               <h5>{listsProperty.property_title}</h5> <span className="interested"  style={{textAlign:"right"}}> {listsProperty.view} Interested </span>
                             </div>
@@ -1002,7 +1018,7 @@ function PropertyBuyList() {
                     </div>
                   )}
 
-                  {/* Pagination Controls */}
+               
                   {paginatedProperty.length > 0 && (
                     <div className="pagination-controls">
                       <button onClick={handlePreviousPage} className="page-button"  disabled={currentPage === 1}  > Previous </button>

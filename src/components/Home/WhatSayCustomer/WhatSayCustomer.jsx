@@ -112,11 +112,11 @@ function WhatSayCustomer() {
           <div className="row">
             <div className="col-12 homeWhatSayCustomerSecHed">
               <h4>What Say Our Customers</h4>
-              <p>
+              {/* <p>
                 Lorem Ipsum is simply dummy text of the printing and type
                 setting industry. Lorem Ipsum has been the industry's standard
                 dummy text ever since...
-              </p>
+              </p> */}
             </div>
           </div>
           <Slider {...settings}>
@@ -127,7 +127,7 @@ function WhatSayCustomer() {
                 </div>
                 {index === activeSlide && (
                   <div className="utf_testimonial_author">
-                    <img src={testimonial.profile}  alt={`${testimonial.name}'s profile`} />
+                    {/* <img src={testimonial.profile}  alt={`${testimonial.name}'s profile`} /> */}
                     <h4>{testimonial.name}</h4>
                     <p>{testimonial.title}</p>
                   </div>

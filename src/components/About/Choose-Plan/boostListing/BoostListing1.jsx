@@ -114,10 +114,129 @@ const handleBusinessNextPage = (totalPages) => {
 };
 
   // ----------------------propert payment -------------------------------
-  const fetchPaymentPropertyDetails = async (propertyId) => {
-    try {
+  // const fetchPaymentPropertyDetails = async (propertyId) => {
+  //   try {
    
   
+  //     if (!user || !propertyId) {
+  //       throw new Error("Login ID or Property ID is missing.");
+  //     }
+  
+  //     const payload = {
+  //       amount: 149,
+  //       user_id: user,
+  //       property_id: propertyId,
+  //       boost_name: "month",
+  //     };
+  
+  //     console.log("Sending payload for property payment:", payload);
+  
+  //     const response = await axios.post(
+  //       "https://bxell.com/bxell/admin/api/create-property-boost-payment",
+  //       payload
+  //     );
+  
+  //     if (response.data.result === true && response.data.status === 200) {
+  //       console.log("Payment API Response:", response.data);
+  //       return response.data; // Returning the complete response
+  //     } else {
+  //       throw new Error(response.data.message || "Failed to fetch payment details.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching payment details:", error.message);
+  //     alert("Failed to initiate payment. Please try again.");
+  //     return null;
+  //   }
+  // };
+  
+  // const handlePaymentForProperty = async (propertyId) => {
+  //   const paymentData = await fetchPaymentPropertyDetails(propertyId);
+  //   console.log("Fetched Payment Data:", paymentData);
+
+  //   if (!user) {
+  //     // If the user is not logged in, redirect to the login page
+  //     navigate("/login");
+  //     return;
+  //   }
+  //   if (paymentData) {
+  //     const { payment_details, user_details, razorpay_key } = paymentData;
+  //     const { razorpay_order_id, amount } = payment_details;
+  
+  //     if (!razorpay_order_id || !razorpay_key || !amount) {
+  //       alert("Incomplete payment details. Please try again.");
+  //       return;
+  //     }
+  
+  //     const options = {
+  //       key: razorpay_key,
+  //       amount: amount * 100, // Convert to paise
+  //       currency: "INR",
+  //       order_id: razorpay_order_id,
+  //       name: "SRN Infotech",
+  //       description: "Property Purchase",
+  //       image: "https://your-logo-url.com/logo.png",
+  //       handler: async function (response) {
+  //         console.log("Payment successful response:", response);
+  //         try {
+  //           await updatePropertyHandlePayment(response.razorpay_payment_id, payment_details.id);
+  //           alert("Payment successful!");
+  //         } catch (error) {
+  //           console.error("Error during payment processing:", error.message);
+  //           alert("Error updating payment status. Please contact support.");
+  //         }
+  //       },
+  //       prefill: {
+  //         name: user_details?.name || "User Name",
+  //         email: user_details?.email || "user@example.com",
+  //         contact: user_details?.phone_number || "9999999999",
+  //       },
+  //       theme: {
+  //         color: "#3399cc",
+  //       },
+  //     };
+  
+  //     const rzp1 = new window.Razorpay(options);
+  
+  //     rzp1.on("payment.failed", function (response) {
+  //       alert(`Payment failed: ${response.error.description}`);
+  //     });
+  
+  //     rzp1.open();
+  //   }
+  // };
+  
+  // const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
+   
+  //     try {
+  //   const url = "https://bxell.com/bxell/admin/api/update-property-boost-payment";
+  //   const payload = { payment_id: razorpay_payment_id, id };
+
+  //   console.log("Updating property payment status with payload:", payload);
+
+  //   const response = await axios.post(url, payload);
+
+  //   console.log("API Response for payment status update:", response.data);
+
+  //   // Check success conditions based on the actual API response structure
+  //   if (response.data?.result === true && response.data?.status === 200) {
+  //     toast.success("Payment successful and verified!"); // Show success message
+
+  //     // Navigate to the home page after a delay
+  //     setTimeout(() => {
+  //       navigate("/"); // Adjust the route based on your routing setup
+  //     }, 3000); // Navigate after 3 seconds
+  //   } else {
+  //     toast.error("Payment verification failed. Please contact support."); // Show error message
+  //     console.error("Payment verification failed response:", response.data);
+  //   }
+  // } catch (error) {
+  //   console.error("Error updating payment status:", error.message);
+  //   toast.error("Failed to update payment status. Please try again."); // Show error message
+  // }
+  // };
+
+  const fetchPaymentPropertyDetails = async (propertyId) => {
+    try {
       if (!user || !propertyId) {
         throw new Error("Login ID or Property ID is missing.");
       }
@@ -138,13 +257,24 @@ const handleBusinessNextPage = (totalPages) => {
   
       if (response.data.result === true && response.data.status === 200) {
         console.log("Payment API Response:", response.data);
-        return response.data; // Returning the complete response
+       
+        return response.data;
       } else {
-        throw new Error(response.data.message || "Failed to fetch payment details.");
+        if (response.data.error) {
+          toast.error(response.data.error); // Show backend error in toast
+        } else {
+          toast.error("Failed to fetch payment details.");
+        }
+        return null;
       }
     } catch (error) {
-      console.error("Error fetching payment details:", error.message);
-      alert("Failed to initiate payment. Please try again.");
+      console.error("Error fetching payment details:", error);
+  
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error); // Show backend error message
+      } else {
+        toast.error(error.message || "Failed to initiate payment. Please try again.");
+      }
       return null;
     }
   };
@@ -152,24 +282,24 @@ const handleBusinessNextPage = (totalPages) => {
   const handlePaymentForProperty = async (propertyId) => {
     const paymentData = await fetchPaymentPropertyDetails(propertyId);
     console.log("Fetched Payment Data:", paymentData);
-
+  
     if (!user) {
-      // If the user is not logged in, redirect to the login page
       navigate("/login");
       return;
     }
+  
     if (paymentData) {
       const { payment_details, user_details, razorpay_key } = paymentData;
       const { razorpay_order_id, amount } = payment_details;
   
       if (!razorpay_order_id || !razorpay_key || !amount) {
-        alert("Incomplete payment details. Please try again.");
+        toast.error("Incomplete payment details. Please try again.");
         return;
       }
   
       const options = {
         key: razorpay_key,
-        amount: amount * 100, // Convert to paise
+        amount: amount * 100,
         currency: "INR",
         order_id: razorpay_order_id,
         name: "SRN Infotech",
@@ -179,10 +309,10 @@ const handleBusinessNextPage = (totalPages) => {
           console.log("Payment successful response:", response);
           try {
             await updatePropertyHandlePayment(response.razorpay_payment_id, payment_details.id);
-            alert("Payment successful!");
+            toast.success("Payment update successfully!");
           } catch (error) {
             console.error("Error during payment processing:", error.message);
-            alert("Error updating payment status. Please contact support.");
+            toast.error("Error updating payment status. Please contact support.");
           }
         },
         prefill: {
@@ -198,7 +328,7 @@ const handleBusinessNextPage = (totalPages) => {
       const rzp1 = new window.Razorpay(options);
   
       rzp1.on("payment.failed", function (response) {
-        alert(`Payment failed: ${response.error.description}`);
+        toast.error(`Payment failed: ${response.error.description}`);
       });
   
       rzp1.open();
@@ -206,153 +336,276 @@ const handleBusinessNextPage = (totalPages) => {
   };
   
   const updatePropertyHandlePayment = async (razorpay_payment_id, id) => {
-   
-      try {
-    const url = "https://bxell.com/bxell/admin/api/update-property-boost-payment";
-    const payload = { payment_id: razorpay_payment_id, id };
-
-    console.log("Updating property payment status with payload:", payload);
-
-    const response = await axios.post(url, payload);
-
-    console.log("API Response for payment status update:", response.data);
-
-    // Check success conditions based on the actual API response structure
-    if (response.data?.result === true && response.data?.status === 200) {
-      toast.success("Payment successful and verified!"); // Show success message
-
-      // Navigate to the home page after a delay
-      setTimeout(() => {
-        navigate("/"); // Adjust the route based on your routing setup
-      }, 3000); // Navigate after 3 seconds
-    } else {
-      toast.error("Payment verification failed. Please contact support."); // Show error message
-      console.error("Payment verification failed response:", response.data);
-    }
-  } catch (error) {
-    console.error("Error updating payment status:", error.message);
-    toast.error("Failed to update payment status. Please try again."); // Show error message
-  }
-  };
-  
-  //------------------ Fetch Payment Business Details--------------------------
-  const fetchPaymentBusinessDetails = async (businessId) => {
     try {
-      if (!user || !businessId) {
-        throw new Error("Login ID or Property ID is missing.");
-      }
+      const url = "https://bxell.com/bxell/admin/api/update-property-boost-payment";
+      const payload = { payment_id: razorpay_payment_id, id };
   
-      const payload = {
-        amount: 149,
-        user_id: user,
-        business_id: businessId,
-        boost_name: "month",
-      };
+      console.log("Updating property payment status with payload:", payload);
   
-      console.log("Sending payload for property payment:", payload);
+      const response = await axios.post(url, payload);
   
-      const response = await axios.post(
-        "https://bxell.com/bxell/admin/api/create-business-boost-payment",
-        payload
-      );
+      console.log("API Response for payment status update:", response.data);
   
-      if (response.data.result === true && response.data.status === 200) {
-        console.log("Payment API Response:", response.data);
-        return response.data; // Returning the complete response
+      if (response.data?.result === true && response.data?.status === 200) {
+        toast.success("Payment successful and verified!");
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
       } else {
-        throw new Error(response.data.message || "Failed to fetch payment details.");
+        toast.error("Payment verification failed. Please contact support.");
+        console.error("Payment verification failed response:", response.data);
       }
     } catch (error) {
-      console.error("Error fetching payment details:", error.message);
-      alert("Failed to initiate payment. Please try again.");
+      console.error("Error updating payment status:", error.message);
+      toast.error("Failed to update payment status. Please try again.");
+    }
+  };
+  
+  
+  //------------------ Fetch Payment Business Details--------------------------
+//   const fetchPaymentBusinessDetails = async (businessId) => {
+//     try {
+//       if (!user || !businessId) {
+//         throw new Error("Login ID or Property ID is missing.");
+//       }
+  
+//       const payload = {
+//         amount: 149,
+//         user_id: user,
+//         business_id: businessId,
+//         boost_name: "month",
+//       };
+  
+//       console.log("Sending payload for property payment:", payload);
+  
+//       const response = await axios.post(
+//         "https://bxell.com/bxell/admin/api/create-business-boost-payment",
+//         payload
+//       );
+  
+//       if (response.data.result === true && response.data.status === 200) {
+//         console.log("Payment API Response:", response.data);
+//         return response.data; // Returning the complete response
+//       } else {
+//         throw new Error(response.data.message || "Failed to fetch payment details.");
+//       }
+//     } catch (error) {
+//       console.error("Error fetching payment details:", error.message);
+//       alert("Failed to initiate payment. Please try again.");
+//       return null;
+//     }
+//   };
+  
+//   const handlePaymentForBusiness = async (businessId) => {
+//     const paymentData = await fetchPaymentBusinessDetails(businessId);
+  
+//     console.log("Fetched Payment Data:", paymentData);
+//     if (!user) {
+//       // If the user is not logged in, redirect to the login page
+//       navigate("/login");
+//       return;
+//     }
+  
+//     if (paymentData) {
+//       const { payment_details, user_details, razorpay_key } = paymentData;
+//       const { razorpay_order_id, amount } = payment_details;
+  
+//       if (!razorpay_order_id || !razorpay_key || !amount) {
+//         alert("Incomplete payment details. Please try again.");
+//         return;
+//       }
+  
+//       const options = {
+//         key: razorpay_key,
+//         amount: amount * 100, // Convert to paise
+//         currency: "INR",
+//         order_id: razorpay_order_id,
+//         name: "SRN Infotech",
+//         description: "Property Purchase",
+//         image: "https://your-logo-url.com/logo.png",
+//         handler: async function (response) {
+//           console.log("Payment successful response:", response);
+//           try {
+//             await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
+           
+//           } catch (error) {
+//             console.error("Error during payment processing:", error.message);
+//             alert("Error updating payment status. Please contact support.");
+//           }
+//         },
+//         prefill: {
+//           name: user_details?.name || "User Name",
+//           email: user_details?.email || "user@example.com",
+//           contact: user_details?.phone_number || "9999999999",
+//         },
+//         theme: {
+//           color: "#3399cc",
+//         },
+//       };
+  
+//       const rzp1 = new window.Razorpay(options);
+  
+//       rzp1.on("payment.failed", function (response) {
+//         alert(`Payment failed: ${response.error.description}`);
+//       });
+  
+//       rzp1.open();
+//     }
+//   };
+
+// const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
+
+//   try {
+//     const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
+//     const payload = { payment_id: razorpay_payment_id, id };
+
+//     console.log("Updating property payment status with payload:", payload);
+
+//     const response = await axios.post(url, payload);
+
+//     console.log("API Response for payment status update:", response.data);
+
+//     // Check success conditions based on the actual API response structure
+//     if (response.data?.result === true && response.data?.status === 200) {
+//       toast.success("Payment successful and verified!"); // Show success message
+
+//       // Navigate to the home page after a delay
+//       setTimeout(() => {
+//         navigate("/"); // Adjust the route based on your routing setup
+//       }, 3000); // Navigate after 3 seconds
+//     } else {
+//       toast.error("Payment verification failed. Please contact support."); // Show error message
+//       console.error("Payment verification failed response:", response.data);
+//     }
+//   } catch (error) {
+//     console.error("Error updating payment status:", error.message);
+//     toast.error("Failed to update payment status. Please try again."); // Show error message
+//   }
+// };
+
+const fetchPaymentBusinessDetails = async (businessId) => {
+  try {
+    if (!user || !businessId) {
+      throw new Error("Login ID or business ID is missing.");
+    }
+
+    const payload = {
+      amount: 149,
+      user_id: user,
+      business_id: businessId,
+      boost_name: "month",
+    };
+
+    console.log("Sending payload for business payment:", payload);
+
+    const response = await axios.post(
+      "https://bxell.com/bxell/admin/api/create-business-boost-payment",
+      payload
+    );
+
+    if (response.data.result === true && response.data.status === 200) {
+      console.log("Payment API Response:", response.data);
+     
+      return response.data;
+    } else {
+      if (response.data.error) {
+        toast.error(response.data.error); // Show backend error in toast
+      } else {
+        toast.error("Failed to fetch payment details.");
+      }
       return null;
     }
-  };
-  
-  const handlePaymentForBusiness = async (businessId) => {
-    const paymentData = await fetchPaymentBusinessDetails(businessId);
-  
-    console.log("Fetched Payment Data:", paymentData);
-    if (!user) {
-      // If the user is not logged in, redirect to the login page
-      navigate("/login");
+  } catch (error) {
+    console.error("Error fetching payment details:", error);
+
+    if (error.response && error.response.data && error.response.data.error) {
+      toast.error(error.response.data.error); // Show backend error message
+    } else {
+      toast.error(error.message || "Failed to initiate payment. Please try again.");
+    }
+    return null;
+  }
+};
+
+const handlePaymentForBusiness = async (businessId) => {
+  const paymentData = await fetchPaymentBusinessDetails(businessId);
+  console.log("Fetched Payment Data:", paymentData);
+
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+
+  if (paymentData) {
+    const { payment_details, user_details, razorpay_key } = paymentData;
+    const { razorpay_order_id, amount } = payment_details;
+
+    if (!razorpay_order_id || !razorpay_key || !amount) {
+      toast.error("Incomplete payment details. Please try again.");
       return;
     }
-  
-    if (paymentData) {
-      const { payment_details, user_details, razorpay_key } = paymentData;
-      const { razorpay_order_id, amount } = payment_details;
-  
-      if (!razorpay_order_id || !razorpay_key || !amount) {
-        alert("Incomplete payment details. Please try again.");
-        return;
-      }
-  
-      const options = {
-        key: razorpay_key,
-        amount: amount * 100, // Convert to paise
-        currency: "INR",
-        order_id: razorpay_order_id,
-        name: "SRN Infotech",
-        description: "Property Purchase",
-        image: "https://your-logo-url.com/logo.png",
-        handler: async function (response) {
-          console.log("Payment successful response:", response);
-          try {
-            await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
-           
-          } catch (error) {
-            console.error("Error during payment processing:", error.message);
-            alert("Error updating payment status. Please contact support.");
-          }
-        },
-        prefill: {
-          name: user_details?.name || "User Name",
-          email: user_details?.email || "user@example.com",
-          contact: user_details?.phone_number || "9999999999",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-  
-      const rzp1 = new window.Razorpay(options);
-  
-      rzp1.on("payment.failed", function (response) {
-        alert(`Payment failed: ${response.error.description}`);
-      });
-  
-      rzp1.open();
-    }
-  };
+
+    const options = {
+      key: razorpay_key,
+      amount: amount * 100,
+      currency: "INR",
+      order_id: razorpay_order_id,
+      name: "SRN Infotech",
+      description: "Property Purchase",
+      image: "https://your-logo-url.com/logo.png",
+      handler: async function (response) {
+        console.log("Payment successful response:", response);
+        try {
+          await updateBusinessHandlePayment(response.razorpay_payment_id, payment_details.id);
+          toast.success("Payment update successfully!");
+        } catch (error) {
+          console.error("Error during payment processing:", error.message);
+          toast.error("Error updating payment status. Please contact support.");
+        }
+      },
+      prefill: {
+        name: user_details?.name || "User Name",
+        email: user_details?.email || "user@example.com",
+        contact: user_details?.phone_number || "9999999999",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp1 = new window.Razorpay(options);
+
+    rzp1.on("payment.failed", function (response) {
+      toast.error(`Payment failed: ${response.error.description}`);
+    });
+
+    rzp1.open();
+  }
+};
 
 const updateBusinessHandlePayment = async (razorpay_payment_id, id) => {
-
   try {
     const url = "https://bxell.com/bxell/admin/api/update-business-boost-payment";
     const payload = { payment_id: razorpay_payment_id, id };
 
-    console.log("Updating property payment status with payload:", payload);
+    console.log("Updating business payment status with payload:", payload);
 
     const response = await axios.post(url, payload);
 
     console.log("API Response for payment status update:", response.data);
 
-    // Check success conditions based on the actual API response structure
     if (response.data?.result === true && response.data?.status === 200) {
-      toast.success("Payment successful and verified!"); // Show success message
-
-      // Navigate to the home page after a delay
+      toast.success("Payment successful and verified!");
       setTimeout(() => {
-        navigate("/"); // Adjust the route based on your routing setup
-      }, 3000); // Navigate after 3 seconds
+        navigate("/");
+      }, 3000);
     } else {
-      toast.error("Payment verification failed. Please contact support."); // Show error message
+      toast.error("Payment verification failed. Please contact support.");
       console.error("Payment verification failed response:", response.data);
     }
   } catch (error) {
     console.error("Error updating payment status:", error.message);
-    toast.error("Failed to update payment status. Please try again."); // Show error message
+    toast.error("Failed to update payment status. Please try again.");
   }
 };
 
